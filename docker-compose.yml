@@ -1,0 +1,87 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: lms-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - lms-network
+
+  moodle:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        MOODLE_BRANCH: ${MOODLE_BRANCH}
+    image: lms-moodle:local
+    container_name: lms-moodle
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      MOODLE_DB_TYPE: ${MOODLE_DB_TYPE}
+      MOODLE_DB_HOST: ${MOODLE_DB_HOST}
+      MOODLE_DB_NAME: ${MOODLE_DB_NAME}
+      MOODLE_DB_USER: ${MOODLE_DB_USER}
+      MOODLE_DB_PASSWORD: ${MOODLE_DB_PASSWORD}
+      MOODLE_WWWROOT: ${MOODLE_WWWROOT}
+      MOODLE_INTERNAL_URL: ${MOODLE_INTERNAL_URL}
+      MOODLE_DATA_ROOT: ${MOODLE_DATA_ROOT}
+      MOODLE_SITE_NAME: ${MOODLE_SITE_NAME}
+      MOODLE_ADMIN_USER: ${MOODLE_ADMIN_USER}
+      MOODLE_ADMIN_PASSWORD: ${MOODLE_ADMIN_PASSWORD}
+      MOODLE_ADMIN_EMAIL: ${MOODLE_ADMIN_EMAIL}
+    volumes:
+      - moodledata:/var/www/moodledata
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - lms-network
+
+  moodle-cron:
+    image: lms-moodle:local
+    container_name: lms-moodle-cron
+    restart: unless-stopped
+    user: www-data
+    command: >
+      sh -c "while true; do
+      php /var/www/html/admin/cli/cron.php;
+      sleep 60;
+      done"
+    environment:
+      MOODLE_DB_TYPE: ${MOODLE_DB_TYPE}
+      MOODLE_DB_HOST: ${MOODLE_DB_HOST}
+      MOODLE_DB_NAME: ${MOODLE_DB_NAME}
+      MOODLE_DB_USER: ${MOODLE_DB_USER}
+      MOODLE_DB_PASSWORD: ${MOODLE_DB_PASSWORD}
+      MOODLE_WWWROOT: ${MOODLE_WWWROOT}
+      MOODLE_INTERNAL_URL: ${MOODLE_INTERNAL_URL}
+      MOODLE_DATA_ROOT: ${MOODLE_DATA_ROOT}
+    volumes:
+      - moodledata:/var/www/moodledata
+    depends_on:
+      postgres:
+        condition: service_healthy
+      moodle:
+        condition: service_started
+    networks:
+      - lms-network
+
+volumes:
+  postgres_data:
+  moodledata:
+
+networks:
+  lms-network:
+    driver: bridge

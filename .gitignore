@@ -1,0 +1,21 @@
+# Variables d'environnement réelles
+.env
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Données locales éventuelles
+moodledata/
+postgres_data/
+
+# Fichiers temporaires d'éditeurs
+.vscode/
+.idea/
+
+# Perso
+commit-message.txt
+notes.md
