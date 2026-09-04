@@ -1,0 +1,5673 @@
+// =============================================================
+// URDFS - Extra SCSS (compiled after Bootstrap/Boost)
+// Visual language inspired by the React admin/teacher/student
+// frontend: clean white surfaces, soft rounded cards, navy
+// sidebar accents, generous spacing.
+// =============================================================
+
+// -------------------------------------------------------------
+// POLICES AUTO-HÉBERGÉES (theme/urdfs/fonts/*.woff2)
+// Servies par Moodle via le placeholder [[font:theme|...]].
+// Plus aucune dépendance à Google Fonts (fiable hors-ligne / réseau lent).
+// -------------------------------------------------------------
+@font-face { font-family: 'Plus Jakarta Sans'; font-style: normal; font-weight: 400; font-display: swap;
+    src: url('[[font:theme|plus-jakarta-sans-v12-latin-regular.woff2]]') format('woff2'); }
+@font-face { font-family: 'Plus Jakarta Sans'; font-style: normal; font-weight: 500; font-display: swap;
+    src: url('[[font:theme|plus-jakarta-sans-v12-latin-500.woff2]]') format('woff2'); }
+@font-face { font-family: 'Plus Jakarta Sans'; font-style: normal; font-weight: 600; font-display: swap;
+    src: url('[[font:theme|plus-jakarta-sans-v12-latin-600.woff2]]') format('woff2'); }
+@font-face { font-family: 'Plus Jakarta Sans'; font-style: normal; font-weight: 700; font-display: swap;
+    src: url('[[font:theme|plus-jakarta-sans-v12-latin-700.woff2]]') format('woff2'); }
+@font-face { font-family: 'Plus Jakarta Sans'; font-style: normal; font-weight: 800; font-display: swap;
+    src: url('[[font:theme|plus-jakarta-sans-v12-latin-800.woff2]]') format('woff2'); }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 400; font-display: swap;
+    src: url('[[font:theme|inter-v20-latin-regular.woff2]]') format('woff2'); }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 500; font-display: swap;
+    src: url('[[font:theme|inter-v20-latin-500.woff2]]') format('woff2'); }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 600; font-display: swap;
+    src: url('[[font:theme|inter-v20-latin-600.woff2]]') format('woff2'); }
+@font-face { font-family: 'Inter'; font-style: normal; font-weight: 700; font-display: swap;
+    src: url('[[font:theme|inter-v20-latin-700.woff2]]') format('woff2'); }
+
+// -------------------------------------------------------------
+// Global look & feel
+// -------------------------------------------------------------
+body {
+    font-family: $font-family-sans-serif;
+}
+
+a {
+    color: $urdfs-brand;
+}
+
+// Cards: rounded corners + soft border, no heavy shadows (matches
+// the "card" component used across the React dashboards).
+.card {
+    border: 1px solid $urdfs-border;
+    border-radius: $border-radius;
+    box-shadow: 0 1px 2px rgba(15, 26, 51, 0.04);
+}
+
+.card-title {
+    font-weight: 600;
+    color: $urdfs-foreground;
+}
+
+// -------------------------------------------------------------
+// Top navbar - navy bar with the URDFS logo, white text/icons
+// (mirrors the React app's top bar).
+// -------------------------------------------------------------
+.navbar {
+    background-color: $urdfs-brand !important;
+    border-bottom: none;
+    box-shadow: 0 1px 4px rgba(15, 26, 51, 0.12);
+    min-height: 4rem;
+}
+
+.navbar-brand,
+.navbar .nav-link,
+.navbar-light .navbar-nav .nav-link,
+.navbar .navbar-nav > .nav-item > a,
+.navbar > .container a,
+.navbar > .container button,
+.navbar .icon-no-margin,
+.navbar label,
+.navbar .form-check-label,
+.navbar .editmode-switch-form,
+.navbar [data-region="drawer-toggle"] {
+    color: #ffffff !important;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link:focus,
+.navbar > .container > a:hover,
+.navbar > .container > a:focus {
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+// Dropdown menus opened from the navbar (user menu, notifications...)
+// keep their normal light background and dark text, even on hover/focus.
+.navbar .dropdown-menu,
+.navbar .dropdown-menu a,
+.navbar .dropdown-menu .dropdown-item,
+.navbar .dropdown-menu .dropdown-item:hover,
+.navbar .dropdown-menu .dropdown-item:focus,
+.navbar .dropdown-menu * {
+    color: $urdfs-foreground !important;
+}
+
+.navbar .dropdown-menu .dropdown-item:hover,
+.navbar .dropdown-menu .dropdown-item:focus {
+    background-color: $urdfs-accent !important;
+    color: $urdfs-brand !important;
+}
+
+// Logo only - hide the site name text next to it (university wants the
+// logo alone, no "URDFS" label). On garde uniquement le vrai logo du site
+// (image rendue par la navbar) : pas de pseudo-logo ::before.
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    font-size: 0; // masque le texte du nom du site a cote du logo
+
+    img {
+        height: 44px;
+        width: auto;
+        display: block;
+    }
+}
+
+// -------------------------------------------------------------
+// Drawer / primary side navigation (mirrors the React sidebar:
+// white background, rounded active item with navy fill).
+// -------------------------------------------------------------
+#nav-drawer,
+.drawer {
+    background-color: $urdfs-background;
+    border-right: 1px solid $urdfs-border;
+    padding-top: 0.5rem;
+}
+
+.drawer .list-group-item,
+#nav-drawer .list-group-item {
+    border: 0;
+    border-radius: $border-radius-sm;
+    margin: 2px 10px;
+    padding: 0.6rem 0.9rem;
+    color: $urdfs-foreground;
+    font-weight: 500;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.drawer .list-group-item .icon,
+#nav-drawer .list-group-item .icon {
+    color: $urdfs-muted-fg;
+    margin: 0;
+}
+
+.drawer .list-group-item.active,
+.drawer .list-group-item:hover,
+#nav-drawer .list-group-item.active,
+#nav-drawer .list-group-item:hover {
+    background-color: $urdfs-accent;
+    color: $urdfs-brand;
+
+    .icon {
+        color: $urdfs-brand;
+    }
+}
+
+.drawer .list-group-item.active,
+#nav-drawer .list-group-item.active {
+    background-color: $urdfs-brand;
+    color: #ffffff;
+    font-weight: 600;
+
+    .icon {
+        color: #ffffff;
+    }
+}
+
+// Section headings inside the drawer (e.g. "Administration du site").
+.drawer .list-group-item.list-group-header,
+#nav-drawer .list-group-item.list-group-header {
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: $urdfs-muted-fg;
+    font-weight: 700;
+    background: transparent;
+    margin-top: 0.5rem;
+}
+
+// -------------------------------------------------------------
+// Role-based accents.
+// The custom renderer (classes/output/core_renderer.php) adds one
+// of these classes to <body> depending on the logged-in user's
+// role, so each space keeps a subtle distinct accent colour while
+// sharing the same overall layout.
+// -------------------------------------------------------------
+$urdfs-role-accents: (
+    "urdfs-role-admin": $urdfs-admin-accent,
+    "urdfs-role-teacher": $urdfs-teacher-accent,
+    "urdfs-role-student": $urdfs-student-accent,
+);
+
+@each $class, $accent in $urdfs-role-accents {
+    body.#{$class} {
+        .drawer .list-group-item.active,
+        #nav-drawer .list-group-item.active {
+            background-color: $accent;
+        }
+
+        .page-header-headings h1::before,
+        #page-header::after {
+            border-color: $accent;
+        }
+
+        .progress-bar {
+            background-color: $accent;
+        }
+    }
+}
+
+// Small badge shown in the header to make it obvious which space
+// the user is currently in (optional, can be wired up via a
+// renderer/template override later).
+.urdfs-space-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-color: $urdfs-accent;
+    color: $urdfs-brand;
+    margin-inline-start: 0.5rem;
+}
+
+body.urdfs-role-admin .urdfs-space-badge {
+    background-color: rgba($urdfs-admin-accent, 0.12);
+    color: $urdfs-admin-accent;
+}
+
+body.urdfs-role-teacher .urdfs-space-badge {
+    background-color: rgba($urdfs-teacher-accent, 0.12);
+    color: $urdfs-teacher-accent;
+}
+
+body.urdfs-role-student .urdfs-space-badge {
+    background-color: rgba($urdfs-student-accent, 0.12);
+    color: $urdfs-student-accent;
+}
+
+// -------------------------------------------------------------
+// Buttons
+// -------------------------------------------------------------
+.btn-primary {
+    background-color: $urdfs-brand;
+    border-color: $urdfs-brand;
+
+    &:hover,
+    &:focus {
+        background-color: darken($urdfs-brand, 6%);
+        border-color: darken($urdfs-brand, 6%);
+    }
+}
+
+// -------------------------------------------------------------
+// Page de connexion : carte blanche centree sur fond degrade
+// charte (bleu marine -> vert). Centrage par margin auto (sur, ne
+// s'ecrase pas). Le markup vient de templates/core/loginform.mustache.
+// -------------------------------------------------------------
+#page-login-index {
+    background: #ffffff;
+    min-height: 100vh;
+
+    // Conteneurs neutralises : transparents, pleine largeur, sans cadre
+    // (evite le double-cadre et l'ecrasement en colonnes).
+    #page,
+    #page-content,
+    #region-main-box,
+    #region-main,
+    .login-wrapper,
+    .login-container {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        float: none !important;
+    }
+
+    #page {
+        padding: 3rem 1rem !important;
+    }
+
+    // La carte (fond blanc : bordure + ombre douce pour la detacher)
+    .loginform.urdfs-login-card {
+        background: $urdfs-background;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius-lg;
+        box-shadow: 0 10px 40px rgba(15, 26, 51, 0.08);
+        padding: 2.5rem 2.25rem;
+        width: 100%;
+        max-width: 440px;
+        margin: 0 auto;
+    }
+
+    // Logo au-dessus du formulaire
+    .login-logo img {
+        max-height: 64px;
+        width: auto;
+        margin: 0 auto 1.25rem;
+    }
+
+    // Titre + sous-titre
+    .urdfs-login-title {
+        text-align: center;
+        color: $urdfs-brand;
+        font-weight: 800;
+        font-size: 1.9rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .urdfs-login-subtitle {
+        text-align: center;
+        color: $urdfs-muted-fg;
+        margin-bottom: 1.75rem;
+    }
+
+    // Labels des champs
+    .urdfs-field-label {
+        display: block;
+        font-weight: 700;
+        color: $urdfs-foreground;
+        margin-bottom: 0.4rem;
+    }
+
+    // Champs de saisie
+    .form-control,
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+        background: $urdfs-secondary;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius-sm;
+        padding: 0.8rem 1rem;
+        height: auto;
+
+        &:focus {
+            background: #fff;
+            border-color: $urdfs-success;
+            box-shadow: 0 0 0 3px rgba($urdfs-success, 0.15);
+        }
+    }
+
+    // Ligne "se souvenir de moi" + "mot de passe oublie"
+    .urdfs-login-options {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .urdfs-forgot {
+        color: $urdfs-brand;
+        font-weight: 600;
+        text-decoration: none;
+        white-space: nowrap;
+
+        &:hover {
+            color: $urdfs-success;
+            text-decoration: underline;
+        }
+    }
+
+    // Bouton "Se connecter" : vert charte, pleine largeur
+    #loginbtn {
+        background: $urdfs-success;
+        border-color: $urdfs-success;
+        border-radius: $border-radius-sm;
+        font-weight: 700;
+        padding: 0.85rem 1rem;
+
+        &:hover,
+        &:focus {
+            background: darken($urdfs-success, 6%);
+            border-color: darken($urdfs-success, 6%);
+        }
+    }
+
+    // Separateurs et pied (langue + cookies)
+    .login-divider {
+        border-top: 1px solid $urdfs-border;
+        margin: 1.25rem 0;
+    }
+
+    .urdfs-login-footer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1.25rem;
+        flex-wrap: wrap;
+    }
+}
+
+// -------------------------------------------------------------
+// Dashboard summary cards (My overview, course overview blocks).
+// -------------------------------------------------------------
+.block .card,
+[data-block] .card {
+    border-radius: $border-radius;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.block .card:hover,
+[data-block] .card:hover {
+    box-shadow: 0 4px 16px rgba(15, 26, 51, 0.08);
+}
+
+.progress {
+    border-radius: $border-radius-sm;
+    background-color: $urdfs-secondary;
+}
+
+// Block headers (e.g. "Administration du site", "Mes cours") styled
+// like the React dashboard section titles.
+.card-block .card-header,
+.block .card-header,
+[data-block] .card-header {
+    background-color: transparent;
+    border-bottom: 1px solid $urdfs-border;
+    font-weight: 700;
+    color: $urdfs-foreground;
+    font-family: $headings-font-family, $font-family-sans-serif;
+}
+
+// Generic page header.
+#page-header {
+    border-bottom: 1px solid $urdfs-border;
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.page-header-headings h1 {
+    font-weight: 700;
+    color: $urdfs-foreground;
+}
+
+// =============================================================
+// DESIGN SYSTEM URDFS - composants partages (couche fondations)
+// Langage visuel premium : surfaces blanches, coins arrondis,
+// ombres tres legeres, transitions discretes. Bleu dominant,
+// vert reserve aux actions positives / succes.
+// =============================================================
+
+// --- Rythme typographique -----------------------------------
+body {
+    color: $urdfs-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.01em;
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: $urdfs-foreground;
+}
+
+// --- Boutons -------------------------------------------------
+.btn {
+    border-radius: $border-radius-sm;
+    font-weight: 600;
+    padding: 0.5rem 1.1rem;
+    transition: background-color 0.18s ease, border-color 0.18s ease,
+                box-shadow 0.18s ease, transform 0.06s ease;
+    box-shadow: none;
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+.btn-primary {
+    background-color: $urdfs-brand;
+    border-color: $urdfs-brand;
+
+    &:hover,
+    &:focus {
+        background-color: darken($urdfs-brand, 6%);
+        border-color: darken($urdfs-brand, 6%);
+        box-shadow: 0 4px 14px rgba($urdfs-brand, 0.28);
+    }
+}
+
+// Le vert = actions positives / succes uniquement.
+.btn-success {
+    background-color: $urdfs-success;
+    border-color: $urdfs-success;
+
+    &:hover,
+    &:focus {
+        background-color: darken($urdfs-success, 6%);
+        border-color: darken($urdfs-success, 6%);
+        box-shadow: 0 4px 14px rgba($urdfs-success, 0.28);
+    }
+}
+
+.btn-outline-primary {
+    color: $urdfs-brand;
+    border-color: $urdfs-border;
+    background: #fff;
+
+    &:hover,
+    &:focus {
+        background: $urdfs-accent;
+        color: $urdfs-brand;
+        border-color: $urdfs-brand;
+    }
+}
+
+.btn-secondary {
+    background: $urdfs-secondary;
+    border-color: $urdfs-border;
+    color: $urdfs-foreground;
+
+    &:hover,
+    &:focus {
+        background: $urdfs-accent;
+        color: $urdfs-brand;
+        border-color: $urdfs-border;
+    }
+}
+
+.btn-link {
+    color: $urdfs-brand;
+    &:hover { color: $urdfs-success; }
+}
+
+// --- Champs de formulaire -----------------------------------
+.form-control,
+.custom-select,
+select,
+textarea,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="number"] {
+    border-radius: $border-radius-sm;
+    border: 1px solid $urdfs-border;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:focus {
+        border-color: $urdfs-brand;
+        box-shadow: 0 0 0 3px rgba($urdfs-brand, 0.12);
+    }
+}
+
+// --- Cartes --------------------------------------------------
+.card {
+    border: 1px solid $urdfs-border;
+    border-radius: $border-radius;
+    box-shadow: 0 1px 2px rgba(15, 26, 51, 0.04);
+    transition: box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+// --- Badges --------------------------------------------------
+.badge {
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 0.35em 0.7em;
+    letter-spacing: 0;
+}
+
+.badge.badge-primary,
+.badge.bg-primary {
+    background-color: rgba($urdfs-brand, 0.12) !important;
+    color: $urdfs-brand !important;
+}
+
+.badge.badge-success,
+.badge.bg-success {
+    background-color: rgba($urdfs-success, 0.14) !important;
+    color: $urdfs-success !important;
+}
+
+// --- Tableaux (modernes, sans lignes lourdes) ---------------
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+
+    thead th {
+        background: $urdfs-secondary;
+        color: $urdfs-muted-fg;
+        font-weight: 600;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        border: none;
+        border-bottom: 1px solid $urdfs-border;
+        padding: 0.85rem 1rem;
+        white-space: nowrap;
+    }
+
+    tbody td {
+        border-top: none;
+        border-bottom: 1px solid $urdfs-border;
+        padding: 0.8rem 1rem;
+        vertical-align: middle;
+    }
+
+    tbody tr {
+        transition: background-color 0.12s ease;
+        &:hover { background: rgba($urdfs-brand, 0.03); }
+    }
+}
+
+.table-responsive {
+    border: 1px solid $urdfs-border;
+    border-radius: $border-radius;
+    overflow-x: auto;
+}
+
+// --- Menus deroulants ---------------------------------------
+.dropdown-menu {
+    border: 1px solid $urdfs-border;
+    border-radius: $border-radius-sm;
+    box-shadow: 0 10px 30px rgba(15, 26, 51, 0.12);
+    padding: 0.35rem;
+}
+
+.dropdown-item {
+    border-radius: $border-radius-sm - 0.15rem;
+    padding: 0.5rem 0.75rem;
+
+    &:hover,
+    &:focus {
+        background: $urdfs-accent;
+        color: $urdfs-brand;
+    }
+}
+
+// --- Alertes -------------------------------------------------
+.alert {
+    border: 1px solid transparent;
+    border-radius: $border-radius-sm;
+}
+
+// --- Avatars -------------------------------------------------
+.userpicture,
+img.userpicture {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+// --- Barres de progression ----------------------------------
+.progress {
+    height: 0.6rem;
+    border-radius: 999px;
+    background: $urdfs-secondary;
+
+    .progress-bar {
+        border-radius: 999px;
+        background: $urdfs-success; // le vert = progression / reussite
+        transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+
+// --- Pagination ---------------------------------------------
+.pagination {
+    gap: 0.25rem;
+
+    .page-link {
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius-sm !important;
+        color: $urdfs-foreground;
+        margin: 0;
+
+        &:hover {
+            background: $urdfs-accent;
+            color: $urdfs-brand;
+        }
+    }
+
+    .page-item.active .page-link {
+        background: $urdfs-brand;
+        border-color: $urdfs-brand;
+        color: #fff;
+    }
+}
+
+// --- Micro-interactions globales ----------------------------
+a {
+    transition: color 0.15s ease;
+}
+
+// =============================================================
+// TABLEAU DE BORD ETUDIANT (/my/) - refonte premium
+// =============================================================
+
+// En-tete de page facon "hero" (Tableau de bord + salutation).
+body#page-my-index,
+body.pagelayout-mydashboard {
+
+    #page-header,
+    .page-header-headings {
+        border-bottom: none;
+    }
+
+    .page-header-headings h1 {
+        font-size: 1.9rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+    }
+
+    // Chaque bloc = carte moderne, respirante.
+    .block {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: 0 1px 2px rgba(15, 26, 51, 0.04);
+        padding: 1.25rem 1.35rem;
+        margin-bottom: 1.5rem;
+        transition: box-shadow 0.18s ease;
+
+        &:hover {
+            box-shadow: 0 6px 24px rgba(15, 26, 51, 0.07);
+        }
+
+        .card-body,
+        .card {
+            border: none;
+            box-shadow: none;
+            padding: 0;
+            background: transparent;
+        }
+
+        h2, h3, h4, .card-title, .block-header {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: $urdfs-foreground;
+            margin-bottom: 1rem;
+        }
+    }
+
+    // Filtres / selects en tete de bloc (ex : "Tous les cours", "7 jours").
+    .btn-outline-secondary,
+    select.custom-select {
+        border-radius: $border-radius-sm;
+        border-color: $urdfs-border;
+    }
+}
+
+// --- Vue d'ensemble des cours (bloc myoverview) --------------
+.block_myoverview {
+
+    .dashboard-card {
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        overflow: hidden;
+        box-shadow: 0 1px 2px rgba(15, 26, 51, 0.04);
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(15, 26, 51, 0.12);
+        }
+    }
+
+    .dashboard-card-img,
+    .course-image {
+        height: 130px;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .dashboard-card-footer,
+    .card-body {
+        padding: 1rem 1.1rem;
+    }
+
+    .coursename,
+    .multiline {
+        font-weight: 700;
+        color: $urdfs-foreground;
+    }
+
+    .progress {
+        margin-top: 0.75rem;
+    }
+}
+
+// --- Chronologie (bloc timeline) : echeances a venir --------
+.block_timeline {
+
+    .event-name-container,
+    .event-name {
+        font-weight: 600;
+        color: $urdfs-foreground;
+    }
+
+    .list-group-item {
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius-sm;
+        margin-bottom: 0.6rem;
+        transition: background-color 0.12s ease;
+
+        &:hover { background: rgba($urdfs-brand, 0.03); }
+    }
+}
+
+// --- Calendrier (bloc + page) : plus leger, aux couleurs -----
+.calendarmonth,
+.calendartable {
+    border-collapse: separate;
+    border-spacing: 0;
+
+    th {
+        background: transparent;
+        color: $urdfs-muted-fg;
+        text-transform: uppercase;
+        font-size: 0.72rem;
+        letter-spacing: 0.05em;
+        border: none;
+        padding: 0.6rem;
+    }
+
+    td {
+        border: 1px solid $urdfs-border;
+        vertical-align: top;
+        padding: 0.5rem;
+        transition: background-color 0.12s ease;
+
+        &:hover { background: rgba($urdfs-brand, 0.03); }
+    }
+
+    td.today {
+        background: rgba($urdfs-brand, 0.06);
+        box-shadow: inset 0 0 0 2px $urdfs-brand;
+
+        .day-number-circle,
+        .current {
+            color: $urdfs-brand;
+            font-weight: 800;
+        }
+    }
+
+    // Pastilles d'evenements en vert (mise en valeur).
+    .calendar_event_course,
+    .calendar_event_group,
+    .calendar_event_user {
+        border-left: 3px solid $urdfs-success;
+        border-radius: $border-radius-sm - 0.15rem;
+        background: rgba($urdfs-success, 0.08);
+        padding: 2px 6px;
+        font-size: 0.78rem;
+    }
+}
+
+// --- Etat vide (aucun cours / aucune echeance) --------------
+.dashboard-card-deck .card-deck-empty,
+.block .empty-message,
+[data-region="empty-message"] {
+    color: $urdfs-muted-fg;
+    text-align: center;
+    padding: 1.5rem 1rem;
+}
+
+// =============================================================
+// PALIER 2 — RAFFINEMENTS PREMIUM
+// Ajouts alignés sur le design system du prototype d'administration.
+// Purement additif : ces règles arrivent après tout ce qui précède
+// et ne suppriment aucune règle existante.
+// =============================================================
+
+// --- Échelle d'ombres douces, réutilisable ------------------
+$urdfs-sh-sm: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
+$urdfs-sh-md: 0 4px 12px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.03);
+$urdfs-sh-lg: 0 12px 32px rgba(15, 23, 42, 0.08), 0 2px 8px rgba(15, 23, 42, 0.04);
+
+// --- Fond de page : gris très clair, respiration ------------
+// Les cartes blanches ressortent nettement sur ce fond (effet
+// Stripe / Linear). #region-main reste transparent pour laisser
+// voir le fond de page.
+#page.drawers,
+#topofscroll {
+    background-color: $urdfs-page;
+}
+
+// --- Cartes : ombre plus travaillée + lift discret au survol -
+.card {
+    box-shadow: $urdfs-sh-sm;
+}
+
+.block:hover,
+.dashboard-card:hover {
+    box-shadow: $urdfs-sh-lg;
+}
+
+// --- Texte secondaire cohérent partout ----------------------
+.text-muted,
+.dimmed_text,
+.text-secondary {
+    color: $urdfs-muted-fg !important;
+}
+
+// --- Anneaux de focus visibles (accessibilité WCAG 2.1) -----
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible,
+[tabindex]:focus-visible,
+.list-group-item:focus-visible {
+    outline: 2px solid $urdfs-brand;
+    outline-offset: 2px;
+    border-radius: $border-radius-sm;
+}
+
+.form-control:focus-visible,
+.custom-select:focus-visible {
+    outline: none; // le halo (box-shadow) fait déjà office d'indicateur
+}
+
+// --- Item de drawer actif : liseré d'accent côté gauche -----
+// L'accent (vert de charte) reste rare : il souligne uniquement
+// l'élément de navigation actif, jamais des aplats entiers.
+.drawer .list-group-item.active,
+#nav-drawer .list-group-item.active {
+    position: relative;
+    box-shadow: $urdfs-sh-sm;
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 4px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 60%;
+        border-radius: 999px;
+        background: $urdfs-gold;
+    }
+}
+
+// --- Badges : variantes sémantiques manquantes --------------
+.badge.badge-warning,
+.badge.bg-warning {
+    background-color: rgba($urdfs-warning, 0.16) !important;
+    color: darken($urdfs-warning, 12%) !important;
+}
+
+.badge.badge-info,
+.badge.bg-info {
+    background-color: rgba($urdfs-info, 0.14) !important;
+    color: darken($urdfs-info, 6%) !important;
+}
+
+.badge.badge-danger,
+.badge.bg-danger {
+    background-color: rgba($urdfs-destructive, 0.14) !important;
+    color: darken($urdfs-destructive, 6%) !important;
+}
+
+// --- Accent vert : puce « nouveau » / mise en avant ponctuelle -
+.urdfs-accent-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: $urdfs-gold;
+    vertical-align: middle;
+}
+
+// --- Alertes : fonds teintés lisibles -----------------------
+.alert-success { background: rgba($urdfs-success, 0.10);     border-color: rgba($urdfs-success, 0.22); }
+.alert-danger  { background: rgba($urdfs-destructive, 0.10); border-color: rgba($urdfs-destructive, 0.22); }
+.alert-warning { background: rgba($urdfs-warning, 0.12);     border-color: rgba($urdfs-warning, 0.26); }
+.alert-info    { background: rgba($urdfs-info, 0.10);        border-color: rgba($urdfs-info, 0.22); }
+
+// --- Navbar : la recherche et les icônes respirent ----------
+.navbar {
+    box-shadow: $urdfs-sh-md;
+}
+
+// --- Transitions globales discrètes (200 ms) ----------------
+.card,
+.btn,
+.list-group-item,
+.dropdown-item,
+.page-link {
+    transition-duration: 0.2s;
+}
+
+// --- Respect de prefers-reduced-motion ----------------------
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+}
+
+// =============================================================
+// PALIER 3 — SHELL (barre supérieure + largeur de contenu)
+// Active par les surcharges de templates :
+//   templates/columns2.mustache  -> classe .urdfs-shell
+//   templates/navbar.mustache    -> classes .urdfs-navbar / .urdfs-search
+// Purement présentationnel et scopé : sans ces classes, rien ne change.
+// =============================================================
+
+// --- Largeur de contenu confortable, centrée ----------------
+// Les pages très denses (admin) gagnent en lisibilité avec une
+// colonne de lecture bornée, façon Notion/Linear. Les tableaux
+// plus larges défilent normalement à l'intérieur.
+.urdfs-shell {
+    #region-main-box {
+        max-width: 1500px;
+        margin-inline: auto;
+    }
+
+    // On garde la pleine largeur là où Moodle en a besoin
+    // (édition de cours, rapports larges, iframes SCORM…).
+    &.pagelayout-embedded #region-main-box,
+    &.pagelayout-maintenance #region-main-box,
+    .path-mod-scorm #region-main-box {
+        max-width: none;
+    }
+}
+
+// --- Barre supérieure : plus aérée, ombre douce -------------
+.urdfs-navbar {
+    box-shadow: $urdfs-sh-md;
+
+    .navbar-brand img.logo {
+        height: 40px;
+        width: auto;
+    }
+
+    // Séparateurs plus discrets entre les groupes d'actions.
+    .divider {
+        border-color: rgba(255, 255, 255, 0.22) !important;
+    }
+}
+
+// --- Recherche globale : champ « pilule » moderne -----------
+// Le markup exact vient de output.search_box (core) ; on stylise
+// de façon générique le champ à l'intérieur de .urdfs-search.
+.urdfs-search {
+    input[type="text"],
+    input[type="search"],
+    .form-control {
+        min-width: 220px;
+        height: 40px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        background: rgba(255, 255, 255, 0.14);
+        color: #fff;
+        padding-inline: 0.95rem;
+        transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+
+        &::placeholder { color: rgba(255, 255, 255, 0.7); }
+
+        &:focus {
+            background: #fff;
+            color: $urdfs-foreground;
+            border-color: #fff;
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.18);
+
+            &::placeholder { color: $urdfs-subtle-fg; }
+        }
+    }
+
+    @media (max-width: 900px) {
+        input[type="text"],
+        input[type="search"],
+        .form-control { min-width: 150px; }
+    }
+}
+
+// --- Fil d'Ariane : plus léger, aligné à la charte ----------
+.urdfs-shell {
+    .breadcrumb {
+        background: transparent;
+        padding-inline: 0;
+        font-size: 0.85rem;
+
+        .breadcrumb-item a { color: $urdfs-muted-fg; }
+        .breadcrumb-item a:hover { color: $urdfs-brand; }
+        .breadcrumb-item.active { color: $urdfs-foreground; font-weight: 600; }
+    }
+}
+
+// --- Drawer : sections groupées bien démarquées -------------
+// (complète le style déjà présent : titres de section + item actif)
+.drawer .list-group-item.list-group-header,
+#nav-drawer .list-group-item.list-group-header {
+    margin-top: 0.85rem;
+    padding-bottom: 0.3rem;
+}
+
+// =============================================================
+// PALIER 4 — COQUILLE URDFS : sidebar sur-mesure fixe
+// Rendue par classes/output/core_renderer.php -> urdfs_sidebar(),
+// injectée dans templates/theme_boost/drawers.mustache.
+// C'est la pièce qui rend Moodle « méconnaissable » : une vraie
+// barre latérale groupée, rétractable, à la place de la navigation
+// primaire de Boost.
+// =============================================================
+
+$urdfs-sb-w: 268px;
+$urdfs-sb-w-collapsed: 76px;
+$urdfs-navbar-h: 64px;
+
+// La barre du haut et la marque de la sidebar partagent EXACTEMENT la même
+// hauteur : leurs bordures basses s'alignent pour ne former qu'une seule ligne.
+.urdfs-navbar {
+    height: $urdfs-navbar-h;
+    min-height: $urdfs-navbar-h;
+}
+
+.urdfs-has-sidebar {
+    // La navigation primaire de Boost fait doublon avec la sidebar.
+    .urdfs-navbar .primary-navigation { display: none; }
+
+    // Barre supérieure décalée à droite de la sidebar.
+    .navbar.fixed-top {
+        left: $urdfs-sb-w;
+        transition: left 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    // Contenu décalé pour ne jamais passer sous la sidebar.
+    #page {
+        margin-left: $urdfs-sb-w;
+        transition: margin-left 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    // État réduit : tout se resserre à la largeur d'icônes.
+    &.urdfs-collapsed {
+        .navbar.fixed-top { left: $urdfs-sb-w-collapsed; }
+        #page { margin-left: $urdfs-sb-w-collapsed; }
+    }
+}
+
+// --- La sidebar ---------------------------------------------
+.urdfs-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1039; // au-dessus de la navbar (1030)
+    width: $urdfs-sb-w;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-right: 1px solid $urdfs-border;
+    transition: width 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+
+// Marque / logo.
+.urdfs-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    height: $urdfs-navbar-h;
+    padding: 0 1.1rem;
+    flex-shrink: 0;
+    border-bottom: 1px solid $urdfs-border;
+    color: $urdfs-foreground;
+
+    &:hover { text-decoration: none; color: $urdfs-foreground; }
+
+    overflow: hidden; // rien ne dépasse de la marque
+
+    .urdfs-brand-mark {
+        display: grid;
+        place-items: center;
+        width: 40px; height: 40px;
+        flex-shrink: 0;
+
+        svg { width: 40px; height: 40px; display: block; }
+    }
+
+    .urdfs-brand-text {
+        display: flex; flex-direction: column; min-width: 0; line-height: 1.2;
+    }
+    .urdfs-brand-name {
+        font-size: 0.82rem; font-weight: 800; letter-spacing: -0.01em;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        color: $urdfs-brand;
+    }
+    .urdfs-brand-sub {
+        font-size: 0.66rem; color: $urdfs-muted-fg;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+}
+
+// La barre du haut n'a plus besoin de logo : la marque vit dans la sidebar.
+.urdfs-navbar .navbar-brand { display: none !important; }
+
+// --- Barre du haut (bleu marine) : contenu toujours en blanc lisible.
+// Couvre TOUT le contenu (y compris le bandeau « Connecté sous le nom … »).
+.urdfs-navbar,
+.urdfs-navbar * {
+    color: #fff !important;
+}
+// …sauf les menus déroulants (fond blanc) qui gardent un texte foncé.
+.urdfs-navbar .dropdown-menu,
+.urdfs-navbar .dropdown-menu * {
+    color: $urdfs-foreground !important;
+}
+
+// Marque « image » (vrai logo compact configuré dans Moodle) : bornée pour
+// ne jamais déborder de la sidebar, centrée, réduite proprement quand replié.
+.urdfs-brand--img {
+    justify-content: flex-start;
+    img {
+        height: 40px;
+        width: auto;
+        max-width: 190px;
+        object-fit: contain;
+        display: block;
+    }
+}
+.urdfs-collapsed .urdfs-brand--img {
+    justify-content: center;
+    img { max-width: 100%; height: 34px; }
+}
+
+// Zone de navigation défilante.
+.urdfs-nav {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0.9rem 0.65rem 1.5rem;
+}
+
+.urdfs-group + .urdfs-group { margin-top: 1.1rem; }
+
+.urdfs-group-label {
+    padding: 0 0.6rem 0.35rem;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: $urdfs-subtle-fg;
+    white-space: nowrap;
+}
+
+// Item principal.
+.urdfs-link {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    height: 40px;
+    padding: 0 0.7rem;
+    border-radius: 0.6rem;
+    color: $urdfs-muted-fg;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background-color 0.18s ease, color 0.18s ease;
+
+    &:hover { background: $urdfs-accent; color: $urdfs-brand; text-decoration: none; }
+
+    .urdfs-ico {
+        width: 20px;
+        text-align: center;
+        font-size: 0.95rem;
+        color: $urdfs-muted-fg;
+        flex-shrink: 0;
+        transition: color 0.18s ease;
+    }
+    .urdfs-lbl {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .urdfs-chev {
+        display: grid;
+        place-items: center;
+        width: 22px; height: 22px;
+        border: 0;
+        background: transparent;
+        color: $urdfs-subtle-fg;
+        border-radius: 0.4rem;
+        font-size: 0.7rem;
+        transition: transform 0.2s ease, background 0.15s ease;
+
+        &:hover { background: rgba($urdfs-brand, 0.08); }
+    }
+}
+
+// Le parent d'un sous-menu est un <button> : on le remet au niveau d'un lien.
+.urdfs-toggle {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.urdfs-item.open > .urdfs-link .urdfs-chev { transform: rotate(90deg); }
+
+.urdfs-item.active > .urdfs-link {
+    background: $urdfs-accent;
+    color: $urdfs-brand;
+    font-weight: 600;
+    position: relative;
+
+    .urdfs-ico { color: $urdfs-brand; }
+
+    &::before {
+        content: "";
+        position: absolute;
+        left: 2px; top: 50%;
+        transform: translateY(-50%);
+        width: 3px; height: 60%;
+        border-radius: 999px;
+        background: $urdfs-gold; // accent (vert de charte)
+    }
+}
+
+// Sous-menu (repli animé).
+.urdfs-subnav {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.urdfs-item.open > .urdfs-subnav { max-height: 520px; }
+
+.urdfs-subnav-inner {
+    padding: 0.15rem 0 0.3rem;
+    margin-left: 1.55rem;
+    border-left: 1px solid $urdfs-border;
+}
+
+.urdfs-sublink {
+    display: block;
+    padding: 0.4rem 0.7rem 0.4rem 0.85rem;
+    margin-left: -1px;
+    border-left: 2px solid transparent;
+    font-size: 0.82rem;
+    color: $urdfs-muted-fg;
+    white-space: nowrap;
+    border-radius: 0 0.4rem 0.4rem 0;
+    transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+
+    &:hover { color: $urdfs-brand; background: $urdfs-accent; text-decoration: none; }
+    &.current {
+        color: $urdfs-brand;
+        font-weight: 600;
+        border-left-color: $urdfs-brand;
+    }
+}
+
+// Pied : bouton de repli.
+.urdfs-sb-foot {
+    padding: 0.6rem;
+    border-top: 1px solid $urdfs-border;
+    flex-shrink: 0;
+}
+.urdfs-collapse {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    width: 100%;
+    height: 38px;
+    padding: 0 0.7rem;
+    border: 0;
+    border-radius: 0.6rem;
+    background: transparent;
+    color: $urdfs-muted-fg;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+    transition: background 0.15s ease, color 0.15s ease;
+
+    &:hover { background: $urdfs-accent; color: $urdfs-brand; }
+    i { width: 20px; text-align: center; transition: transform 0.3s ease; }
+}
+
+.urdfs-scrim {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1038;
+    background: rgba(15, 23, 42, 0.42);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+// --- État réduit (icônes seules) ----------------------------
+.urdfs-collapsed {
+    .urdfs-sidebar { width: $urdfs-sb-w-collapsed; }
+    .urdfs-brand { padding: 0; justify-content: center; }
+    .urdfs-brand-text { display: none; }
+    .urdfs-group-label { text-align: center; padding: 0 0 0.35rem; font-size: 0; }
+    .urdfs-group-label::after { content: "•"; font-size: 0.8rem; }
+    .urdfs-link { justify-content: center; padding: 0; }
+    .urdfs-lbl, .urdfs-chev { display: none; }
+    .urdfs-subnav { display: none; }
+    .urdfs-collapse { justify-content: center; padding: 0; }
+    .urdfs-foot-text { display: none; }
+    .urdfs-collapse i { transform: rotate(180deg); }
+    .urdfs-item.active > .urdfs-link::before { display: none; }
+}
+
+// --- Responsive : sidebar en drawer sous 768 px -------------
+@media (max-width: 768px) {
+    .urdfs-sidebar {
+        width: $urdfs-sb-w !important;
+        transform: translateX(-100%);
+        box-shadow: 0 24px 56px rgba(15, 23, 42, 0.18);
+    }
+    .urdfs-has-sidebar {
+        .navbar.fixed-top { left: 0; }
+        #page { margin-left: 0; }
+        // En drawer, on force l'affichage complet même si l'état réduit est mémorisé.
+        &.urdfs-collapsed .urdfs-sidebar { width: $urdfs-sb-w !important; }
+        &.urdfs-collapsed .urdfs-brand-text,
+        &.urdfs-collapsed .urdfs-lbl,
+        &.urdfs-collapsed .urdfs-chev,
+        &.urdfs-collapsed .urdfs-foot-text { display: initial; }
+        &.urdfs-collapsed .urdfs-link,
+        &.urdfs-collapsed .urdfs-brand,
+        &.urdfs-collapsed .urdfs-collapse { justify-content: flex-start; padding-inline: 0.7rem; }
+        &.urdfs-collapsed .urdfs-subnav { display: block; }
+    }
+    .urdfs-drawer-open {
+        .urdfs-sidebar { transform: translateX(0); }
+        .urdfs-scrim { opacity: 1; visibility: visible; }
+    }
+    // Le bouton de repli n'a pas de sens en mode drawer.
+    .urdfs-sb-foot { display: none; }
+}
+
+.urdfs-burger {
+    color: $urdfs-brand;
+    font-size: 1.1rem;
+}
+
+// N'affiche jamais la sidebar sur les pages sans coquille (login, popup…).
+body.pagelayout-login .urdfs-sidebar,
+body.pagelayout-embedded .urdfs-sidebar,
+body.pagelayout-maintenance .urdfs-sidebar,
+body.pagelayout-print .urdfs-sidebar,
+body.pagelayout-popup .urdfs-sidebar { display: none; }
+
+// Utilisateur NON connecté (ou invité) : aucune coquille. On masque la
+// sidebar et on annule le décalage, pour que le contenu reprenne toute
+// la largeur (le renderer ne génère déjà plus la sidebar dans ce cas).
+body.urdfs-role-guest {
+    .urdfs-sidebar,
+    .urdfs-scrim,
+    .urdfs-burger { display: none !important; }
+
+    .navbar.fixed-top { left: 0 !important; }
+    #page { margin-left: 0 !important; }
+}
+
+// =============================================================
+// PALIER 5 — DASHBOARD PREMIUM (page d'accueil admin /my/)
+// Rendu par core_renderer.php -> urdfs_dashboard_hero(), injecté
+// dans le layout drawers. Données réelles (utilisateurs, cours…).
+// =============================================================
+
+.urdfs-dash {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
+}
+
+.urdfs-dash-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.urdfs-dash-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: $urdfs-foreground;
+    margin: 0;
+}
+.urdfs-dash-sub { color: $urdfs-muted-fg; margin: 0.15rem 0 0; }
+
+.urdfs-badge-ok {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: rgba($urdfs-success, 0.12);
+    color: darken($urdfs-success, 4%);
+    font-size: 0.78rem;
+    font-weight: 700;
+    .urdfs-dot {
+        width: 8px; height: 8px; border-radius: 999px;
+        background: $urdfs-success;
+        box-shadow: 0 0 0 3px rgba($urdfs-success, 0.18);
+    }
+}
+
+// --- Cartes KPI ---------------------------------------------
+.urdfs-kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); // 4 cartes alignées sur desktop
+    gap: 1rem;
+}
+@media (max-width: 980px)  { .urdfs-kpis { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px)  { .urdfs-kpis { grid-template-columns: 1fr; } }
+
+// Sur le tableau de bord ( /my/ ), notre bandeau d'accueil remplace l'en-tête
+// natif de Moodle (« Tableau de bord » + « Bonjour … 👋 ») : on le masque pour
+// supprimer la répétition. Vaut pour l'admin comme pour l'étudiant.
+#page-my-index #page-header {
+    display: none;
+}
+.urdfs-kpi {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1.15rem 1.25rem;
+    background: #fff;
+    border: 1px solid $urdfs-border;
+    border-radius: $border-radius;
+    box-shadow: $urdfs-sh-sm;
+    transition: box-shadow 0.18s ease, transform 0.18s ease;
+
+    &:hover { box-shadow: $urdfs-sh-lg; transform: translateY(-2px); }
+}
+.urdfs-kpi-icon {
+    display: grid;
+    place-items: center;
+    width: 46px; height: 46px;
+    border-radius: 0.75rem;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+
+    &.is-blue  { background: rgba($urdfs-brand, 0.10);   color: $urdfs-brand; }
+    &.is-green { background: rgba($urdfs-success, 0.12);  color: $urdfs-success; }
+    &.is-amber { background: rgba($urdfs-gold, 0.14);     color: darken($urdfs-gold, 6%); }
+    &.is-slate { background: $urdfs-secondary;            color: $urdfs-muted-fg; }
+}
+.urdfs-kpi-value {
+    font-size: 1.7rem;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: $urdfs-foreground;
+    font-variant-numeric: tabular-nums;
+}
+.urdfs-kpi-label { font-size: 0.8rem; color: $urdfs-muted-fg; font-weight: 500; }
+
+// --- Grille graphique + actions -----------------------------
+.urdfs-dash-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: 1.25rem;
+}
+@media (max-width: 1100px) {
+    .urdfs-dash-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+.urdfs-card-head { margin-bottom: 1rem; }
+.urdfs-card-title { font-size: 1rem; font-weight: 700; color: $urdfs-foreground; }
+.urdfs-card-sub { font-size: 0.8rem; color: $urdfs-muted-fg; }
+
+.urdfs-chart-card,
+.urdfs-actions {
+    padding: 1.35rem 1.4rem;
+    background: #fff;
+    border: 1px solid $urdfs-border;
+    border-radius: $border-radius;
+    box-shadow: $urdfs-sh-sm;
+}
+
+// =============================================================
+// PALIER 27 — MICRO-FINITIONS TRANSVERSALES
+// Dernière passe de cohérence : scrollbars, focus clavier, et
+// harmonisation des composants Bootstrap/Moodle avec le design
+// system (boutons, badges, onglets, pagination, alertes, etc.).
+// =============================================================
+
+// --- Barres de défilement fines et discrètes (global) --------
+* { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+// --- Focus clavier visible (accessibilité) -------------------
+.urdfs-has-sidebar a:focus-visible,
+.urdfs-has-sidebar button:focus-visible,
+.urdfs-has-sidebar .btn:focus-visible,
+.urdfs-has-sidebar input:focus-visible,
+.urdfs-has-sidebar select:focus-visible,
+.urdfs-has-sidebar textarea:focus-visible,
+.urdfs-has-sidebar [tabindex]:focus-visible {
+    outline: 2px solid $urdfs-brand;
+    outline-offset: 2px;
+    border-radius: 5px;
+}
+
+.urdfs-has-sidebar {
+
+    // --- Boutons cohérents --------------------------------
+    .btn { border-radius: 0.6rem; font-weight: 600; }
+    .btn-primary {
+        background: $urdfs-brand;
+        border-color: $urdfs-brand;
+        &:hover { filter: brightness(1.08); }
+    }
+    .btn-secondary,
+    .btn-default {
+        background: #fff;
+        color: $urdfs-foreground;
+        border: 1px solid $urdfs-border;
+        &:hover { background: $urdfs-secondary; border-color: $urdfs-border-strong; color: $urdfs-foreground; }
+    }
+    .btn-success { background: $urdfs-success; border-color: $urdfs-success; &:hover { filter: brightness(1.08); } }
+    .btn-danger { background: $urdfs-destructive; border-color: $urdfs-destructive; }
+    .btn-outline-primary { color: $urdfs-brand; border-color: $urdfs-brand; &:hover { background: $urdfs-brand; color: #fff; } }
+    .btn-link { color: $urdfs-brand; font-weight: 600; }
+
+    // --- Badges -------------------------------------------
+    .badge { border-radius: 999px; font-weight: 600; padding: 0.32em 0.65em; letter-spacing: 0.01em; }
+    .badge.bg-primary, .badge-primary { background-color: $urdfs-brand !important; }
+    .badge.bg-success, .badge-success { background-color: $urdfs-ok !important; }
+    .badge.bg-danger, .badge-danger { background-color: $urdfs-destructive !important; }
+    .badge.bg-secondary, .badge-secondary { background-color: $urdfs-secondary !important; color: $urdfs-muted-fg !important; }
+
+    // --- Fil d'Ariane -------------------------------------
+    .breadcrumb {
+        background: transparent;
+        padding: 0;
+        margin-bottom: 1rem;
+        font-size: 0.85rem;
+    }
+    .breadcrumb-item a { color: $urdfs-muted-fg; text-decoration: none; &:hover { color: $urdfs-brand; } }
+    .breadcrumb-item.active { color: $urdfs-foreground; font-weight: 600; }
+
+    // --- Onglets ------------------------------------------
+    .nav-tabs { border-bottom: 1px solid $urdfs-border; }
+    .nav-tabs .nav-link {
+        border: 0;
+        color: $urdfs-muted-fg;
+        font-weight: 600;
+        padding: 0.6rem 0.9rem;
+        &:hover { color: $urdfs-foreground; border: 0; }
+    }
+    .nav-tabs .nav-link.active {
+        color: $urdfs-brand;
+        background: transparent;
+        border: 0;
+        box-shadow: inset 0 -2px 0 $urdfs-brand;
+    }
+
+    // --- Pagination ---------------------------------------
+    .pagination .page-link {
+        border-radius: 0.5rem;
+        margin: 0 0.12rem;
+        border: 1px solid $urdfs-border;
+        color: $urdfs-foreground;
+        &:hover { background: $urdfs-secondary; }
+    }
+    .pagination .page-item.active .page-link {
+        background: $urdfs-brand;
+        border-color: $urdfs-brand;
+        color: #fff;
+    }
+
+    // --- Alertes (fond teinté + liseré) -------------------
+    .alert {
+        border-radius: $border-radius;
+        border: 0;
+        border-left: 4px solid $urdfs-border-strong;
+        color: $urdfs-foreground;
+    }
+    .alert-success { background: rgba(6, 132, 60, 0.08); border-left-color: $urdfs-success; }
+    .alert-danger, .alert-error { background: rgba(239, 68, 68, 0.08); border-left-color: $urdfs-destructive; }
+    .alert-warning { background: rgba(245, 158, 11, 0.10); border-left-color: #f59e0b; }
+    .alert-info { background: rgba(59, 130, 246, 0.08); border-left-color: #3b82f6; }
+
+    // --- Champs select / cases / interrupteurs ------------
+    .custom-select, .form-select { border-radius: 0.6rem; border: 1px solid $urdfs-border; }
+    .form-check-input:checked { background-color: $urdfs-brand; border-color: $urdfs-brand; }
+    .custom-control-input:checked ~ .custom-control-label::before { background-color: $urdfs-brand; border-color: $urdfs-brand; }
+
+    // --- Infobulles ---------------------------------------
+    .tooltip-inner {
+        background: $urdfs-foreground;
+        border-radius: 0.5rem;
+        font-size: 0.8rem;
+        padding: 0.4rem 0.65rem;
+        box-shadow: $urdfs-sh-md;
+    }
+    .bs-tooltip-top .arrow::before,
+    .tooltip.bs-tooltip-top .tooltip-arrow::before { border-top-color: $urdfs-foreground; }
+    .bs-tooltip-bottom .arrow::before,
+    .tooltip.bs-tooltip-bottom .tooltip-arrow::before { border-bottom-color: $urdfs-foreground; }
+}
+.urdfs-chart-wrap { position: relative; height: 260px; }
+
+// Graphique en barres CSS pur (dashboard admin) — sans dépendance externe.
+.urdfs-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.75rem;
+    height: 240px;
+    padding-top: 0.5rem;
+}
+.urdfs-bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    min-width: 0;
+}
+.urdfs-bar-val {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: $urdfs-foreground;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 0.3rem;
+}
+.urdfs-bar-track {
+    width: 100%;
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+.urdfs-bar {
+    width: 62%;
+    max-width: 44px;
+    min-height: 4px;
+    background: $urdfs-brand;
+    border-radius: 0.4rem 0.4rem 0 0;
+    transition: height 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+
+    &.is-current { background: $urdfs-success; } // mois courant en vert
+}
+.urdfs-bar-label {
+    font-size: 0.72rem;
+    color: $urdfs-muted-fg;
+    margin-top: 0.5rem;
+    white-space: nowrap;
+}
+
+// =============================================================
+// PALIER 16 — PAGE D'UN COURS ( /course/view.php ) refonte premium
+// La page la plus vue (enseignant + étudiant). Sections en cartes,
+// activités en lignes modernes hoverables. Rien de la logique Moodle
+// n'est touché : uniquement la présentation.
+// =============================================================
+body.format-topics,
+body.format-weeks,
+body[id^="page-course-view"] {
+
+    // Chaque SECTION devient une carte propre et aérée.
+    .course-content .course-section,
+    .course-content li.section {
+        list-style: none;
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        padding: 1.35rem 1.5rem;
+        margin-bottom: 1.25rem;
+    }
+
+    // Titre de section.
+    .course-section .sectionname,
+    .course-section-header .sectionname,
+    h3.sectionname,
+    .sectiontitle {
+        font-weight: 700;
+        font-size: 1.15rem;
+        letter-spacing: -0.01em;
+        color: $urdfs-foreground;
+    }
+    .course-section .summarytext,
+    .section_availability { color: $urdfs-muted-fg; }
+
+    // ACTIVITÉS : lignes premium avec survol.
+    .course-section .activity-item {
+        border: 1px solid $urdfs-border;
+        border-radius: 0.7rem;
+        padding: 0.85rem 1rem;
+        margin-bottom: 0.6rem;
+        background: #fff;
+        transition: box-shadow 0.18s ease, border-color 0.18s ease, transform 0.15s ease;
+
+        &:hover {
+            box-shadow: $urdfs-sh-md;
+            border-color: $urdfs-border-strong;
+            transform: translateX(2px);
+        }
+    }
+    .activityname a,
+    .activitytitle .instancename,
+    .activity-item .instancename {
+        font-weight: 600;
+        color: $urdfs-foreground;
+    }
+    // Pastille d'icône d'activité (Moodle la colore déjà par type).
+    .activityiconcontainer {
+        border-radius: 0.6rem;
+        overflow: hidden;
+    }
+
+    // Bloc « ajouter une activité » (mode édition) plus discret.
+    .section .activity-add-button,
+    .changenumsections { margin-top: 0.75rem; }
+
+    // Index de cours (colonne native repliée) laissé à Moodle, mais épuré.
+    #region-main { max-width: 100%; }
+}
+
+// =============================================================
+// PALIER 17 — MODALES + SÉLECTEUR D'ACTIVITÉS (transverse)
+// Utilisés partout (confirmations, dialogues, « Ajouter une
+// activité »). Rendu premium et cohérent avec le design system.
+// =============================================================
+
+// --- Modales (Bootstrap/Moodle) ------------------------------
+.modal-content {
+    border: 1px solid $urdfs-border !important;
+    border-radius: $border-radius !important;
+    box-shadow: $urdfs-sh-lg !important;
+    overflow: hidden;
+}
+.modal-header {
+    border-bottom: 1px solid $urdfs-border;
+    padding: 1.15rem 1.4rem;
+}
+.modal-title {
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: -0.01em;
+    color: $urdfs-foreground;
+}
+.modal-body { padding: 1.4rem; color: $urdfs-foreground; }
+.modal-footer {
+    border-top: 1px solid $urdfs-border;
+    background: $urdfs-page;
+    padding: 0.9rem 1.4rem;
+    gap: 0.5rem;
+}
+.modal-backdrop.show { opacity: 0.42; }
+
+// --- Sélecteur d'activités (« Ajouter une activité ou ressource ») ---------
+.modchooser,
+.chooserdialoguebody,
+[data-region="chooser-container"] {
+    .option,
+    .optioncontainer .option,
+    [data-region="chooser-option-container"] .chooser-option {
+        border: 1px solid $urdfs-border !important;
+        border-radius: 0.7rem !important;
+        transition: box-shadow 0.18s ease, border-color 0.18s ease, transform 0.15s ease;
+
+        &:hover {
+            box-shadow: $urdfs-sh-md;
+            border-color: $urdfs-brand;
+            transform: translateY(-2px);
+        }
+    }
+    // Onglets du sélecteur (Tout / Activités / Ressources).
+    .nav-tabs .nav-link.active {
+        color: $urdfs-brand;
+        border-color: transparent transparent $urdfs-brand;
+        font-weight: 600;
+    }
+}
+
+// =============================================================
+// PALIER 18 — BLOCS (Navigation, Administration…) + arbres
+// Le tiroir de droite (mode édition) affichait des arbres tassés,
+// avec des mots coupés. On les rend lisibles et cohérents.
+// =============================================================
+.urdfs-has-sidebar {
+
+    // Chaque bloc = carte propre.
+    .block.card {
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+    }
+    .block .card-title,
+    .block h3.card-title,
+    .block > .card-body > h3 {
+        font-weight: 700;
+        font-size: 1rem;
+        letter-spacing: -0.01em;
+        color: $urdfs-foreground;
+    }
+
+    // Arbres de navigation / réglages.
+    .block_tree {
+        font-size: 0.86rem;
+
+        // Jamais de mot coupé au milieu (« Participant s »).
+        li, p, a, span { word-break: normal !important; overflow-wrap: normal !important; }
+
+        li { margin: 1px 0; }
+
+        .tree_item {
+            display: block;
+            padding: 0.35rem 0.5rem;
+            border-radius: 0.5rem;
+            color: $urdfs-foreground;
+            transition: background 0.12s ease, color 0.12s ease;
+
+            &:hover { background: $urdfs-secondary; }
+        }
+        a { color: inherit; text-decoration: none; }
+        a:hover { color: $urdfs-brand; }
+
+        .tree_item.branch,
+        p.branch { font-weight: 600; }
+
+        // Nœud actif mis en valeur.
+        .active_tree_node > p,
+        p.active_tree_node,
+        .active_tree_node { color: $urdfs-brand; font-weight: 700; }
+
+        // Icônes alignées et discrètes.
+        .icon, .navicon {
+            color: $urdfs-muted-fg;
+            margin-right: 0.4rem;
+            vertical-align: -2px;
+        }
+
+        // Indentation plus douce.
+        ul { padding-left: 0.9rem; }
+    }
+}
+
+// =============================================================
+// PALIER 19 — PAGE PROFIL ( /user/profile.php )
+// Catégories d'infos en cartes, en-tête utilisateur soigné.
+// =============================================================
+#page-user-profile,
+body[id^="page-user-profile"] {
+
+    // Chaque catégorie d'information = carte.
+    .profile_tree .node_category,
+    section.node_category,
+    .userprofile .node_category {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        padding: 1.35rem 1.5rem;
+        margin-bottom: 1.25rem;
+        break-inside: avoid;
+    }
+    .node_category > h3,
+    .node_category .lead {
+        font-weight: 700;
+        font-size: 1.05rem;
+        letter-spacing: -0.01em;
+        color: $urdfs-foreground;
+        margin-bottom: 0.9rem;
+    }
+    // Lignes d'information nettes.
+    .node_category ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .node_category ul li {
+        padding: 0.5rem 0;
+        border-bottom: 1px solid $urdfs-border;
+    }
+    .node_category ul li:last-child { border-bottom: 0; }
+    .node_category ul li a { color: $urdfs-brand; }
+
+    // En-tête utilisateur (avatar rond, nom net).
+    .page-context-header .page-header-image img,
+    .page-context-header img.userpicture {
+        border-radius: 50%;
+        box-shadow: $urdfs-sh-sm;
+    }
+    .page-context-header .page-header-headings h1 {
+        font-weight: 800;
+        letter-spacing: -0.02em;
+    }
+}
+
+.urdfs-actions-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.urdfs-qa {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.7rem 0.8rem;
+    border: 1px solid $urdfs-border;
+    border-radius: 0.7rem;
+    color: $urdfs-foreground;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+
+    &:hover {
+        background: $urdfs-accent;
+        border-color: $urdfs-brand;
+        text-decoration: none;
+        transform: translateX(2px);
+    }
+    .urdfs-qa-ic {
+        display: grid; place-items: center;
+        width: 36px; height: 36px; flex-shrink: 0;
+        border-radius: 0.6rem;
+        background: $urdfs-secondary;
+        color: $urdfs-muted-fg;
+        transition: background 0.15s ease, color 0.15s ease;
+    }
+    &:hover .urdfs-qa-ic { background: $urdfs-brand; color: #fff; }
+    .urdfs-qa-lbl { flex: 1; font-size: 0.9rem; font-weight: 600; }
+    .urdfs-qa-arw { color: $urdfs-subtle-fg; opacity: 0; transform: translateX(-4px);
+                    transition: opacity 0.15s ease, transform 0.15s ease; }
+    &:hover .urdfs-qa-arw { opacity: 1; transform: translateX(0); color: $urdfs-brand; }
+}
+
+// =============================================================
+// PALIER 6 — Page « Gestion des cours et catégories »
+// La sidebar réduit la largeur utile ; les colonnes internes de
+// Moodle se comprimaient au point de couper les mots verticalement.
+// Scopé à cette page uniquement : aucun effet ailleurs.
+// =============================================================
+#page-course-management {
+
+    // 1) Jamais de coupure au milieu d'un mot.
+    * {
+        word-break: normal !important;
+        overflow-wrap: normal !important;
+    }
+
+    // 2) On EMPILE les panneaux (catégories, puis cours) sur toute la largeur
+    //    au lieu de deux colonnes serrées : chaque panneau respire.
+    #course-category-listings,
+    .course-category-listings {
+        display: block !important;
+        margin: 0;
+    }
+    // Tous les enfants directs du conteneur (peu importe leur classe) passent
+    // sur toute la largeur : les panneaux s'empilent et respirent vraiment.
+    #course-category-listings > *,
+    .course-category-listings > * {
+        float: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+        margin: 0 0 1.25rem !important;
+        padding: 1.25rem 1.4rem;
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        box-sizing: border-box;
+    }
+
+    // 3) Blocs d'actions (tri, déplacement) DANS LES PANNEAUX : conteneurs en
+    //    bloc pleine largeur. On NE cible PAS .form-inline global (sinon la
+    //    barre de recherche du haut, qui est aussi un .form-inline, casse).
+    #course-category-listings .listing-actions,
+    #course-category-listings .listing-actions > div,
+    #course-category-listings .listing-actions form,
+    #course-category-listings [class*="bulk-actions"] {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    // Les libellés d'action (« Déplacer… vers ») sur leur propre ligne, pleine
+    // largeur. Scopé aux panneaux pour ne pas toucher la barre de recherche.
+    #course-category-listings label {
+        flex: 0 0 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        white-space: normal !important;
+        display: block;
+        margin: 0.6rem 0 0.3rem;
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: $urdfs-foreground;
+    }
+
+    // La barre de recherche « Rechercher des cours » reste EN LIGNE :
+    // champ + bouton loupe côte à côte.
+    .simplesearchform,
+    form[role="search"],
+    .input-group {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch;
+        width: auto;
+        max-width: 380px;
+    }
+    .input-group > .form-control,
+    .simplesearchform input[type="text"],
+    form[role="search"] input[type="text"] {
+        flex: 1 1 auto;
+        width: auto !important;
+        min-width: 0;
+    }
+    .input-group > .input-group-append,
+    .input-group > .btn,
+    .simplesearchform .btn,
+    form[role="search"] .btn {
+        flex: 0 0 auto;
+        width: auto !important;
+    }
+
+    // 4) Menus / champs : jamais de débordement hors du panneau.
+    select,
+    .custom-select {
+        width: auto;
+        min-width: 200px;
+        max-width: 100% !important;
+        margin: 0 0.5rem 0.4rem 0;
+    }
+    input[type="text"] { max-width: 100%; }
+
+    // 5) Lignes de cours / catégories : survol discret.
+    .listitem {
+        border-radius: 0.6rem;
+        transition: background-color 0.12s ease;
+        &:hover { background: rgba($urdfs-brand, 0.03); }
+    }
+
+    // 6) En-têtes de panneau plus nets.
+    .listing-header,
+    h3 {
+        font-weight: 700;
+        letter-spacing: -0.01em;
+    }
+}
+
+// =============================================================
+// PALIER 7 — Barres de défilement + finitions transverses
+// =============================================================
+
+// --- Scroll de la sidebar : fin, discret, aux couleurs URDFS -
+.urdfs-nav {
+    scrollbar-width: thin;
+    scrollbar-color: $urdfs-border-strong transparent;
+
+    &::-webkit-scrollbar { width: 6px; }
+    &::-webkit-scrollbar-track { background: transparent; }
+    &::-webkit-scrollbar-thumb {
+        background: $urdfs-border-strong;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        background-clip: content-box;
+    }
+    &::-webkit-scrollbar-thumb:hover { background: $urdfs-brand; }
+}
+
+// --- Scroll global de la coquille : plus léger que celui par défaut.
+.urdfs-has-sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: $urdfs-border-strong transparent;
+}
+.urdfs-has-sidebar ::-webkit-scrollbar { width: 10px; height: 10px; }
+.urdfs-has-sidebar ::-webkit-scrollbar-track { background: transparent; }
+.urdfs-has-sidebar ::-webkit-scrollbar-thumb {
+    background: $urdfs-border-strong;
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+.urdfs-has-sidebar ::-webkit-scrollbar-thumb:hover { background: $urdfs-subtle-fg; }
+
+// --- Anti-coupure de mots généralisée à toute la coquille -----
+// La sidebar réduit la largeur utile ; on empêche partout Bootstrap
+// (.text-break) de hacher les mots verticalement dans les colonnes
+// étroites. N'affecte que le retour à la ligne, pas la mise en page.
+.urdfs-has-sidebar {
+    label,
+    .form-inline,
+    .fitem,
+    .col-form-label {
+        word-break: normal;
+        overflow-wrap: normal;
+    }
+}
+
+// =============================================================
+// PALIER 8 — Le contenu remplit bien la zone sur toutes les pages
+// =============================================================
+
+// La zone de contenu occupe toute la largeur disponible (jamais
+// bridée par une largeur résiduelle qui laisserait un grand vide).
+.urdfs-has-sidebar {
+    #region-main-box,
+    #region-main {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+// --- Messagerie ( /message/index.php ) ----------------------
+// L'app de messagerie de Moodle est un « tiroir » à largeur fixe.
+// Sur la page pleine, on la fait occuper toute la largeur et on lui
+// donne une hauteur confortable : contacts (1/3) + conversation (2/3).
+#page-message-index {
+    .message-app.main {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: 76vh;
+        border-radius: $border-radius;
+        border-color: $urdfs-border !important;
+        overflow: hidden;
+        box-shadow: $urdfs-sh-sm;
+    }
+    .message-app .container-fluid,
+    .message-app .row {
+        height: 100%;
+        min-height: 76vh;
+    }
+    #region-main-box,
+    #region-main { max-width: 100% !important; }
+}
+
+// =============================================================
+// PALIER 9 — ESPACE ÉTUDIANT
+// Bandeau d'accueil (urdfs_student_hero) + finitions des cartes
+// de cours (bloc « Vue d'ensemble des cours »).
+// =============================================================
+
+// --- Bandeau d'accueil ---------------------------------------
+.urdfs-welcome {
+    margin-bottom: 1.75rem;
+    border-radius: $border-radius-lg;
+    background: linear-gradient(135deg, #0f2a5c 0%, $urdfs-brand 52%, #0b5e34 165%);
+    color: #fff;
+    overflow: hidden;
+    box-shadow: 0 18px 44px rgba(20, 56, 118, 0.28);
+}
+.urdfs-welcome-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 2rem 2.25rem;
+}
+.urdfs-welcome-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.35rem;
+}
+.urdfs-welcome-title {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: #fff;
+}
+.urdfs-welcome-sub {
+    color: rgba(255, 255, 255, 0.82);
+    margin: 0.4rem 0 1.25rem;
+    font-size: 1rem;
+}
+.urdfs-welcome-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.urdfs-wbtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    height: 42px;
+    padding: 0 1.1rem;
+    border-radius: 0.7rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    transition: background 0.18s ease, transform 0.18s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        text-decoration: none;
+        transform: translateY(-1px);
+    }
+}
+.urdfs-wbtn--solid {
+    background: #fff;
+    color: $urdfs-brand;
+    border-color: #fff;
+    &:hover { background: rgba(255, 255, 255, 0.9); color: $urdfs-brand; }
+}
+.urdfs-welcome-badge {
+    display: grid;
+    place-items: center;
+    width: 96px; height: 96px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    font-size: 2.4rem;
+    color: #fff;
+}
+@media (max-width: 820px) {
+    .urdfs-welcome-inner { padding: 1.5rem 1.4rem; }
+    .urdfs-welcome-title { font-size: 1.6rem; }
+    .urdfs-welcome-badge { display: none; }
+}
+
+// --- Cartes de cours (Vue d'ensemble) : rendu premium --------
+.block_myoverview,
+#page-my-courses {
+    .dashboard-card {
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        overflow: hidden;
+        box-shadow: $urdfs-sh-sm;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+
+        &:hover { transform: translateY(-3px); box-shadow: $urdfs-sh-lg; }
+    }
+    .dashboard-card-img,
+    .courseimage {
+        height: 140px;
+        background-size: cover;
+        background-position: center;
+    }
+    .coursename,
+    .multiline { font-weight: 700; color: $urdfs-foreground; }
+    .progress { height: 0.5rem; border-radius: 999px; }
+    .progress-bar { background: $urdfs-success; } // vert = progression
+}
+
+// --- Strip de stats + prochaines échéances -------------------
+// Les 3 stats en ligne, puis la carte « Prochaines échéances » EN DESSOUS,
+// pleine largeur : plus aucun chevauchement entre les deux.
+.urdfs-sgrid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
+}
+
+.urdfs-sstats {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+    align-content: start;
+}
+@media (min-width: 560px) {
+    .urdfs-sstats { grid-template-columns: repeat(3, 1fr); }
+}
+.urdfs-sstat {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 1.1rem 1.15rem;
+    background: #fff;
+    border: 1px solid $urdfs-border;
+    border-radius: $border-radius;
+    box-shadow: $urdfs-sh-sm;
+    transition: box-shadow 0.18s ease, transform 0.18s ease;
+
+    &:hover { box-shadow: $urdfs-sh-lg; transform: translateY(-2px); }
+}
+.urdfs-sstat-ic {
+    display: grid;
+    place-items: center;
+    width: 44px; height: 44px;
+    border-radius: 0.75rem;
+    font-size: 1.05rem;
+    flex-shrink: 0;
+
+    &.is-blue  { background: rgba($urdfs-brand, 0.10);   color: $urdfs-brand; }
+    &.is-green { background: rgba($urdfs-success, 0.12);  color: $urdfs-success; }
+    &.is-amber { background: rgba($urdfs-gold, 0.16);     color: darken($urdfs-gold, 8%); }
+}
+.urdfs-sstat-val {
+    font-size: 1.55rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: $urdfs-foreground;
+    font-variant-numeric: tabular-nums;
+}
+.urdfs-sstat-lbl { font-size: 0.8rem; color: $urdfs-muted-fg; font-weight: 500; margin-top: 0.2rem; }
+
+// Carte des échéances.
+.urdfs-up {
+    padding: 1.25rem 1.35rem;
+    background: #fff;
+    border: 1px solid $urdfs-border;
+    border-radius: $border-radius;
+    box-shadow: $urdfs-sh-sm;
+}
+.urdfs-up-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.9rem;
+}
+.urdfs-up-all {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: $urdfs-brand;
+    &:hover { text-decoration: underline; }
+}
+.urdfs-up-list { display: flex; flex-direction: column; gap: 0.35rem; }
+.urdfs-up-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.6rem 0.65rem;
+    border-radius: 0.65rem;
+    color: $urdfs-foreground;
+    transition: background 0.15s ease;
+
+    &:hover { background: $urdfs-accent; text-decoration: none; color: $urdfs-foreground; }
+}
+.urdfs-up-ic {
+    display: grid;
+    place-items: center;
+    width: 38px; height: 38px;
+    flex-shrink: 0;
+    border-radius: 0.6rem;
+    background: rgba($urdfs-gold, 0.16);
+    color: darken($urdfs-gold, 8%);
+    font-size: 0.9rem;
+}
+.urdfs-up-body { flex: 1; min-width: 0; }
+.urdfs-up-name {
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.urdfs-up-meta { display: block; font-size: 0.78rem; color: $urdfs-muted-fg; }
+.urdfs-up-when {
+    flex-shrink: 0;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: $urdfs-muted-fg;
+    font-variant-numeric: tabular-nums;
+}
+.urdfs-up-empty {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1.5rem 0.5rem;
+    color: $urdfs-muted-fg;
+    justify-content: center;
+    text-align: center;
+
+    i { color: $urdfs-success; font-size: 1.1rem; }
+}
+
+// =============================================================
+// VARIANTE — Barre du haut BLANCHE (contenu en bleu marine)
+// Test d'un header clair, façon Notion / Linear. La marque de la
+// sidebar (blanche) et la navbar (blanche) fusionnent : la ligne
+// du bas devient continue.
+// =============================================================
+.urdfs-navbar {
+    background: #fff !important;
+    border-bottom: 1px solid $urdfs-border !important;
+    box-shadow: none !important;
+}
+
+// Tout le contenu de la barre passe en bleu marine.
+.urdfs-navbar,
+.urdfs-navbar * {
+    color: $urdfs-brand !important;
+}
+// Les menus déroulants gardent un texte foncé neutre (fond blanc).
+.urdfs-navbar .dropdown-menu,
+.urdfs-navbar .dropdown-menu * {
+    color: $urdfs-foreground !important;
+}
+
+// Séparateurs verticaux discrets.
+.urdfs-navbar .divider {
+    border-color: $urdfs-border !important;
+}
+
+// Survol des icônes / actions : léger fond bleu très pâle.
+.urdfs-navbar .nav-link:hover,
+.urdfs-navbar .icon-btn:hover,
+.urdfs-navbar [data-region="drawer-toggle"]:hover {
+    background: $urdfs-accent !important;
+    border-radius: 0.6rem;
+}
+
+// Recherche globale : champ clair (au lieu du translucide sur bleu).
+.urdfs-navbar .urdfs-search input,
+.urdfs-navbar input[type="text"],
+.urdfs-navbar input[type="search"],
+.urdfs-navbar .form-control {
+    background: $urdfs-secondary !important;
+    border: 1px solid $urdfs-border !important;
+    color: $urdfs-foreground !important;
+
+    &::placeholder { color: $urdfs-subtle-fg !important; }
+
+    &:focus {
+        background: #fff !important;
+        border-color: $urdfs-brand !important;
+        box-shadow: 0 0 0 4px rgba($urdfs-brand, 0.12) !important;
+    }
+}
+
+// Certaines règles Moodle ciblent précisément ces éléments et les forcent en
+// blanc (héritage du header bleu) : on les repasse explicitement en bleu, sinon
+// « Mode d'édition » reste blanc sur blanc = invisible.
+.urdfs-navbar .nav-link,
+.urdfs-navbar .navbar-nav .nav-link,
+.urdfs-navbar .navbar-nav > .nav-item > a,
+.urdfs-navbar label,
+.urdfs-navbar .form-check-label,
+.urdfs-navbar .editmode-switch-form,
+.urdfs-navbar .editmode-switch-form label,
+.urdfs-navbar .icon-no-margin,
+.urdfs-navbar [data-region="drawer-toggle"] {
+    color: $urdfs-brand !important;
+}
+
+// Tout reste sur UNE seule ligne : l'interrupteur « Mode d'édition » ne saute
+// plus en dessous sur les pages chargées.
+.urdfs-navbar,
+.urdfs-navbar > .container-fluid,
+.urdfs-navbar #usernavigation {
+    flex-wrap: nowrap !important;
+    align-items: center;
+}
+
+// =============================================================
+// VARIANTE — Éléments de la sidebar en BLEU MARINE
+// Test : icônes + noms de menu en bleu (au lieu du gris).
+// Les sous-liens restent plus discrets pour garder la hiérarchie.
+// =============================================================
+.urdfs-link { color: $urdfs-brand; }
+.urdfs-link .urdfs-ico { color: $urdfs-brand; }
+.urdfs-link:hover { color: $urdfs-brand-700; }
+.urdfs-link:hover .urdfs-ico { color: $urdfs-brand-700; }
+.urdfs-group-label { color: $urdfs-brand; opacity: 0.55; }
+
+// =============================================================
+// PALIER 10 — Tables (participants, listes), icônes d'action,
+// et suppression du drawer natif Boost qui débordait à gauche.
+// =============================================================
+
+// 1) Le drawer « index de cours » de Boost fait doublon avec notre sidebar et
+//    débordait par-dessus (surtout en mode réduit). On le retire, avec son
+//    bouton d'ouverture.
+.urdfs-has-sidebar #theme_boost-drawers-courseindex,
+.urdfs-has-sidebar .drawer.drawer-left,
+.urdfs-has-sidebar .drawer-toggler.drawer-left-toggle {
+    display: none !important;
+}
+
+// 2) Le contenu garde TOUJOURS le décalage de notre sidebar, quel que soit
+//    l'état des drawers Boost (plus de contenu qui glisse sous la sidebar).
+.urdfs-has-sidebar #page.drawers {
+    margin-left: $urdfs-sb-w !important;
+}
+.urdfs-has-sidebar.urdfs-collapsed #page.drawers {
+    margin-left: $urdfs-sb-w-collapsed !important;
+}
+@media (max-width: 768px) {
+    .urdfs-has-sidebar #page.drawers { margin-left: 0 !important; }
+}
+
+// 3) Icônes d'action colorées par FONCTION : modifier (bleu), supprimer
+//    (rouge), informations (bleu clair). Plus lisible d'un coup d'œil.
+.urdfs-has-sidebar {
+    .fa-trash, .fa-trash-can, .fa-trash-alt, .fa-trash-o,
+    a[data-action="delete"] .icon {
+        color: $urdfs-destructive !important;
+    }
+    .fa-pencil, .fa-pencil-alt, .fa-edit, .fa-cog, .fa-gear {
+        color: $urdfs-brand !important;
+    }
+    .fa-circle-info, .fa-info-circle, .fa-info {
+        color: $urdfs-info !important;
+    }
+
+    // Pastille cliquable + survol doux autour de chaque icône d'action.
+    .action-icon {
+        display: inline-grid;
+        place-items: center;
+        width: 30px; height: 30px;
+        border-radius: 0.5rem;
+        transition: background 0.15s ease;
+        &:hover { background: $urdfs-secondary; }
+    }
+}
+
+// 4) Tables premium (participants, listes d'utilisateurs…).
+.urdfs-has-sidebar {
+    table.table {
+        th, td { vertical-align: middle; }
+        thead th {
+            background: $urdfs-secondary;
+            color: $urdfs-muted-fg;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            border-bottom: 1px solid $urdfs-border;
+        }
+        tbody tr { transition: background-color 0.12s ease; }
+        tbody tr:hover { background: rgba($urdfs-brand, 0.03); }
+        td { border-color: $urdfs-border; }
+    }
+    // Conteneurs de table : défilement HORIZONTAL si la table dépasse
+    // (on ne coupe plus la colonne « Statut »), coins arrondis conservés.
+    .table-responsive,
+    .no-overflow {
+        overflow-x: auto;
+        overflow-y: visible;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        -webkit-overflow-scrolling: touch;
+    }
+    .table-responsive > table,
+    .no-overflow > table { margin-bottom: 0; }
+
+    // Badge de statut « Active » / « Suspendu » : pastille nette et sobre.
+    .badge.badge-success, .badge.bg-success {
+        background: rgba($urdfs-ok, 0.15) !important;
+        color: darken($urdfs-ok, 14%) !important;
+        border-radius: 999px;
+    }
+    .badge.badge-secondary, .badge.bg-secondary {
+        background: $urdfs-secondary !important;
+        color: $urdfs-muted-fg !important;
+        border-radius: 999px;
+    }
+}
+
+// 5) Filtres alphabétiques (Prénom / Nom) : puces propres et alignées.
+.urdfs-has-sidebar {
+    .initialbar,
+    .initialbargroup {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    .initialbar a,
+    .initialbar .page-item a,
+    .initialbargroup a {
+        display: inline-grid;
+        place-items: center;
+        min-width: 32px;
+        height: 32px;
+        padding: 0 0.4rem;
+        border: 1px solid $urdfs-border;
+        border-radius: 0.5rem;
+        color: $urdfs-muted-fg;
+        font-size: 0.85rem;
+        transition: all 0.15s ease;
+        &:hover { border-color: $urdfs-brand; color: $urdfs-brand; text-decoration: none; }
+    }
+    .initialbar .active a,
+    .initialbar strong {
+        background: $urdfs-brand;
+        color: #fff;
+        border-radius: 0.5rem;
+        padding: 0 0.55rem;
+    }
+    // Espace net entre « Tout » et la première lettre.
+    .initialbar li:first-child,
+    .initialbargroup li:first-child { margin-right: 0.75rem; }
+}
+
+// =============================================================
+// PALIER 11 — Page « Catégories » ( /course/index.php )
+// Cours affichés en cartes claires, lisibles même en nombre.
+// =============================================================
+#page-course-index {
+    .course_category_tree,
+    .category-browse { max-width: 100%; }
+
+    // Barre d'outils (sélecteur de catégorie + recherche + menu) : alignée,
+    // aérée, et qui passe à la ligne proprement sur petit écran.
+    .categorypicker,
+    .course-search,
+    .simplesearchform,
+    #region-main form {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 1.25rem;
+    }
+    #region-main select,
+    #region-main input[type="text"],
+    #region-main input[type="search"] {
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius-sm;
+        min-height: 40px;
+        background: #fff;
+    }
+
+    // L'arbre des catégories : panneau blanc unique qui s'adapte au contenu
+    // (hauteur auto, pas de coupure), séparé par de fins filets.
+    // Le conteneur à fond clair qui entoure la liste des catégories doit
+    // respirer en bas : le dernier lien ne doit jamais toucher le bord.
+    #region-main,
+    #region-main > .box,
+    #region-main > div,
+    .course_category_tree,
+    .category-browse,
+    .categorytree,
+    #category-listing,
+    .course-category-listing {
+        padding-bottom: 1.5rem;
+    }
+
+    .course_category_tree {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        // Respiration intérieure haut/bas : le panneau s'adapte au contenu
+        // sans que le texte colle aux bords.
+        padding: 1rem 1.25rem 1.75rem;
+        overflow: hidden;
+    }
+    // Le dernier bloc de contenu ne touche pas le bord bas du panneau.
+    .course_category_tree > :last-child,
+    .course_category_tree .content:last-child,
+    .course_category_tree .subcategories:last-child { margin-bottom: 0; }
+    .course_category_tree .courses { padding-bottom: 0.25rem; }
+    .course_category_tree .category {
+        border-bottom: 1px solid $urdfs-border;
+    }
+    .course_category_tree .category:last-child { border-bottom: 0; }
+    .course_category_tree .category > .info {
+        padding: 0.85rem 1rem;
+        border-radius: $border-radius-sm;
+        transition: background 0.12s ease;
+    }
+    .course_category_tree .category > .info:hover { background: $urdfs-secondary; }
+
+    // Chaque cours = carte moderne.
+    .coursebox {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        padding: 1.1rem 1.25rem;
+        margin-bottom: 1rem;
+        transition: box-shadow 0.18s ease, transform 0.18s ease;
+
+        &:hover { box-shadow: $urdfs-sh-lg; transform: translateY(-2px); }
+    }
+    .coursebox .coursename a,
+    .coursebox .coursename {
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: $urdfs-brand;
+    }
+    .coursebox .summary { color: $urdfs-muted-fg; margin-top: 0.4rem; }
+
+    // En-tête de catégorie : titre net + compteur.
+    .category > h3,
+    .categoryname,
+    .category .info h3 {
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: $urdfs-foreground;
+    }
+    // Le nom d'une catégorie (lien) et son compteur de cours.
+    .category .categoryname a { color: $urdfs-brand; font-weight: 600; }
+    .numberofcourse,
+    .category .numberofcourse {
+        background: $urdfs-secondary;
+        color: $urdfs-muted-fg;
+        border-radius: 999px;
+        padding: 0.1rem 0.6rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+}
+
+// =============================================================
+// PALIER 12 — Sélecteurs cohérents + rapport de notes (grader)
+// =============================================================
+
+// Tous les menus déroulants (Afficher N, Filtrer par nom, Rapport de
+// l'évaluateur…) : champ propre, arrondi, homogène.
+.urdfs-has-sidebar {
+    select.custom-select,
+    select.form-control,
+    select.form-select,
+    .singleselect select,
+    select#menuperpage,
+    select {
+        border-radius: 0.5rem;
+        border: 1px solid $urdfs-border;
+        background-color: #fff;
+        color: $urdfs-foreground;
+        min-height: 38px;
+        padding: 0 2rem 0 0.75rem;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+        &:focus {
+            border-color: $urdfs-brand;
+            box-shadow: 0 0 0 3px rgba($urdfs-brand, 0.12);
+            outline: none;
+        }
+    }
+}
+
+// --- Correctif : sélecteurs d'utilisateurs (listes à choix multiples) -------
+// Le style « menu déroulant » (min-height 38px, padding à droite, flèche) ne
+// doit PAS s'appliquer aux <select multiple> / [size] (attribution de rôles,
+// inscriptions…), sinon les options sont écrasées et les noms tronqués.
+.urdfs-has-sidebar select[multiple],
+.urdfs-has-sidebar select[size],
+.userselector select {
+    min-height: 340px !important;
+    height: auto !important;
+    padding: 0.35rem !important;
+    width: 100% !important;
+    font-size: 0.82rem !important;
+    line-height: 1.4;
+    background-image: none !important;
+}
+.userselector select option {
+    padding: 0.35rem 0.6rem;
+    border-radius: 6px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.userselector select option:checked {
+    background: rgba($urdfs-brand, 0.12) linear-gradient(0deg, rgba($urdfs-brand, 0.12), rgba($urdfs-brand, 0.12));
+    color: $urdfs-brand;
+}
+
+// La zone du sélecteur occupe la largeur disponible, sans débordement.
+#page-admin-roles-assign #region-main,
+.userselector { max-width: 100%; }
+.roleassigntable { width: 100% !important; }
+.roleassigntable td { vertical-align: top; padding: 0.5rem; }
+.roleassigntable p { margin-bottom: 0.4rem; }
+
+// --- Rapport de l'évaluateur ( /grade/report/grader ) --------
+#page-grade-report-grader-index {
+
+    // La table occupe TOUTE la largeur disponible : plus de grand vide à
+    // droite, et la colonne du cours a la place pour son titre.
+    .gradeparent { overflow-x: auto; }
+    table.gradereport-grader-table {
+        width: 100% !important;
+
+        th, td {
+            vertical-align: middle;
+            border-color: $urdfs-border !important;
+        }
+        // La vraie ligne d'en-tête est <tr class="heading">.
+        tr.heading th {
+            background: $urdfs-secondary;
+            font-weight: 700;
+        }
+        tr.userrow:hover th,
+        tr.userrow:hover td { background: rgba($urdfs-brand, 0.04); }
+
+        // Ligne « Moyenne globale » mise en valeur.
+        tr.avg th,
+        tr.avg td {
+            background: $urdfs-secondary;
+            font-weight: 700;
+        }
+
+        // La DERNIÈRE colonne (« Total du cours », marquée .lastcol par Moodle)
+        // s'étire pour remplir l'espace restant à droite. Les colonnes de
+        // gauche gardent leur largeur de contenu.
+        th.lastcol,
+        td.lastcol {
+            width: 100%;
+        }
+        .gradeitemheader {
+            white-space: normal;
+            line-height: 1.3;
+        }
+
+        // Le « ... » (menu de cellule) de l'en-tête de cours est poussé à droite
+        // de sa colonne, comme pour « Total du cours ». On fait grandir le titre.
+        th.category .header {
+            flex: 1 1 auto;
+        }
+    }
+}
+
+// --- Pagination « Afficher N » : dé-collée, en bas à DROITE du tableau -------
+// On retire le comportement « pied collant » de Moodle et l'espace réservé,
+// et on aligne le contrôle à droite, juste sous le tableau.
+#sticky-footer.stickyfooter {
+    position: static !important;
+    transform: none !important;
+    border-top: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    margin-top: 0.5rem;
+    min-height: 0 !important;
+    height: auto !important;
+}
+#sticky-footer .sticky-footer-content-wrapper {
+    min-height: 0 !important;
+    height: auto !important;
+}
+#sticky-footer .sticky-footer-content {
+    justify-content: flex-end !important;
+    padding: 0.25rem 0 !important;
+}
+#sticky-footer .sticky-footer-content > .col { display: none !important; }
+#sticky-footer label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-weight: 600;
+    color: $urdfs-muted-fg;
+    white-space: nowrap;
+}
+#sticky-footer .form-select {
+    width: auto;
+    min-height: 38px;
+    border-radius: 0.5rem;
+    border: 1px solid $urdfs-border;
+    padding: 0 2rem 0 0.75rem;
+}
+// L'espace réservé en bas pour le pied collant n'a plus lieu d'être.
+body.hasstickyfooter #page.drawers { padding-bottom: 0 !important; }
+
+// =============================================================
+// PALIER 13a — Popovers de la barre (notifications, messages)
+// Ils s'ouvraient à gauche, sous la sidebar. On les ancre sous
+// leur cloche, alignés à droite, AU-DESSUS de la sidebar.
+// =============================================================
+.urdfs-navbar .popover-region {
+    position: relative;
+}
+.urdfs-navbar .popover-region-container {
+    position: absolute !important;
+    top: calc(100% + 8px) !important;
+    right: 0 !important;
+    left: auto !important;
+    z-index: 1060 !important; // > sidebar (1039)
+    max-width: 92vw;
+    border: 1px solid $urdfs-border;
+    border-radius: $border-radius;
+    box-shadow: $urdfs-sh-lg;
+    overflow: hidden;
+}
+@media (max-width: 768px) {
+    .urdfs-navbar .popover-region-container {
+        position: fixed !important;
+        top: 62px !important;
+        right: 0.75rem !important;
+        left: 0.75rem !important;
+        max-width: none;
+    }
+}
+
+// =============================================================
+// PALIER 13 — FORMULAIRES PREMIUM (mform Moodle)
+// Chantier n°1 de l'audit : créer un cours, un quiz, un devoir,
+// les réglages… passent d'un rendu Moodle dense à un rendu
+// « carte + libellé au-dessus + champ large », façon Notion/Linear.
+// =============================================================
+.urdfs-has-sidebar {
+
+    // Chaque fieldset = une carte de section propre.
+    .mform fieldset {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        padding: 1.5rem 1.6rem;
+        margin-bottom: 1.25rem;
+    }
+    // Les fieldsets « cachés » (général) restent sans carte.
+    .mform fieldset.hidden,
+    .mform fieldset.hidden-fields { background: transparent; border: 0; box-shadow: none; padding: 0; }
+
+    .mform fieldset > legend {
+        font-size: 1.05rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: $urdfs-foreground;
+        padding: 0;
+        margin-bottom: 1.1rem;
+        border: 0;
+        width: auto;
+    }
+
+    // Chaque champ : libellé AU-DESSUS, champ pleine largeur en dessous.
+    .mform .fitem {
+        display: block;
+        margin-bottom: 1.15rem;
+    }
+    .mform .fitem > .col-form-label,
+    .mform .fitem > [class*="col-"]:first-child {
+        max-width: 100%;
+        flex: 0 0 100%;
+        width: 100%;
+        text-align: left;
+        padding: 0 0 0.4rem 0;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: $urdfs-foreground;
+    }
+    .mform .fitem > .felement,
+    .mform .fitem > [class*="col-"]:last-child {
+        max-width: 100%;
+        flex: 0 0 100%;
+        width: 100%;
+        padding: 0;
+    }
+
+    // Texte d'aide / erreurs sous le champ.
+    .mform .form-control-feedback,
+    .mform .felement .form-text {
+        font-size: 0.8rem;
+        color: $urdfs-muted-fg;
+        margin-top: 0.35rem;
+    }
+    .mform .is-invalid ~ .form-control-feedback,
+    .mform .error {
+        color: $urdfs-destructive;
+    }
+
+    // Barre d'actions du formulaire : boutons simplement alignes, SANS
+    // cadre blanc pleine largeur (il laissait une grande zone vide a droite).
+    .mform .form-actions,
+    #fgroup_id_buttonar,
+    .mform .fitem_actionbuttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        justify-content: flex-start;
+        align-items: center;
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+        padding: 0;
+        margin-top: 1.25rem;
+
+        .col-form-label { display: none; } // libellé vide de la ligne de boutons
+    }
+}
+
+// =============================================================
+// PALIER 14a — Recherche dans la sidebar (filtre les entrées)
+// =============================================================
+.urdfs-navsearch {
+    position: relative;
+    padding: 0.75rem 0.65rem 0.25rem;
+
+    i {
+        position: absolute;
+        left: 1.15rem;
+        top: 50%;
+        transform: translateY(-25%);
+        color: $urdfs-subtle-fg;
+        font-size: 0.8rem;
+        pointer-events: none;
+    }
+    input {
+        width: 100%;
+        height: 38px;
+        padding: 0 0.75rem 0 2.1rem;
+        border: 1px solid $urdfs-border;
+        border-radius: 0.6rem;
+        background: $urdfs-secondary;
+        font-size: 0.85rem;
+        color: $urdfs-foreground;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+
+        &::placeholder { color: $urdfs-subtle-fg; }
+        &:focus {
+            outline: none;
+            background: #fff;
+            border-color: $urdfs-brand;
+            box-shadow: 0 0 0 3px rgba($urdfs-brand, 0.12);
+        }
+    }
+}
+// En mode réduit, la recherche disparaît (icônes seules).
+.urdfs-collapsed .urdfs-navsearch { display: none; }
+
+// =============================================================
+// PALIER 14b — Bandeau « Connecté sous le nom … » : pastille discrète
+// =============================================================
+.urdfs-navbar .usertext .viewingas,
+.urdfs-navbar .meta.viewingas {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+    background: rgba($urdfs-brand, 0.08);
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+// =============================================================
+// PALIER 14c — Cibles tactiles plus généreuses (accessibilité)
+// =============================================================
+.urdfs-has-sidebar {
+    .action-icon {
+        width: 36px;
+        height: 36px;
+    }
+    // Les liens d'icône dans les tables ont une zone cliquable min.
+    td a.icon-no-margin,
+    td .action-menu .dropdown > a {
+        min-width: 36px;
+        min-height: 36px;
+    }
+}
+
+// =============================================================
+// PALIER 14d — Pages de RÉGLAGES admin : habillage cohérent
+// (fonds, cartes, titres) pour supprimer l'effet Moodle brut.
+// =============================================================
+body[id^="page-admin"] {
+    .settingsform,
+    #adminsettings,
+    .form-item.row,
+    fieldset.collapsible {
+        // Chaque réglage devient une ligne aérée, lisible.
+    }
+    #adminsettings h3,
+    .settingsform h3,
+    #region-main h2 {
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: $urdfs-foreground;
+        margin-top: 1.5rem;
+    }
+    // Chaque réglage : carte légère.
+    .form-item {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius-sm;
+        padding: 1rem 1.1rem;
+        margin-bottom: 0.75rem;
+        box-shadow: $urdfs-sh-sm;
+    }
+    .form-item .form-label label,
+    .form-item .form-label {
+        font-weight: 600;
+        color: $urdfs-foreground;
+    }
+    .form-item .form-description,
+    .form-item .form-defaultinfo {
+        color: $urdfs-muted-fg;
+        font-size: 0.82rem;
+    }
+}
+
+// =============================================================
+// PALIER 14e — MODE SOMBRE (activé par html.urdfs-dark + bascule header)
+// Couvre la coquille et les surfaces/texte principaux. Opt-in : le mode
+// clair reste le défaut, donc aucune régression si un widget profond n'est
+// pas encore couvert.
+// =============================================================
+html.urdfs-dark {
+  // Surfaces & texte de base
+  body, #page, #page.drawers, #topofscroll, .main-inner { background: #0B1220 !important; color: #E8EDF7; }
+  .urdfs-sidebar, .urdfs-brand, .urdfs-navbar, .urdfs-nav,
+  .card, .block, section#region-main, .list-group-item,
+  .dropdown-menu, .modal-content, .popover-region-container,
+  .urdfs-kpi, .urdfs-sstat, .urdfs-up, .urdfs-chart-card, .urdfs-actions,
+  .table-wrap, #sticky-footer {
+    background: #111A2C !important;
+    border-color: #1E2A44 !important;
+    color: #E8EDF7;
+  }
+
+  // Utilitaires Bootstrap/Moodle clairs -> sombres
+  .bg-white, .bg-light, .card-header, .list-group { background: #111A2C !important; }
+  .border, hr, .border-top, .border-bottom, .border-start, .border-end { border-color: #1E2A44 !important; }
+
+  // Texte
+  body, h1, h2, h3, h4, h5, h6, p, .h1, .h2, .h3, .h4, .h5,
+  .text-dark, .text-body, .urdfs-lbl, .urdfs-brand-name,
+  a:not(.btn):not(.nav-link) { color: #E8EDF7; }
+  .text-muted, .muted, .urdfs-brand-sub, .urdfs-group-label,
+  .caption, small, .dimmed_text { color: #94A3B8 !important; }
+
+  // Barre du haut (variante blanche -> sombre, contenu clair)
+  .urdfs-navbar, .urdfs-navbar * { color: #E8EDF7 !important; }
+  .urdfs-navbar .dropdown-menu, .urdfs-navbar .dropdown-menu * { color: #E8EDF7 !important; }
+
+  // Sidebar
+  .urdfs-link { color: #A6B3C9; }
+  .urdfs-link:hover, .urdfs-item.active > .urdfs-link { background: #1C2E4E; color: #8FB3F7; }
+  .urdfs-link .urdfs-ico { color: inherit; }
+  .urdfs-sublink { color: #94A3B8; }
+  .urdfs-sublink:hover, .urdfs-sublink.current { background: #1C2E4E; color: #8FB3F7; }
+  .urdfs-navsearch input { background: #17223A; border-color: #1E2A44; color: #E8EDF7; }
+
+  // Champs
+  .form-control, .custom-select, select, textarea, input[type="text"],
+  input[type="email"], input[type="password"], input[type="search"],
+  input[type="number"], .input, .urdfs-navbar .urdfs-search input {
+    background: #17223A !important;
+    border-color: #1E2A44 !important;
+    color: #E8EDF7 !important;
+  }
+  .form-control::placeholder, input::placeholder { color: #64748B !important; }
+
+  // Tableaux
+  table th, .ds-table thead th, .table thead th,
+  table.gradereport-grader-table tr.heading th,
+  table.gradereport-grader-table tr.avg th, table.gradereport-grader-table tr.avg td { background: #17223A !important; color: #94A3B8; }
+  table td, table th { border-color: #1E2A44 !important; }
+  tbody tr:hover, .urdfs-up-item:hover { background: rgba(110,155,240,0.06) !important; }
+
+  // Surfaces creusées / séparateurs
+  .urdfs-surface-alt, .bg-secondary, .initialbar a { background: #17223A !important; }
+
+  // Boutons primaires : fond plein assez soutenu pour du blanc
+  .btn-primary { background: #2F62CC !important; border-color: #2F62CC !important; color: #fff !important; }
+
+  // Bandeau d'accueil : garde son dégradé (déjà foncé), OK.
+  .urdfs-welcome { box-shadow: none; }
+
+  // Scrollbars
+  ::-webkit-scrollbar-thumb { background: #2C3B5C !important; }
+}
+// Icône de bascule
+.urdfs-darktoggle { color: inherit; font-size: 1rem; }
+
+// =============================================================
+// PALIER 15 — Vague 2 : tables en cartes sur mobile,
+//             états vides soignés, skeletons alignés au design.
+// =============================================================
+
+// --- Tables en CARTES EMPILÉES sous 768px (pages de listes) --------------
+// Sur mobile, une table dense est illisible ; on empile chaque ligne en carte.
+// Scopé aux listes d'utilisateurs (pas au carnet de notes, trop complexe).
+@media (max-width: 768px) {
+    #page-user-index,
+    #page-admin-user {
+        .table thead { display: none; } // les libellés d'en-tête sont masqués
+        .table,
+        .table tbody,
+        .table tr,
+        .table td {
+            display: block;
+            width: 100%;
+        }
+        .table tr {
+            background: #fff;
+            border: 1px solid $urdfs-border;
+            border-radius: $border-radius;
+            box-shadow: $urdfs-sh-sm;
+            padding: 0.85rem 1rem;
+            margin-bottom: 0.85rem;
+        }
+        .table td {
+            border: 0 !important;
+            padding: 0.3rem 0;
+        }
+        // Nom (1ʳᵉ cellule utile) mis en avant.
+        .table td:first-of-type,
+        .table td.col-check + td {
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+        .table td.col-actions,
+        .table td.cell.c0 { padding-top: 0.5rem; }
+        // La case à cocher passe en ligne discrète.
+        .table td.col-check { display: inline-block; width: auto; margin-right: 0.5rem; }
+        .row-actions { opacity: 1; } // actions toujours visibles sur mobile
+    }
+}
+
+// --- États VIDES soignés ---------------------------------------------------
+.urdfs-has-sidebar {
+    .empty-message,
+    [data-region="empty-message"],
+    .noresults,
+    .nothingtodisplay,
+    #region-main .alert-info:only-child {
+        text-align: center;
+        color: $urdfs-muted-fg;
+        padding: 2.5rem 1.25rem;
+        font-size: 0.92rem;
+        line-height: 1.6;
+    }
+}
+
+// --- SKELETONS : on aligne les placeholders Moodle (.bg-pulse-grey)
+//     sur notre effet « shimmer » et notre palette. -----------------------
+.urdfs-has-sidebar .bg-pulse-grey,
+.urdfs-has-sidebar [data-region="placeholder-container"] .bg-pulse-grey {
+    background: linear-gradient(90deg,
+        $urdfs-secondary 25%,
+        #ffffff 50%,
+        $urdfs-secondary 75%) !important;
+    background-size: 200% 100% !important;
+    animation: urdfs-shimmer 1.4s linear infinite;
+    border-radius: 0.4rem;
+}
+@keyframes urdfs-shimmer {
+    from { background-position: 200% 0; }
+    to   { background-position: -200% 0; }
+}
+
+// =============================================================
+// PALIER 20 — PAGES D'ACTIVITÉ (devoir, quiz, forum, ressource…)
+// Les pages mod-* affichaient des « boîtes » et des tables Moodle
+// brutes. On les passe en cartes propres + tables premium + un
+// bouton d'action principal bien visible. Aucune logique touchée.
+// =============================================================
+body[id^="page-mod-"] {
+
+    // Boîtes de contenu -> cartes blanches aérées.
+    #region-main .box,
+    #region-main .generalbox,
+    #region-main .activitydescription,
+    .submissionsummarytable,
+    .gradingsummary,
+    .quizinfo,
+    .quizattemptsummary,
+    .path-mod-assign .submissionstatustable,
+    .path-mod-forum .forumsearch {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        padding: 1.35rem 1.5rem;
+        margin-bottom: 1.25rem;
+    }
+
+    // Tables de résumé (statut de remise, tentatives) : rendu premium.
+    #region-main table.generaltable {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    #region-main table.generaltable th,
+    #region-main table.generaltable td {
+        padding: 0.7rem 0.9rem;
+        border: 0;
+        border-bottom: 1px solid $urdfs-border;
+        vertical-align: middle;
+    }
+    #region-main table.generaltable th {
+        background: $urdfs-secondary;
+        color: $urdfs-muted-fg;
+        font-weight: 600;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+    }
+    // Cellule de libellé (1re colonne des tables statut/remise) discrète.
+    #region-main table.generaltable td.cell.c0,
+    .submissionsummarytable th.cell,
+    .submissionstatustable th.cell {
+        color: $urdfs-muted-fg;
+        font-weight: 600;
+        width: 34%;
+    }
+    #region-main table.generaltable tr:last-child td { border-bottom: 0; }
+
+    // Bouton d'action principal (Déposer, Tenter le quiz, Répondre)
+    // mis en avant, centré, respirant.
+    .quizstartbuttondiv .btn,
+    .singlebutton.quizstartbuttondiv .btn,
+    [data-region="activity-information"] + div .btn-primary {
+        font-weight: 700;
+        padding: 0.7rem 1.6rem;
+    }
+
+    // Statut de remise coloré selon l'état (vert = remis, ambre = à faire).
+    .submissionstatussubmitted,
+    .submissionstatus.submitted,
+    .earlysubmission { color: $urdfs-success !important; font-weight: 600; }
+    .submissionstatus0,
+    .latesubmission,
+    .overduesubmission { color: $urdfs-destructive !important; font-weight: 600; }
+
+    // --- FORUM : liste des discussions en table premium ------------
+    .path-mod-forum table.forumheaderlist {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        overflow: hidden;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    .path-mod-forum table.forumheaderlist thead th {
+        background: $urdfs-secondary;
+        color: $urdfs-muted-fg;
+        font-weight: 600;
+        font-size: 0.82rem;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        border: 0;
+        padding: 0.7rem 0.9rem;
+    }
+    .path-mod-forum table.forumheaderlist td {
+        border: 0;
+        border-bottom: 1px solid $urdfs-border;
+        padding: 0.8rem 0.9rem;
+        vertical-align: middle;
+    }
+    .path-mod-forum table.forumheaderlist tbody tr:hover { background: $urdfs-secondary; }
+    .path-mod-forum .topic .starter { font-weight: 600; color: $urdfs-foreground; }
+
+    // Fils de discussion (posts) en cartes.
+    .path-mod-forum .forumpost,
+    .path-mod-forum article.forum-post-container {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        margin-bottom: 1rem;
+        overflow: hidden;
+    }
+    .path-mod-forum .forumpost .header,
+    .path-mod-forum .forum-post-container .header {
+        background: $urdfs-secondary;
+        border-bottom: 1px solid $urdfs-border;
+    }
+}
+
+// =============================================================
+// PALIER 21 — CALENDRIER PREMIUM ( /calendar/view.php + blocs )
+// La grille du mois passe d'une table Moodle brute à un vrai
+// calendrier moderne : carte, cases aérées, « aujourd'hui » mis
+// en valeur, événements en pastilles colorées par type. Le
+// mini-calendrier des blocs est assorti. Rien de la logique
+// (événements, liens) n'est touché.
+// =============================================================
+
+// --- Barre de navigation du mois (‹ Juillet 2026 ›) -----------
+.path-calendar .calendar-controls,
+.maincalendar .calendar-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.path-calendar .calendar-controls .current,
+.maincalendar .calendar-controls .current {
+    font-weight: 800;
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
+    color: $urdfs-foreground;
+    text-align: center;
+    flex: 1;
+}
+.path-calendar .calendar-controls .arrow_link,
+.maincalendar .calendar-controls .arrow_link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.45rem 0.85rem;
+    border: 1px solid $urdfs-border;
+    border-radius: 0.6rem;
+    color: $urdfs-foreground;
+    background: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.15s ease, border-color 0.15s ease;
+
+    &:hover { background: $urdfs-secondary; border-color: $urdfs-border-strong; }
+}
+
+// --- La grille du mois = une carte ----------------------------
+.maincalendar .calendarmonth,
+.path-calendar table.calendarmonth {
+    width: 100%;
+    background: #fff;
+    border: 1px solid $urdfs-border;
+    border-radius: $border-radius;
+    box-shadow: $urdfs-sh-sm;
+    border-collapse: separate;
+    border-spacing: 0;
+    overflow: hidden;
+    table-layout: fixed;
+}
+
+// En-têtes des jours de la semaine.
+.maincalendar .calendarmonth thead th,
+.path-calendar table.calendarmonth thead th {
+    background: $urdfs-secondary;
+    color: $urdfs-muted-fg;
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    text-align: center;
+    padding: 0.7rem 0.5rem;
+    border: 0;
+    border-bottom: 1px solid $urdfs-border;
+}
+
+// Cases des jours : hautes, aérées, séparées par un fin filet.
+.maincalendar .calendarmonth td,
+.path-calendar table.calendarmonth td {
+    height: 7.5rem;
+    vertical-align: top;
+    padding: 0.4rem 0.45rem;
+    border: 0;
+    border-right: 1px solid $urdfs-border;
+    border-bottom: 1px solid $urdfs-border;
+    background: #fff;
+    transition: background 0.12s ease;
+}
+.maincalendar .calendarmonth td:last-child,
+.path-calendar table.calendarmonth td:last-child { border-right: 0; }
+.maincalendar .calendarmonth tr:last-child td,
+.path-calendar table.calendarmonth tr:last-child td { border-bottom: 0; }
+
+.maincalendar .calendarmonth td:hover,
+.path-calendar table.calendarmonth td:hover { background: $urdfs-secondary; }
+
+// Numéro du jour, en haut à droite, discret.
+.maincalendar .calendarmonth td .day,
+.maincalendar .calendarmonth td a.day,
+.path-calendar table.calendarmonth td .day {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: $urdfs-muted-fg;
+    text-decoration: none;
+}
+
+// Cases hors du mois / vides : atténuées.
+.maincalendar .calendarmonth td.dayblank,
+.path-calendar table.calendarmonth td.dayblank { background: $urdfs-page; }
+.maincalendar .calendarmonth td.weekend,
+.path-calendar table.calendarmonth td.weekend { background: rgba(20, 56, 118, 0.015); }
+
+// AUJOURD'HUI : liseré marine + pastille sur le numéro.
+.maincalendar .calendarmonth td.today,
+.path-calendar table.calendarmonth td.today {
+    box-shadow: inset 0 0 0 2px $urdfs-brand;
+    background: $urdfs-accent;
+}
+.maincalendar .calendarmonth td.today .day,
+.path-calendar table.calendarmonth td.today .day {
+    background: $urdfs-brand;
+    color: #fff;
+    width: 1.6rem;
+    height: 1.6rem;
+    line-height: 1.6rem;
+    text-align: center;
+    border-radius: 50%;
+}
+
+// --- ÉVÉNEMENTS : pastilles colorées par type -----------------
+.maincalendar .calendarmonth td .events-new,
+.maincalendar .calendarmonth td .event,
+.maincalendar .calendarmonth ul.events-underway li,
+.path-calendar table.calendarmonth td .event {
+    display: block;
+    margin-top: 0.28rem;
+    padding: 0.15rem 0.45rem;
+    font-size: 0.74rem;
+    font-weight: 600;
+    line-height: 1.35;
+    border-radius: 0.4rem;
+    border-left: 3px solid $urdfs-brand;
+    background: $urdfs-accent;
+    color: $urdfs-foreground;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+// Types Moodle (bord + fond assortis).
+.maincalendar .calendarmonth td .calendar_event_course,
+.path-calendar .calendar_event_course {
+    border-left-color: $urdfs-brand;
+    background: $urdfs-accent;
+}
+.maincalendar .calendarmonth td .calendar_event_user,
+.path-calendar .calendar_event_user {
+    border-left-color: $urdfs-success;
+    background: rgba(6, 132, 60, 0.08);
+}
+.maincalendar .calendarmonth td .calendar_event_group,
+.path-calendar .calendar_event_group {
+    border-left-color: #8b5cf6;
+    background: rgba(139, 92, 246, 0.08);
+}
+.maincalendar .calendarmonth td .calendar_event_site,
+.path-calendar .calendar_event_site {
+    border-left-color: #f59e0b;
+    background: rgba(245, 158, 11, 0.10);
+}
+.maincalendar .calendarmonth td .calendar_event_category,
+.path-calendar .calendar_event_category {
+    border-left-color: #ef4444;
+    background: rgba(239, 68, 68, 0.08);
+}
+
+// --- Filtres / légende en pills -------------------------------
+.maincalendar .calendar_filters ul,
+.path-calendar .calendar_filters ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0;
+    margin: 0 0 1rem;
+}
+.maincalendar .calendar_filters li,
+.path-calendar .calendar_filters li {
+    padding: 0.3rem 0.7rem;
+    border: 1px solid $urdfs-border;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    background: #fff;
+}
+
+// --- Vue « jour » / « à venir » : événements en cartes --------
+.path-calendar .eventlist .event,
+.maincalendar .eventlist .event {
+    background: #fff;
+    border: 1px solid $urdfs-border;
+    border-left: 4px solid $urdfs-brand;
+    border-radius: $border-radius;
+    box-shadow: $urdfs-sh-sm;
+    padding: 1rem 1.25rem;
+    margin-bottom: 0.85rem;
+}
+.path-calendar .eventlist .event .name,
+.maincalendar .eventlist .event .name {
+    font-weight: 700;
+    color: $urdfs-foreground;
+}
+
+// --- MINI-CALENDRIER des blocs (colonne latérale) -------------
+.block .minicalendar,
+.block_calendar_month .calendarmonth {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 2px;
+    table-layout: fixed;
+}
+.block .minicalendar th {
+    background: transparent;
+    color: $urdfs-muted-fg;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.25rem 0;
+    border: 0;
+}
+.block .minicalendar td {
+    height: auto;
+    padding: 0;
+    border: 0;
+    text-align: center;
+}
+.block .minicalendar td a,
+.block .minicalendar td .day {
+    display: block;
+    padding: 0.3rem 0;
+    border-radius: 0.4rem;
+    font-size: 0.78rem;
+    color: $urdfs-foreground;
+    text-decoration: none;
+
+    &:hover { background: $urdfs-secondary; }
+}
+.block .minicalendar td.today {
+    box-shadow: none;
+    background: transparent;
+}
+.block .minicalendar td.today a,
+.block .minicalendar td.today .day {
+    background: $urdfs-brand;
+    color: #fff;
+    font-weight: 700;
+}
+.block .minicalendar td.hasevent a,
+.block .minicalendar td.duration_global a {
+    box-shadow: inset 0 -3px 0 $urdfs-success;
+}
+
+// =============================================================
+// PALIER 22 — PAGE DE CONNEXION « GLASS » ( /login/index.php )
+// Inspiration Netflix : fond bleu plein écran, carte en verre
+// dépoli (glassmorphism) translucide, formulaire centré et FIXE
+// (aucun défilement). Aucune logique d'auth touchée.
+// =============================================================
+body#page-login-index {
+    // Fond clair : met en valeur la carte blanche.
+    background: #f4f6f9;
+    min-height: 100vh;
+    overflow: hidden; // pas de défilement : la carte tient à l'écran
+
+    // On masque la coquille (navbar/sidebar) : page autonome.
+    .urdfs-navbar,
+    #urdfs-sidebar,
+    .urdfs-burger,
+    #nav-drawer,
+    .primary-navigation { display: none !important; }
+    #page-wrapper.urdfs-has-sidebar,
+    &.urdfs-has-sidebar { padding-left: 0 !important; }
+    #page, .drawers { margin: 0 !important; }
+
+    #page-content,
+    #region-main-box,
+    #region-main {
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+
+    // Conteneur FIXE, plein écran, carte centrée (pas de scroll).
+    #page {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        overflow-y: auto; // repli seulement si écran vraiment petit
+    }
+
+    // Largeur de la carte.
+    .loginform.urdfs-login-card,
+    .urdfs-login-card,
+    #region-main .card {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    // LA CARTE : blanche, bordure fine, ombre douce.
+    .loginform.urdfs-login-card,
+    .urdfs-login-card,
+    #region-main .card {
+        background: #ffffff;
+        border: 1px solid $urdfs-border;
+        border-radius: 1.25rem;
+        box-shadow: 0 20px 60px rgba(15, 26, 51, 0.10);
+        padding: 2.25rem 2.1rem 2rem;
+    }
+
+    // Logo couleur du site (sur fond clair).
+    .urdfs-login-brand {
+        height: 60px;
+        margin: 0 auto 1.1rem;
+        background: url('[[pix:theme|logo]]') center center / contain no-repeat;
+    }
+    // On neutralise le logo de site éventuel en double.
+    .login-logo { display: none; }
+
+    // Titre + sous-titre foncés.
+    .urdfs-login-title,
+    .card-body h1 {
+        text-align: center;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: $urdfs-brand;
+        font-size: 1.5rem;
+        margin: 0 0 0.35rem;
+    }
+    .urdfs-login-subtitle {
+        text-align: center;
+        color: $urdfs-muted-fg;
+        font-size: 0.92rem;
+        margin: 0 0 1.6rem;
+    }
+
+    // Libellés de champ.
+    .urdfs-field-label {
+        color: $urdfs-foreground;
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 0.4rem;
+    }
+
+    // Champs : fond gris clair, texte foncé.
+    .form-control,
+    input#username,
+    input#password {
+        height: 3rem;
+        border-radius: 0.7rem;
+        border: 1px solid $urdfs-border;
+        background: $urdfs-secondary;
+        color: $urdfs-foreground;
+        padding: 0 0.95rem;
+        font-size: 0.95rem;
+
+        &::placeholder { color: $urdfs-muted-fg; }
+        &:focus {
+            background: #fff;
+            border-color: $urdfs-success;
+            box-shadow: 0 0 0 3px rgba($urdfs-success, 0.15);
+            color: $urdfs-foreground;
+        }
+    }
+
+    // Ligne « se souvenir » + « mot de passe perdu ».
+    .urdfs-login-options {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin: 0.2rem 0 1.15rem;
+    }
+    .form-check-label,
+    .urdfs-remember label { color: $urdfs-foreground; font-size: 0.88rem; }
+    .form-check-input {
+        background-color: #fff;
+        border-color: $urdfs-border;
+        &:checked { background-color: $urdfs-success; border-color: $urdfs-success; }
+    }
+    .urdfs-forgot,
+    a { color: $urdfs-brand; font-size: 0.88rem; text-decoration: none; }
+    .urdfs-forgot:hover,
+    a:hover { color: $urdfs-success; text-decoration: underline; }
+
+    .form-group,
+    .mb-3 { margin-bottom: 1rem !important; }
+
+    // Bouton de connexion : vert de charte, plein.
+    .btn-primary,
+    button#loginbtn {
+        width: 100%;
+        height: 3rem;
+        border-radius: 0.7rem;
+        background: $urdfs-success;
+        border-color: $urdfs-success;
+        color: #fff;
+        font-weight: 700;
+        font-size: 1rem;
+        box-shadow: 0 10px 24px -10px rgba(6, 132, 60, 0.5);
+        transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+
+        &:hover { transform: translateY(-1px); filter: brightness(1.04); box-shadow: 0 14px 28px -10px rgba(6, 132, 60, 0.6); }
+    }
+
+    // Séparateur + connexions externes (OAuth).
+    .login-divider {
+        border-top: 1px solid $urdfs-border;
+        margin: 1.4rem 0;
+    }
+    .login-heading { color: $urdfs-muted-fg; text-align: center; }
+    .login-identityprovider-btn,
+    .login-identityproviders a.btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        width: 100%;
+        height: 2.85rem;
+        margin-bottom: 0.6rem;
+        border: 1px solid $urdfs-border !important;
+        border-radius: 0.7rem;
+        background: #fff !important;
+        color: $urdfs-foreground !important;
+        font-weight: 600;
+        text-decoration: none;
+
+        &:hover { background: $urdfs-secondary !important; }
+    }
+
+    // Sécurité : masque tout superflu résiduel.
+    .login-instructions,
+    .instructions,
+    .login-signup,
+    .login-guest,
+    #guestlogin,
+    .cookieuse { display: none !important; }
+
+    // Pied de page discret + menu de langue.
+    .urdfs-login-footer { margin-top: 1.1rem; text-align: center; }
+    .urdfs-login-footer a,
+    .urdfs-login-footer .dropdown-toggle,
+    #page-footer > .footer-content,
+    footer > .footer-content { color: $urdfs-muted-fg; }
+    .urdfs-login-footer a:hover { color: $urdfs-brand; }
+}
+
+// =============================================================
+// PALIER 23 — BOUTON D'AIDE FLOTTANT « ? » + son popover (global)
+// Le petit bouton rond en bas à droite (aide / infos Moodle) était
+// trop gros, mal centré, et son contenu s'affichait en blanc sur
+// blanc. On le rend net, compact et lisible — partout.
+// =============================================================
+
+// Le bouton rond : compact, ? centré, visible au survol.
+.footer-popover > button,
+.footer-popover .btn,
+.btn-footer-popover,
+[data-action="footer-popover"],
+[data-action="footer-popover-toggle"],
+.footer-popover-toggle {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 50% !important;
+    background: #fff !important;
+    color: $urdfs-brand !important;
+    border: 1px solid $urdfs-border !important;
+    box-shadow: $urdfs-sh-md !important;
+    font-size: 1.05rem;
+    line-height: 1;
+    transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+// ? parfaitement centré (aucune marge d'icône résiduelle).
+.footer-popover > button > *,
+.footer-popover .btn > *,
+.btn-footer-popover > *,
+[data-action="footer-popover"] > *,
+[data-action="footer-popover-toggle"] > *,
+.footer-popover-toggle > * { margin: 0 !important; }
+
+// Survol bien visible : cercle marine, ? blanc.
+.footer-popover > button:hover,
+.footer-popover .btn:hover,
+.btn-footer-popover:hover,
+[data-action="footer-popover"]:hover,
+[data-action="footer-popover-toggle"]:hover,
+.footer-popover-toggle:hover {
+    background: $urdfs-brand !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: $urdfs-sh-lg !important;
+}
+.footer-popover > button:hover .icon,
+.footer-popover .btn:hover .icon,
+.btn-footer-popover:hover .icon { color: #fff !important; }
+
+// Le POPOVER : carte propre, texte lisible (corrige le blanc/blanc).
+.footer-content-popover {
+    background: #fff !important;
+    border: 1px solid $urdfs-border !important;
+    border-radius: 0.9rem !important;
+    box-shadow: $urdfs-sh-lg !important;
+    padding: 0.35rem 0.2rem !important;
+}
+.footer-content-popover,
+.footer-content-popover *,
+.footer-content-popover .footer-section,
+.footer-content-popover div,
+.footer-content-popover span,
+.footer-content-popover p { color: $urdfs-foreground !important; }
+.footer-content-popover a { color: $urdfs-brand !important; text-decoration: none; }
+.footer-content-popover a:hover { text-decoration: underline; }
+.footer-content-popover hr,
+.footer-content-popover .dropdown-divider { border-color: $urdfs-border !important; }
+
+// =============================================================
+// PALIER 24 — ACCUEIL DU SITE + LISTING COURS / CATÉGORIES
+// Les fiches de cours (.coursebox) et l'arborescence de catégories
+// passent d'un rendu Moodle brut à des cartes premium hoverables.
+// Concerne l'accueil du site et /course/index.php.
+// =============================================================
+.urdfs-has-sidebar {
+
+    // --- FICHE DE COURS = carte premium -----------------------
+    .coursebox {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        padding: 1.25rem 1.4rem;
+        margin-bottom: 1rem;
+        transition: box-shadow 0.18s ease, border-color 0.18s ease, transform 0.15s ease;
+
+        &:hover {
+            box-shadow: $urdfs-sh-md;
+            border-color: $urdfs-border-strong;
+            transform: translateY(-2px);
+        }
+    }
+    // Grille de cartes quand plusieurs cours (accueil / catégorie).
+    .courses.frontpage-course-list-all,
+    .frontpage-course-list-enrolled,
+    .category .courses {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+    }
+    .courses.frontpage-course-list-all .coursebox,
+    .category .courses .coursebox { margin-bottom: 0; }
+
+    // Titre du cours.
+    .coursebox .coursename,
+    .coursebox h3 a,
+    .coursebox .coursename a {
+        font-weight: 700;
+        font-size: 1.05rem;
+        letter-spacing: -0.01em;
+        color: $urdfs-foreground;
+        text-decoration: none;
+
+        &:hover { color: $urdfs-brand; }
+    }
+    // Résumé / infos secondaires.
+    .coursebox .summary,
+    .coursebox .content .summary { color: $urdfs-muted-fg; font-size: 0.9rem; margin-top: 0.5rem; }
+    .coursebox .teachers,
+    .coursebox .courseimage img { border-radius: 0.6rem; }
+    .coursebox .teachers li { color: $urdfs-muted-fg; font-size: 0.85rem; }
+
+    // Badge d'inscription / infos.
+    .coursebox .enrolmenticons a,
+    .coursebox .moreinfo a { color: $urdfs-brand; }
+
+    // --- EN-TÊTES DE CATÉGORIE --------------------------------
+    .course-category-listing .category > .info > .categoryname,
+    #category-listing .categoryname,
+    .category .info h3,
+    .categorylist .categoryname {
+        font-weight: 700;
+        font-size: 1.1rem;
+        letter-spacing: -0.01em;
+        color: $urdfs-foreground;
+    }
+    // Ligne de catégorie cliquable (gestion des cours).
+    .course-category-listing .listitem {
+        border-radius: 0.7rem;
+        transition: background 0.12s ease;
+        &:hover { background: $urdfs-secondary; }
+    }
+    .course-category-listing .listitem.selected { background: $urdfs-accent; }
+
+    // Boîte d'infos de catégorie (description en tête de page).
+    .category_description,
+    .categorytree .category .info {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        padding: 1rem 1.25rem;
+    }
+
+    // Barre de recherche de cours en tête de listing.
+    .course-search-form .btn,
+    #coursesearch .btn { border-radius: 0.6rem; }
+    .course-search-form input[type="text"],
+    #coursesearch input[type="text"] {
+        border-radius: 0.6rem;
+        border: 1px solid $urdfs-border;
+    }
+}
+
+// =============================================================
+// PALIER 25 — PAGES DU COMPTE (préférences, notifications, messagerie)
+// Les écrans atteints depuis le menu en haut à droite passent d'un
+// rendu Moodle brut à des cartes cohérentes avec le reste.
+// =============================================================
+
+// --- PAGE PRÉFÉRENCES ( /user/preferences.php ) --------------
+#page-user-preferences {
+    .preferences-container [class*="col-"] > div,
+    .preferences-group,
+    .preferences-container .card {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        padding: 1.25rem 1.4rem;
+        margin-bottom: 1.25rem;
+        height: calc(100% - 1.25rem);
+    }
+    .preferences-group h3,
+    .preferences-container h3 {
+        font-weight: 700;
+        font-size: 1.02rem;
+        letter-spacing: -0.01em;
+        color: $urdfs-foreground;
+        margin-bottom: 0.85rem;
+    }
+    .preferences-group ul,
+    .preferences-container ul { list-style: none; padding: 0; margin: 0; }
+    .preferences-group li,
+    .preferences-container li { margin: 0; }
+    .preferences-group li a,
+    .preferences-container li a {
+        display: block;
+        padding: 0.5rem 0.6rem;
+        margin: 0 -0.6rem;
+        border-radius: 0.5rem;
+        color: $urdfs-brand;
+        text-decoration: none;
+
+        &:hover { background: $urdfs-secondary; }
+    }
+}
+
+// --- POPOVERS notifications & messages (haut à droite) -------
+.urdfs-navbar .popover-region-content-container,
+.urdfs-navbar .popover-region-content {
+    background: #fff;
+}
+.urdfs-navbar .popover-region-header-container {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.75rem 0.9rem;
+    border-bottom: 1px solid $urdfs-border;
+}
+.urdfs-navbar .popover-region-header-container h3,
+.urdfs-navbar .popover-region-header-text {
+    font-weight: 700;
+    font-size: 0.98rem;
+    color: $urdfs-foreground;
+    margin: 0 auto 0 0; // titre à gauche, actions poussées à droite
+}
+// Icônes d'action (tout marquer lu, réglages, fermer) groupées à droite.
+.urdfs-navbar .popover-region-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+    margin-left: auto;
+}
+.urdfs-navbar .popover-region-header-actions a,
+.urdfs-navbar .popover-region-header-actions button,
+.urdfs-navbar .popover-region-header-container > a,
+.urdfs-navbar .popover-region-header-container > button {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border-radius: 0.5rem;
+    color: $urdfs-muted-fg;
+    background: transparent;
+    border: 0;
+    transition: background 0.12s ease, color 0.12s ease;
+
+    &:hover { background: $urdfs-secondary; color: $urdfs-brand; }
+}
+.urdfs-navbar .popover-region-header-actions .icon,
+.urdfs-navbar .popover-region-header-container > a .icon { margin: 0; }
+.urdfs-navbar .popover-region .notification,
+.urdfs-navbar [data-region="popover-region-notifications"] .list-group-item,
+.urdfs-navbar .popover-region-content .list-group-item {
+    padding: 0.8rem 1rem;
+    border: 0;
+    border-bottom: 1px solid $urdfs-border;
+    transition: background 0.12s ease;
+
+    &:hover { background: $urdfs-secondary; }
+}
+.urdfs-navbar .popover-region .unread,
+.urdfs-navbar .popover-region-content .unread { background: $urdfs-accent; }
+.urdfs-navbar .popover-region-footer-container {
+    padding: 0.65rem 1rem;
+    border-top: 1px solid $urdfs-border;
+}
+.urdfs-navbar .popover-region-footer-container a { color: $urdfs-brand; font-weight: 600; }
+
+// --- MESSAGERIE ( /message/index.php + tiroir ) --------------
+#page-message-index .messaging-area-container,
+[data-region="message-drawer"] {
+    background: #fff;
+    border: 1px solid $urdfs-border;
+    border-radius: $border-radius;
+    box-shadow: $urdfs-sh-sm;
+    overflow: visible; // ne pas rogner le point de présence
+}
+[data-region="message-drawer"] [data-region="header-container"],
+#page-message-index .messaging-area-container .contacts-area {
+    border-color: $urdfs-border;
+}
+[data-region="message-drawer"] [data-region="view-contacts"] [data-region="contact-container"],
+#page-message-index .contacts-area .contact,
+[data-region="message-drawer"] .list-group-item {
+    transition: background 0.12s ease;
+
+    // Survol discret qui ne masque rien.
+    &:hover { background: $urdfs-accent; }
+}
+// Le point de présence (en ligne) reste toujours visible, au-dessus.
+[data-region="message-drawer"] .contact-online,
+[data-region="message-drawer"] .contact-online .icon,
+[data-region="message-drawer"] [data-region="contact-icon"] .online,
+[data-region="message-drawer"] .online-status,
+[data-region="message-drawer"] .text-success,
+#page-message-index .contact-online .icon,
+#page-message-index .online-status {
+    position: relative;
+    z-index: 2;
+    color: $urdfs-ok !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+// Bulles de conversation.
+[data-region="message-drawer"] .message.left .content,
+#page-message-index .message.left .content {
+    background: $urdfs-secondary;
+    border-radius: 0.9rem 0.9rem 0.9rem 0.25rem;
+}
+[data-region="message-drawer"] .message.right .content,
+#page-message-index .message.right .content {
+    background: $urdfs-brand;
+    color: #fff;
+    border-radius: 0.9rem 0.9rem 0.25rem 0.9rem;
+}
+
+// =============================================================
+// PALIER 26 — ADMINISTRATION & RAPPORTS (tables denses)
+// Les pages d'admin et de rapports affichaient des tables et des
+// boîtes Moodle brutes. On applique le traitement premium : tables
+// lisibles, boîtes de réglages en cartes, filtres soignés.
+// =============================================================
+body[id^="page-admin-"],
+body[id^="page-report-"],
+body[id^="page-grade-report-"] {
+
+    // Tables (admin, rapports) en version premium.
+    #region-main table.generaltable,
+    #region-main table.admintable,
+    #region-main table.reporttable,
+    #region-main table.flexible {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        overflow: hidden;
+        box-shadow: $urdfs-sh-sm;
+    }
+    #region-main table.generaltable th,
+    #region-main table.admintable th,
+    #region-main table.reporttable th,
+    #region-main table.flexible th {
+        background: $urdfs-secondary;
+        color: $urdfs-muted-fg;
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        border: 0;
+        border-bottom: 1px solid $urdfs-border;
+        padding: 0.7rem 0.85rem;
+    }
+    #region-main table.generaltable td,
+    #region-main table.admintable td,
+    #region-main table.reporttable td,
+    #region-main table.flexible td {
+        border: 0;
+        border-bottom: 1px solid $urdfs-border;
+        padding: 0.65rem 0.85rem;
+        vertical-align: middle;
+    }
+    #region-main table tbody tr:last-child td { border-bottom: 0; }
+    #region-main table tbody tr:hover { background: $urdfs-secondary; }
+
+    // Défilement horizontal propre sur les tables larges.
+    .table-responsive,
+    .flexible-wrap { overflow-x: auto; }
+
+    // Boîtes de réglages en cartes.
+    #region-main .box.generalbox,
+    #region-main .box.py-3,
+    .settingsform > fieldset,
+    .adminsettingspage .box {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 1.25rem;
+    }
+
+    // Ligne de réglage (label + description + champ) aérée.
+    .form-item,
+    .adminsettings .form-item {
+        padding: 1rem 0;
+        border-bottom: 1px solid $urdfs-border;
+    }
+    .form-item:last-child { border-bottom: 0; }
+    .form-item .form-label label,
+    .form-item .form-label {
+        font-weight: 600;
+        color: $urdfs-foreground;
+    }
+    .form-item .form-description,
+    .form-item .form-defaultinfo { color: $urdfs-muted-fg; font-size: 0.85rem; }
+
+    // Filtres de rapport (barre au-dessus des tables).
+    .gradereportoverview .btn,
+    .report-selector .btn,
+    #region-main .singleselect .btn { border-radius: 0.6rem; }
+}
+
+// --- PAGE « ADMINISTRATION DU SITE » : sections en cartes -----
+#page-admin-search .settingsdependency,
+#page-admin-search #adminsettings > div,
+.page-admin-search .block_settings .card,
+#page-admin-search h2 + .box {
+    background: #fff;
+    border: 1px solid $urdfs-border;
+    border-radius: $border-radius;
+    box-shadow: $urdfs-sh-sm;
+}
+
+// =============================================================
+// PALIER 27 — Page BigBlueButton (visio + enregistrements)
+// Tableau des enregistrements propre + défilement contenu, plus
+// de débordement de page.
+// =============================================================
+// IMPORTANT : tout est limité à #region-main. La sidebar et les barres
+// d'outils sont EN DEHORS de #region-main -> elles ne sont jamais touchées.
+// Le tableau des enregistrements est une YUI3 DataTable (largeur fixe en
+// ligne) : on fait défiler le conteneur, pas la page.
+#page-mod-bigbluebuttonbn-view #region-main {
+
+    // La PAGE reste fixe : la zone de contenu ne déborde jamais.
+    max-width: 100%;
+    overflow-x: hidden;
+
+    // Le widget ne force pas la page à s'élargir.
+    .yui3-datatable {
+        width: 100% !important;
+        max-width: 100%;
+    }
+
+    // LE CADRE qui défile (gauche/droite ET haut/bas). Le tableau garde sa
+    // largeur intrinsèque (colgroup YUI) -> c'est ce conteneur qui scrolle.
+    .yui3-datatable-content {
+        overflow: auto;
+        max-width: 100%;
+        max-height: 62vh;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        background: #fff;
+        margin: 1rem 0;
+        scrollbar-width: thin;
+        scrollbar-color: rgba($urdfs-brand, 0.35) transparent;
+    }
+
+    table.yui3-datatable-table {
+        margin: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+        background: #fff;
+    }
+
+    // En-tête charte : bleu marine, texte blanc.
+    .yui3-datatable-header,
+    table.yui3-datatable-table thead th {
+        background: $urdfs-brand !important;
+        color: #fff !important;
+        font-weight: 700;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        border: 0 !important;
+        padding: 0.85rem 1rem;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+    .yui3-datatable-header .yui3-datatable-sort-liner,
+    .yui3-datatable-header a { color: #fff !important; }
+    .yui3-datatable-sort-indicator { filter: brightness(0) invert(1); opacity: 0.9; }
+
+    // Cellules : fond blanc, filet fin, survol vert léger (charte).
+    table.yui3-datatable-table td,
+    .yui3-datatable-cell {
+        border: 0 !important;
+        border-bottom: 1px solid $urdfs-border !important;
+        padding: 0.7rem 1rem;
+        vertical-align: middle;
+        color: $urdfs-foreground;
+        background: #fff;
+    }
+    .yui3-datatable-data tr:hover .yui3-datatable-cell { background: rgba($urdfs-success, 0.07); }
+
+    // Colonne « Nom » élargie (le titre de la séance est à l'étroit à 93px).
+    .yui3-datatable-col-recording { min-width: 260px !important; white-space: nowrap; }
+
+    // LA « BARRE GRISE » de pagination (en haut ; et en bas dans le tfoot).
+    // La barre du haut reste collée à gauche quand on défile horizontalement.
+    .yui3-datatable-paginator {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.4rem 0.85rem;
+        padding: 0.6rem 0.9rem;
+        background: $urdfs-secondary;
+        border-bottom: 1px solid $urdfs-border;
+        position: sticky;
+        left: 0;
+    }
+    .yui3-datatable-paginator-wrapper {
+        padding: 0 !important;
+        background: $urdfs-secondary;
+    }
+    .yui3-datatable-paginator-wrapper .yui3-datatable-paginator {
+        border-bottom: 0;
+        border-top: 1px solid $urdfs-border;
+    }
+
+    // Boutons de pagination : lisibles ; désactivés = discrets.
+    .yui3-datatable-paginator-control {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: 0.4rem;
+        padding: 0.25rem 0.65rem;
+        color: $urdfs-brand;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    .yui3-datatable-paginator-control-disabled {
+        color: $urdfs-muted-fg;
+        background: transparent;
+        border-color: transparent;
+        opacity: 0.7;
+        cursor: default;
+    }
+    .yui3-datatable-paginator input[type="text"] {
+        width: 3rem;
+        border: 1px solid $urdfs-border;
+        border-radius: 0.4rem;
+        padding: 0.2rem 0.4rem;
+        text-align: center;
+    }
+    .yui3-datatable-paginator select {
+        border: 1px solid $urdfs-border;
+        border-radius: 0.4rem;
+        padding: 0.2rem 0.5rem;
+        background: #fff;
+        min-height: 32px;
+    }
+    .yui3-datatable-paginator button:not(.yui3-datatable-paginator-control) {
+        background: $urdfs-brand;
+        color: #fff;
+        border: 0;
+        border-radius: 0.4rem;
+        padding: 0.25rem 0.75rem;
+        cursor: pointer;
+        &:hover { background: darken($urdfs-brand, 6%); }
+    }
+
+    // Boutons d'action dans les cellules (Présentation, icônes barre d'outils).
+    .yui3-datatable-cell .btn { border-radius: $border-radius-sm; }
+    .yui3-datatable-cell .action-icon .icon { color: $urdfs-brand; }
+}
+
+// =============================================================
+// PALIER 27d — Page Participants : suppression de la barre
+// alphabetique (A B C ...). Elle fait doublon avec le filtre de
+// recherche par nom, qui est plus rapide et plus propre.
+// =============================================================
+.initialbar,
+.initialbargroup,
+#region-main .initialbar,
+body.path-user .initialbar,
+body.path-enrol .initialbar {
+    display: none !important;
+}
+
+// =============================================================
+// Page « Liste des utilisateurs » ( /admin/user.php )
+// Zone basse aeree : telechargement sur sa propre ligne, actions
+// groupees en dessous, et suppression des blocs vides.
+// =============================================================
+#page-admin-user {
+
+    // --- PANNEAU DE FILTRES SIMPLIFIE ---------------------------------
+    // 20 filtres, c'est illisible. On masque tout, puis on ne reaffiche
+    // que les 6 reellement utiles au quotidien.
+    .reportbuilder-filters-wrapper .filter { display: none; }
+    .filter[data-filter-for="Nom complet"],
+    .filter[data-filter-for="Adresse de courriel"],
+    .filter[data-filter-for="Nom d’utilisateur"],
+    .filter[data-filter-for="Identifiant cohorte"],
+    .filter[data-filter-for="Rôle dans le cours"],
+    .filter[data-filter-for="Suspendu"] { display: block; }
+
+    // Un filtre = un bloc lisible (titre + champs alignes).
+    .reportbuilder-filters-wrapper .filter {
+        border-bottom: 1px solid $urdfs-border;
+    }
+    .filter-name {
+        font-weight: 700;
+        color: $urdfs-foreground;
+        margin-bottom: 0.35rem;
+    }
+    .filter .col-md-3 { display: none; }        // colonne de label vide
+    .filter .col-md-9 { flex: 0 0 100%; max-width: 100%; }
+    .filter .mb-3 { margin-bottom: 0.4rem !important; }
+
+    // Les blocs blancs qui « depassent » a droite de chaque filtre sont
+    // des zones de message d'erreur VIDES : on les masque.
+    .filter .form-control-feedback:empty,
+    .filter .invalid-feedback:empty,
+    .filter [data-fieldtype]:empty { display: none !important; }
+
+    // Le champ occupe la largeur du filtre, sans espace residuel.
+    .filter .d-flex.flex-wrap.align-items-center { display: block !important; }
+    .filter select.form-select,
+    .filter input.form-control { width: 100%; max-width: 100%; }
+
+    // Espace entre le tableau et la zone de telechargement.
+    .table-responsive,
+    [data-region="core_table/dynamic"] { margin-bottom: 1.5rem; }
+
+    // --- TELECHARGEMENT : libelle sur une ligne, controles en dessous --
+    form.dataformatselector {
+        margin: 1.5rem 0 1.25rem;
+        padding: 1rem 1.15rem;
+        background: $urdfs-secondary;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+
+        > .d-flex {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 0.6rem;
+        }
+        label { font-weight: 600; margin: 0; }
+        select {
+            max-width: 320px;
+            min-height: 40px;
+            border-radius: 0.5rem;
+            border: 1px solid $urdfs-border;
+            background: #fff;
+        }
+    }
+
+    // --- ACTIONS GROUPEES : compact, plus de bande blanche a droite ----
+    #user-bulk-action-form { margin: 1.25rem 0 1.5rem; }
+    #fgroup_id_actionsgrp {
+        display: flex !important;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+        margin: 0 !important;
+    }
+    #fgroup_id_actionsgrp > .col-md-3,
+    #fgroup_id_actionsgrp > .col-md-9 {
+        flex: 0 0 auto;
+        max-width: none;
+        width: auto;
+        padding: 0;
+    }
+    #fgroup_id_actionsgrp p { font-weight: 600; }
+    #fgroup_id_actionsgrp .mb-3 { margin-bottom: 0 !important; }
+    #fgroup_id_actionsgrp fieldset { width: auto !important; }
+    #id_action {
+        min-width: 260px;
+        min-height: 40px;
+        border-radius: 0.5rem;
+        border: 1px solid $urdfs-border;
+    }
+}
+
+// =============================================================
+// Pagination du HAUT masquee PARTOUT : celle du bas suffit.
+// (:has(~ table) = la pagination suivie d'un tableau = celle du haut)
+// =============================================================
+#region-main {
+    ul.pagination:has(~ table),
+    ul.pagination:has(~ div table),
+    ul.pagination:has(~ .table-responsive),
+    nav:has(> ul.pagination):has(~ table),
+    nav:has(> ul.pagination):has(~ .table-responsive) {
+        display: none !important;
+    }
+}
+
+#page-user-index {
+
+    // (La recherche live a ete retiree : le filtre natif de Moodle suffit.)
+
+    // 2) Zone d'actions groupees (bas de tableau) : barre nette et alignee.
+    #formactionid,
+    .bulk-action,
+    #participantsform > div:last-child {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    // Le lien « Afficher tous les 21 » : discret, aligne a droite.
+    .paging-morelink {
+        width: 100%;
+        text-align: right;
+        margin: 0.5rem 0 0.75rem;
+        a {
+            color: $urdfs-brand;
+            font-weight: 600;
+            font-size: 0.88rem;
+            text-decoration: none;
+            &:hover { text-decoration: underline; }
+        }
+    }
+    // Le bloc « Sélectionner … / Pour les utilisateurs sélectionnés … »
+    // devient une barre grise claire, arrondie et coherente.
+    #participantsform .d-flex:last-of-type,
+    .stickyfooter .d-flex {
+        background: $urdfs-secondary;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius-sm;
+        padding: 0.75rem 1rem;
+        gap: 0.75rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    #participantsform select,
+    #formactionid {
+        border: 1px solid $urdfs-border;
+        border-radius: 0.5rem;
+        min-height: 40px;
+        background: #fff;
+    }
+    // Bouton « Sélectionner les N utilisateurs » : style secondaire propre.
+    #participantsform input[type="button"],
+    #participantsform button:not(.btn-primary) {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: 0.5rem;
+        color: $urdfs-foreground;
+        font-weight: 600;
+        padding: 0.5rem 0.9rem;
+        &:hover { background: $urdfs-accent; color: $urdfs-brand; }
+    }
+}
+
+// =============================================================
+// PALIER 27c — Ajustements espace ETUDIANT
+// L'etudiant a peu d'entrees de menu : la recherche du menu est
+// inutile, on la masque pour alleger sa navigation.
+// =============================================================
+body.urdfs-role-student .urdfs-navsearch { display: none; }
+body.urdfs-role-student .urdfs-nav { padding-top: 0.5rem; }
+
+// --- Messagerie : la zone ne doit pas rester vide/ecrasee -----
+// (l'app de messagerie est un composant JS a hauteur variable)
+#page-message-index {
+    #region-main,
+    .message-app,
+    .message-app.main {
+        min-height: 70vh;
+        height: auto !important;
+    }
+    // Le conteneur blanc epouse l'app, sans bloc vide au-dessus.
+    #region-main > [role="main"] { min-height: 70vh; }
+}
+
+// =============================================================
+// PALIER 27b — Pastille de compteur (cloche / messages)
+// Le compteur doit etre une pastille ronde collee en haut a droite
+// de l'icone, pas un chiffre pose sous l'icone.
+// =============================================================
+.urdfs-navbar .popover-region,
+.urdfs-navbar .popover-region-toggle,
+.urdfs-navbar [data-region="popover-region-notifications"],
+.urdfs-navbar [data-region="popover-region-messages"] {
+    position: relative;
+}
+
+// Pastille = simple POINT (sans chiffre) quand il y a du non-lu.
+.urdfs-navbar .count-container,
+.urdfs-navbar .popover-region .count-container,
+.urdfs-navbar .badge-pill,
+.urdfs-navbar .popover-region-toggle .badge {
+    position: absolute !important;
+    top: 2px;
+    right: 2px;
+    width: 9px;
+    height: 9px;
+    min-width: 0;
+    padding: 0;
+    // Le chiffre est masque : seule la pastille reste visible.
+    font-size: 0 !important;
+    color: transparent !important;
+    overflow: hidden;
+    background: $urdfs-destructive !important;
+    border: 2px solid #fff;
+    border-radius: 999px;
+    box-shadow: 0 1px 3px rgba(15, 26, 51, 0.25);
+    z-index: 3;
+    pointer-events: none;
+}
+
+// Rien du tout quand il n'y a ni message ni notification.
+.urdfs-navbar .count-container.hidden,
+.urdfs-navbar .count-container:empty,
+.urdfs-navbar .popover-region .count-container.hidden,
+.urdfs-navbar .badge-pill.hidden,
+.urdfs-navbar .popover-region-toggle .badge.hidden {
+    display: none !important;
+}
+
+// =============================================================
+// PALIER 27e — ESPACE ENSEIGNANT (distinct de l'espace etudiant)
+// Bandeau plus « gestion », 4 statistiques, panneau de corrections
+// et grille de cours avec acces rapides.
+// =============================================================
+
+// Bandeau enseignant : teinte plus profonde + liseré vert (pilotage).
+.urdfs-welcome--teacher {
+    background: linear-gradient(135deg, #0f2a5c 0%, $urdfs-brand 60%, #123a7a 100%);
+    border-left: 5px solid $urdfs-success;
+}
+.urdfs-welcome--teacher .urdfs-welcome-sub strong {
+    color: #fff;
+    background: rgba($urdfs-success, 0.35);
+    padding: 0 0.35rem;
+    border-radius: 0.35rem;
+}
+
+// 4 statistiques (au lieu de 3 pour l'etudiant).
+.urdfs-sstats--teacher {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+@media (min-width: 1200px) {
+    .urdfs-sstats--teacher { grid-template-columns: repeat(2, 1fr); }
+}
+
+// Panneau « Travaux a corriger ».
+.urdfs-tograde {
+    background: #fff;
+    border: 1px solid $urdfs-border;
+    border-radius: $border-radius;
+    box-shadow: $urdfs-sh-sm;
+    padding: 1.1rem 1.25rem;
+    margin-top: 1rem;
+}
+.urdfs-grade-badge {
+    background: rgba($urdfs-warning, 0.16);
+    color: darken($urdfs-warning, 15%);
+    font-weight: 800;
+    font-size: 0.8rem;
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+    flex-shrink: 0;
+}
+
+// Grille « Mes cours » avec acces rapides.
+.urdfs-tcourses { margin-top: 1.5rem; }
+.urdfs-tcourse-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}
+.urdfs-tcourse {
+    background: #fff;
+    border: 1px solid $urdfs-border;
+    border-radius: $border-radius;
+    box-shadow: $urdfs-sh-sm;
+    padding: 1.1rem 1.2rem;
+    transition: box-shadow 0.18s ease, transform 0.18s ease;
+
+    &:hover { box-shadow: $urdfs-sh-lg; transform: translateY(-2px); }
+}
+.urdfs-tcourse-title {
+    display: block;
+    font-weight: 700;
+    color: $urdfs-brand;
+    text-decoration: none;
+    line-height: 1.3;
+    &:hover { color: $urdfs-success; }
+}
+.urdfs-tcourse-meta {
+    color: $urdfs-muted-fg;
+    font-size: 0.82rem;
+    margin: 0.35rem 0 0.9rem;
+    i { margin-right: 0.35rem; }
+}
+.urdfs-tcourse-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+
+    a {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: $urdfs-foreground;
+        background: $urdfs-secondary;
+        border: 1px solid $urdfs-border;
+        border-radius: 999px;
+        padding: 0.3rem 0.7rem;
+        text-decoration: none;
+        transition: background 0.15s ease, color 0.15s ease;
+
+        &:hover { background: $urdfs-accent; color: $urdfs-brand; border-color: rgba($urdfs-brand, 0.3); }
+        i { font-size: 0.75rem; }
+    }
+}
+
+// =============================================================
+// PALIER 27g — Sidebar : le libelle NAVIGUE, le chevron DEPLIE
+// (avant, cliquer sur « Cours » ne faisait que deplier : un clic
+// de trop pour une page consultee en permanence).
+// =============================================================
+.urdfs-parent {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+}
+.urdfs-parent .urdfs-parent-link {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.urdfs-chevbtn {
+    flex: 0 0 auto;
+    width: 34px;
+    display: grid;
+    place-items: center;
+    background: transparent;
+    border: 0;
+    color: inherit;
+    cursor: pointer;
+    border-radius: $border-radius-sm;
+    opacity: 0.75;
+    transition: opacity 0.15s ease, background 0.15s ease;
+
+    &:hover { opacity: 1; background: rgba(255, 255, 255, 0.08); }
+}
+.urdfs-chevbtn .urdfs-chev {
+    transition: transform 0.22s ease;
+    font-size: 0.72rem;
+}
+.urdfs-item.open .urdfs-chevbtn .urdfs-chev { transform: rotate(90deg); }
+
+// En mode reduit, seul l'icone reste : on masque le chevron.
+.urdfs-collapsed .urdfs-chevbtn { display: none; }
+
+// =============================================================
+// PALIER 27f — ESPACE TECHNOPEDAGOGUE (pilotage / supervision)
+// Identite visuelle distincte : liseré doré (pilotage) et grille
+// de supervision, differente de l'espace enseignant.
+// =============================================================
+.urdfs-welcome--techno {
+    background: linear-gradient(135deg, #10305f 0%, $urdfs-brand 55%, #0f2a5c 100%);
+    border-left: 5px solid $urdfs-gold;
+}
+
+// Les 4 indicateurs sur UNE SEULE ligne.
+.urdfs-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+.urdfs-kpi {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    background: #fff;
+    border: 1px solid $urdfs-border;
+    border-radius: $border-radius;
+    padding: 1.1rem 1.25rem;
+    box-shadow: $urdfs-sh-sm;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+
+    &:hover { transform: translateY(-3px); box-shadow: $urdfs-sh-lg; }
+}
+.urdfs-kpi-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: grid; place-items: center; flex-shrink: 0;
+
+    &.is-blue { background: rgba($urdfs-brand, 0.1); color: $urdfs-brand; }
+    &.is-green { background: rgba($urdfs-success, 0.12); color: $urdfs-success; }
+    &.is-amber { background: rgba($urdfs-warning, 0.16); color: darken($urdfs-warning, 12%); }
+}
+.urdfs-kpi-value { font-size: 1.6rem; font-weight: 800; color: $urdfs-foreground; line-height: 1; }
+.urdfs-kpi-label { font-size: 0.83rem; color: $urdfs-muted-fg; margin-top: 0.25rem; }
+
+@media (max-width: 992px) { .urdfs-kpi-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 576px) { .urdfs-kpi-grid { grid-template-columns: 1fr; } }
+
+// Respiration entre les indicateurs et le bloc suivant (Chronologie...).
+.urdfs-kpi-grid { margin-bottom: 1.75rem; }
+
+// Graphique + actions rapides du technopedagogue (cote a cote).
+.urdfs-techno-dash {
+    margin-bottom: 1.75rem;
+    align-items: stretch;
+
+    .urdfs-chart-card,
+    .urdfs-actions {
+        padding: 1.25rem 1.4rem;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        background: #fff;
+    }
+
+    // Le graphique occupe TOUTE la hauteur de sa carte : plus de grand
+    // vide sous les barres quand la colonne d'actions est plus haute.
+    .urdfs-chart-card {
+        display: flex;
+        flex-direction: column;
+    }
+    .urdfs-chart-card .urdfs-bars {
+        flex: 1 1 auto;
+        height: auto !important;
+        min-height: 220px;
+        display: flex;
+        align-items: flex-end;
+        gap: 0.75rem;
+        padding-top: 0.5rem;
+    }
+    .urdfs-chart-card .urdfs-bar-col {
+        flex: 1 1 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        height: 100%;
+    }
+    // La piste de la barre s'etire : la barre part bien du bas.
+    .urdfs-chart-card .urdfs-bar-track {
+        flex: 1 1 auto;
+        display: flex;
+        align-items: flex-end;
+        width: 100%;
+    }
+    .urdfs-chart-card .urdfs-bar {
+        width: 100%;
+        border-radius: 8px 8px 0 0;
+        min-height: 4px;
+    }
+}
+
+// Etiquette de motif (« Masqué », « Aucune activité »).
+.urdfs-tag {
+    flex-shrink: 0;
+    font-size: 0.74rem;
+    font-weight: 700;
+    border-radius: 999px;
+    padding: 0.15rem 0.6rem;
+    background: rgba($urdfs-warning, 0.16);
+    color: darken($urdfs-warning, 15%);
+}
+
+@media (max-width: 992px) {
+    .urdfs-techno-grid { grid-template-columns: 1fr; }
+}
+
+// =============================================================
+// PALIER 28 — RESPIRATION GLOBALE DU CONTENU (correctif de fond)
+// Regle placee en FIN de fichier : elle s'applique a TOUTES les
+// pages. Le contenu ne colle plus au bord bas de sa zone : plus
+// aucun bloc ne semble « coupe » juste apres le dernier element.
+// Hauteur toujours automatique (aucune hauteur fixe imposee).
+// =============================================================
+#region-main {
+    padding-bottom: 2rem !important;
+    height: auto !important;      // jamais de hauteur figee
+    min-height: 0;                // le bloc s'adapte au contenu
+}
+
+// Le dernier element interieur ne colle pas au bord du conteneur.
+#region-main > [role="main"] > :last-child,
+#region-main > :last-child {
+    margin-bottom: 0;
+}
+
+// Conteneurs de listing (categories, cours, listes diverses) : meme
+// respiration, quel que soit le nombre d'elements.
+.course_category_tree,
+.category-browse,
+.categorytree,
+#category-listing,
+.course-listing,
+.course-category-listing,
+.courses.category-browse {
+    padding-bottom: 1.25rem;
+    height: auto !important;
+}
+
+// Le contenu principal garde une marge basse avant le pied de page.
+#page-content { padding-bottom: 1.5rem; }
+
+// =============================================================
+// Zones de message d'erreur de formulaire : masquees par defaut
+// (elles contiennent des espaces, d'ou les petits blocs blancs
+// qui « depassaient » sous les champs). Elles reapparaissent
+// automatiquement quand le champ est reellement en erreur.
+// Correctif GLOBAL : vaut pour tous les formulaires Moodle.
+// =============================================================
+.form-control-feedback,
+.invalid-feedback {
+    display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+}
+// Reapparait uniquement en cas d'erreur reelle.
+.is-invalid ~ .form-control-feedback,
+.is-invalid ~ .invalid-feedback,
+.form-control-feedback.d-block,
+.invalid-feedback.d-block,
+.error > .form-control-feedback {
+    display: block !important;
+    margin-top: 0.35rem !important;
+    color: $urdfs-destructive;
+}
+// Petits conteneurs d'icone d'aide vides (a droite des libelles).
+.form-label-addon:empty { display: none !important; }
+
+// =============================================================
+// Boutons d'action places JUSTE SOUS UN TABLEAU : ils etaient
+// colles au tableau. Correctif GLOBAL (cohortes, utilisateurs,
+// participants, rapports...).
+// =============================================================
+#region-main {
+    table + .buttons,
+    table + input[type="submit"],
+    table + button,
+    table + .singlebutton,
+    .table-responsive + .buttons,
+    .table-responsive + input[type="submit"],
+    .table-responsive + button,
+    .table-responsive + .singlebutton,
+    [data-region="core_table/dynamic"] + .buttons,
+    [data-region="core_table/dynamic"] + input[type="submit"],
+    [data-region="core_table/dynamic"] + button,
+    [data-region="core_table/dynamic"] + .singlebutton,
+    form > table + input[type="submit"] {
+        margin-top: 1.25rem !important;
+        margin-bottom: 0.75rem;
+    }
+
+    // Cas Moodle : le bouton est enveloppe dans un <div> qui suit le tableau.
+    table + div > input[type="submit"],
+    table + div > button,
+    .table-responsive + div > input[type="submit"],
+    .table-responsive + div > button {
+        margin-top: 1.25rem;
+    }
+
+    // Cas le plus courant : bouton d'action isole (.singlebutton) place
+    // apres un rapport / tableau. Il etait colle au tableau.
+    .singlebutton {
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+    .reportbuilder-report + .singlebutton,
+    [data-region="core_table/dynamic"] + .singlebutton,
+    .table-dynamic + .singlebutton {
+        margin-top: 1.5rem;
+    }
+}
+
+// =============================================================
+// PALIER 29 — TABLEAUX LARGES : DEFILEMENT DANS LEUR CADRE
+// Regle GLOBALE (fin de fichier) : plus aucun tableau ne deborde
+// de la page. Le cadre defile horizontalement, l'en-tete reste
+// visible, et la page elle-meme ne bouge pas.
+// Les menus « ... » utilisent data-boundary="window" : ils ne sont
+// donc pas rognes par le defilement.
+// =============================================================
+#region-main {
+    .gradingtable,
+    .table-responsive,
+    .flexible-wrap,
+    .no-overflow:has(> table),
+    .gradeparent {
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: visible;
+        border-radius: $border-radius;
+        scrollbar-width: thin;
+        scrollbar-color: rgba($urdfs-brand, 0.35) transparent;
+    }
+
+    // Le tableau garde sa largeur naturelle : c'est le cadre qui defile.
+    .gradingtable > table,
+    .table-responsive > table {
+        margin-bottom: 0;
+    }
+
+    // En-tete charte, colle en haut lors du defilement vertical.
+    .gradingtable table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: $urdfs-brand !important;
+        color: #fff !important;
+        border: 0 !important;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+    .gradingtable table thead th a,
+    .gradingtable table thead th a:hover,
+    .gradingtable table thead th .icon { color: #fff !important; }
+
+    .gradingtable table td {
+        vertical-align: middle;
+        border-color: $urdfs-border !important;
+    }
+    // Statuts de remise : lisibles d'un coup d'oeil.
+    .submissionstatussubmitted {
+        color: $urdfs-success;
+        font-weight: 700;
+    }
+    .submissionstatus {
+        color: $urdfs-muted-fg;
+    }
+}
+
+// Securite : la page ne defile jamais horizontalement.
+body.urdfs-has-sidebar { overflow-x: hidden; }
+
+// =============================================================
+// PALIER 31 — GESTIONNAIRE DE FICHIERS (global)
+// Composant present PARTOUT : avatar, ressources de cours, remise
+// de devoirs, badges, banque de contenus. Corrige une fois ici.
+// =============================================================
+.filemanager,
+.filepicker {
+
+    // Ligne d'information (taille max, nb de fichiers) : discrete, a gauche.
+    .fp-restrictions {
+        display: block;
+        text-align: left;
+        color: $urdfs-muted-fg;
+        font-size: 0.82rem;
+        margin-bottom: 0.5rem !important;
+    }
+
+    // Barre d'outils : surface claire, coins arrondis en haut.
+    .fp-navbar {
+        background: $urdfs-secondary !important;
+        border: 1px solid $urdfs-border;
+        border-bottom: 0;
+        border-radius: $border-radius $border-radius 0 0;
+        padding: 0.55rem 0.75rem;
+        box-shadow: none;
+    }
+    .filemanager-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    .fp-toolbar { display: flex; align-items: center; gap: 0.35rem; }
+
+    // Boutons de la barre : nets, memes dimensions, couleurs charte.
+    .fp-toolbar .btn,
+    .fp-viewbar .btn {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        color: $urdfs-brand;
+        border-radius: 0.5rem;
+        width: 36px;
+        height: 36px;
+        display: inline-grid;
+        place-items: center;
+        padding: 0;
+        transition: background 0.15s ease, border-color 0.15s ease;
+
+        &:hover { background: $urdfs-accent; border-color: rgba($urdfs-brand, 0.35); }
+    }
+    .fp-viewbar { display: inline-flex; gap: 0.25rem; float: none !important; }
+    .fp-viewbar .btn.checked {
+        background: $urdfs-brand;
+        border-color: $urdfs-brand;
+        color: #fff;
+    }
+
+    // Fil d'ariane des dossiers.
+    .fp-pathbar {
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid $urdfs-border;
+        font-size: 0.85rem;
+
+        .fp-path-folder-name { color: $urdfs-brand; font-weight: 600; text-decoration: none; }
+    }
+
+    // Zone de depot : grande, aeree, bordure pointillee douce.
+    // Le conteneur s'adapte au contenu : Moodle lui fixe une hauteur en JS,
+    // ce qui rognait le bas de la zone de depot.
+    .filemanager-container,
+    .fp-content {
+        border: 1px solid $urdfs-border;
+        border-top: 0;
+        border-radius: 0 0 $border-radius $border-radius;
+        background: #fff;
+        box-shadow: none;
+        height: auto !important;
+        min-height: 0;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+    // La zone de depot est positionnee en ABSOLU par Moodle : le parent
+    // doit donc etre relatif et reserver la hauteur, sinon elle deborde
+    // sur le contenu suivant.
+    .fm-content-wrapper {
+        position: relative;
+        padding: 0.75rem;
+        min-height: 190px;
+        height: auto !important;
+        overflow: hidden;
+    }
+
+    // Zone vide (visible en permanence) : invite au depot. Elle reste
+    // DANS son conteneur (inset) et ne recouvre plus le texte suivant.
+    .fm-empty-container {
+        position: absolute;
+        inset: 0.75rem;
+        border: 2px dashed rgba($urdfs-brand, 0.25);
+        border-radius: $border-radius;
+        background: rgba($urdfs-brand, 0.02);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        transition: background 0.15s ease, border-color 0.15s ease;
+
+        &:hover { background: rgba($urdfs-brand, 0.04); border-color: rgba($urdfs-brand, 0.4); }
+    }
+
+    // Cible de glisser-deposer : Moodle la montre UNIQUEMENT pendant le
+    // glisser. On se contente de l'habiller, sans forcer son affichage.
+    .dndupload-target {
+        border: 2px dashed $urdfs-success;
+        border-radius: $border-radius;
+        background: rgba($urdfs-success, 0.08);
+        text-align: center;
+    }
+
+    // Message de depot : fleche AU-DESSUS du texte, le tout centre.
+    .dndupload-message {
+        display: flex;
+        flex-direction: column-reverse; // la fleche (2e enfant) passe en haut
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        color: $urdfs-muted-fg;
+        font-size: 0.92rem;
+        width: 100%;
+        text-align: center;
+
+        br { display: none; }
+    }
+    .dndupload-arrow {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        float: none !important;
+    }
+    .dndupload-arrow .fa,
+    .dndupload-arrow i {
+        color: rgba($urdfs-brand, 0.45);
+        margin: 0 auto;
+    }
+
+    // Vue « arbre » et vue « liste » : zone de contenu compacte, sans
+    // grand vide, et alignement propre du dossier racine.
+    .fp-content {
+        min-height: 0;
+        padding: 0.25rem 0;
+    }
+    .filemanager-container .fp-content:empty { display: none; }
+
+    .fp-treeview,
+    .fp-viewbar + .fp-pathbar + .filemanager-container .fp-content {
+        padding: 0.35rem 0.25rem;
+    }
+    .fp-treeview .fp-filename-icon,
+    .ygtvitem .fp-filename-icon {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.35rem 0.5rem;
+        border-radius: $border-radius-sm;
+
+        &:hover { background: $urdfs-accent; }
+    }
+
+    // Fichiers deposes : vignettes propres.
+    .fp-file,
+    .fp-filename-icon {
+        border-radius: $border-radius-sm;
+    }
+}
+
+// Texte « Types de fichier acceptés » sous le gestionnaire.
+.form-filetypes-descriptions,
+.filetypesdescriptions {
+    color: $urdfs-muted-fg;
+    font-size: 0.82rem;
+    margin-top: 0.5rem;
+}
+
+// --- SELECTEUR DE FICHIER SIMPLE (« Choisir un fichier… ») -----------
+// Present partout : depot de cohortes, import CSV, images, devoirs...
+// Le bouton etait colle a la zone de depot.
+.filepicker,
+.form-filemanager,
+.fitem [data-fieldtype="filepicker"] {
+
+    .fp-btn-choose,
+    .fp-btn-choose .btn {
+        margin-bottom: 0;
+    }
+
+    // Ligne « Choisir un fichier… + taille maximale » : alignee et aeree.
+    .fp-btn-choose {
+        display: inline-flex;
+        align-items: center;
+        margin-right: 0.75rem;
+    }
+
+    // Zone de depot : espace au-dessus, meme habillage que le gestionnaire.
+    .filepicker-filelist,
+    .dndupload-arrow ~ div,
+    .dndupload-target {
+        margin-top: 0.9rem;
+    }
+    .filepicker-filelist {
+        border: 2px dashed rgba($urdfs-brand, 0.25);
+        border-radius: $border-radius;
+        background: rgba($urdfs-brand, 0.02);
+        min-height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 1rem;
+        transition: background 0.15s ease, border-color 0.15s ease;
+
+        &:hover { background: rgba($urdfs-brand, 0.04); border-color: rgba($urdfs-brand, 0.4); }
+    }
+}
+
+// La ligne « Choisir un fichier… + Taille maximale » : barre grise
+// discrete, pour qu'elle ne donne plus l'impression d'un vide blanc.
+.filepicker {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    background: $urdfs-secondary;
+    border: 1px solid $urdfs-border;
+    border-radius: $border-radius;
+    padding: 0.75rem 0.9rem;
+
+    > span,
+    .fp-maxsize,
+    .filepicker-filename {
+        color: $urdfs-muted-fg;
+        font-size: 0.85rem;
+    }
+    // La zone de depot occupe toute la largeur, sous la barre.
+    .filepicker-filelist { flex: 1 1 100%; margin-top: 0.25rem; }
+}
+
+// =============================================================
+// PALIER 30 — INTERFACE DE CORRECTION DES DEVOIRS (grader)
+// Cette page utilise des panneaux FIXES (en-tete, zone centrale,
+// barre d'actions) qui ignorent notre sidebar : on les recale et
+// on les met au format du theme.
+// =============================================================
+.urdfs-has-sidebar {
+
+    // Les panneaux fixes commencent apres la sidebar.
+    [data-region="grading-navigation-panel"],
+    [data-region="grade-actions-panel"] {
+        left: $urdfs-sb-w;
+        width: calc(100% - #{$urdfs-sb-w});
+        transition: left 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+                    width 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    &.urdfs-collapsed {
+        [data-region="grading-navigation-panel"],
+        [data-region="grade-actions-panel"] {
+            left: $urdfs-sb-w-collapsed;
+            width: calc(100% - #{$urdfs-sb-w-collapsed});
+        }
+    }
+    @media (max-width: 768px) {
+        [data-region="grading-navigation-panel"],
+        [data-region="grade-actions-panel"] { left: 0; width: 100%; }
+    }
+}
+
+// En-tete de correction : surface blanche nette, texte lisible, hauteur
+// suffisante pour que « 4 sur 18 » et les filtres ne soient pas coupes.
+[data-region="grading-navigation-panel"] {
+    background: #fff;
+    border-bottom: 1px solid $urdfs-border;
+    box-shadow: $urdfs-sh-sm;
+    padding: 0.9rem 1.25rem 1rem;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+
+    a { color: $urdfs-brand; text-decoration: none; &:hover { text-decoration: underline; } }
+    h4 { font-size: 1.02rem; font-weight: 700; margin: 0; line-height: 1.35; }
+    h4 small { display: block; font-weight: 500; color: $urdfs-muted-fg; font-size: 0.8rem; }
+    [data-region="user-info"] img { border-radius: 50%; }
+
+    // Les 3 colonnes s'alignent en haut et passent a la ligne si besoin.
+    [data-region="grading-navigation"] {
+        align-items: center;
+        row-gap: 0.4rem;
+    }
+
+    // GAUCHE : fil d'ariane compact (Cours › Devoir › Tous les travaux)
+    // au lieu de trois liens empiles.
+    [data-region="assignment-info"] {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.35rem 0.5rem;
+        font-size: 0.85rem;
+        line-height: 1.3;
+
+        br { display: none; }
+        a { color: $urdfs-brand; font-weight: 600; }
+        a + a::before {
+            content: "›";
+            color: $urdfs-muted-fg;
+            font-weight: 400;
+            margin-right: 0.5rem;
+        }
+    }
+
+    // DROITE : navigation entre etudiants, compacte pour ne pas etre coupee.
+    [data-region="user-selector"] .alignment {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.35rem 0.5rem;
+        justify-content: flex-end;
+
+        br { display: none; }
+    }
+    [data-region="user-count"] { font-size: 0.8rem; color: $urdfs-muted-fg; }
+    // Lien technique peu utilise : masque pour liberer de la place.
+    [data-region="user-resettable"] { display: none !important; }
+    // Le champ « Changer d'utilisateur » reste raisonnable.
+    [data-region="user-selector"] .form-autocomplete-input input { min-width: 14ch; }
+}
+
+// La zone centrale demarre sous l'en-tete (qui n'a plus de hauteur figee).
+[data-region="grade-panel"] { padding-top: 1rem; }
+
+// Formulaire de notation : libelle a GAUCHE, champ a DROITE (les lignes
+// s'empilaient verticalement, ce qui rendait « Reglages de tentative »
+// illisible).
+[data-region="grade-panel"] {
+    .fitem.row {
+        display: flex !important;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 0.25rem 0;
+        padding: 0.55rem 0;
+        border-bottom: 1px solid $urdfs-border;
+        margin-bottom: 0 !important;
+    }
+    fieldset .fcontainer > .fitem.row:last-child { border-bottom: 0; }
+
+    .fitem.row > .col-md-3 {
+        flex: 0 0 240px;
+        max-width: 240px;
+        font-weight: 600;
+        color: $urdfs-foreground;
+        padding-top: 0.35rem;
+    }
+    .fitem.row > .col-md-9 {
+        flex: 1 1 320px;
+        max-width: 100%;
+    }
+    .form-control-static { color: $urdfs-muted-fg; }
+
+    // Champ de note : compact, pas pleine largeur.
+    #id_grade { max-width: 140px; }
+
+    @media (max-width: 768px) {
+        .fitem.row > .col-md-3,
+        .fitem.row > .col-md-9 { flex: 1 1 100%; max-width: 100%; }
+    }
+}
+
+// Zone centrale : respire, cartes propres.
+[data-region="grade-panel"] {
+    padding: 1.25rem;
+
+    .submissionstatustable,
+    .gradingform {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        padding: 1.25rem 1.4rem;
+        margin-bottom: 1.25rem;
+    }
+    h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.9rem; }
+
+    // Statuts : pastilles lisibles plutot que bandes pleine largeur.
+    .submissionstatussubmitted,
+    .submissionnotgraded,
+    .earlysubmission,
+    .latesubmission,
+    .submissioneditable {
+        display: inline-block;
+        border-radius: 999px;
+        padding: 0.2rem 0.7rem;
+        font-size: 0.82rem;
+        font-weight: 600;
+        margin: 0 0.35rem 0.4rem 0;
+        background: $urdfs-secondary;
+        color: $urdfs-muted-fg;
+    }
+    .submissionstatussubmitted { background: rgba($urdfs-success, 0.14); color: darken($urdfs-success, 5%); }
+    .submissionnotgraded { background: rgba($urdfs-warning, 0.16); color: darken($urdfs-warning, 15%); }
+    .earlysubmission { background: rgba($urdfs-brand, 0.1); color: $urdfs-brand; }
+}
+
+// Barre d'actions du bas : nette, boutons alignes a droite.
+[data-region="grade-actions-panel"] {
+    background: #fff;
+    border-top: 1px solid $urdfs-border;
+    box-shadow: 0 -2px 12px rgba(15, 26, 51, 0.06);
+    padding: 0.75rem 1.25rem;
+
+    [data-region="grading-actions-form"] {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    label { margin: 0 auto 0 0; font-weight: 600; display: flex; align-items: center; gap: 0.4rem; }
+}
+
+// --- Le contenu s'elargit quand le menu est reduit -----------
+// Aucune largeur maximale residuelle : la zone de contenu occupe
+// tout l'espace libere par la sidebar (et se re-retrecit a l'ouverture).
+.urdfs-has-sidebar {
+    #page-content,
+    #region-main-box,
+    #region-main,
+    .main-inner,
+    #topofscroll > .container,
+    #topofscroll > .container-fluid {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+}
+// Transition douce lors du repli / depli du menu.
+#page.drawers,
+#page-content,
+#region-main {
+    transition: margin-left 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+                max-width 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+// =============================================================
+// PALIER 32 — BOUTONS D'ACTION COLLES AU CONTENU (correctif global)
+// Moodle place souvent un bouton isole juste avant un tableau ou une
+// pagination, sans aucune marge : ca colle. Regle transverse : tout
+// bloc de contenu qui SUIT un bouton dans la meme zone respire.
+// Volontairement limite a #region-main pour ne jamais toucher la
+// sidebar, la barre du haut ni les modales.
+// =============================================================
+#region-main {
+
+    .btn ~ table,
+    .btn ~ .table-responsive,
+    .btn ~ .flexible-wrap,
+    .btn ~ .gradingtable,
+    .btn ~ nav.pagination,
+    .btn ~ .reportbuilder-report,
+    .btn ~ .generaltable {
+        margin-top: 1.5rem;
+    }
+
+    // Le bouton lui-meme garde un peu d'air au-dessus.
+    > [role="main"] > .btn {
+        margin-top: 0.25rem;
+    }
+}
+
+// =============================================================
+// PALIER 33 — RAPPORTS DE JOURNAUX : LISTE COURTE QUI DEFILE
+// Moodle fixe 100 lignes par page en dur dans report_loglive
+// (aucun parametre d'URL) : impossible de le reduire proprement
+// sans patcher le coeur. On borne donc la HAUTEUR du cadre a
+// ~10 lignes ; le reste defile a l'interieur, en-tete figee.
+// La page reste courte et aucune donnee n'est perdue.
+// =============================================================
+#page-report-loglive-index,
+#page-report-log-index {
+
+    #region-main .table-responsive {
+        max-height: 30rem;          // ~10 lignes visibles
+        overflow-y: auto;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        scrollbar-width: thin;
+        scrollbar-color: rgba($urdfs-brand, 0.35) transparent;
+    }
+
+    // En-tete figee pendant le defilement vertical.
+    #region-main .table-responsive table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: $urdfs-brand !important;
+        color: #fff !important;
+        border: 0 !important;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+    #region-main .table-responsive table thead th a,
+    #region-main .table-responsive table thead th a:hover {
+        color: #fff !important;
+    }
+
+    // Cellules plus compactes : plus de lignes visibles d'un coup.
+    #region-main .table-responsive table td {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        font-size: 0.86rem;
+        vertical-align: middle;
+    }
+}

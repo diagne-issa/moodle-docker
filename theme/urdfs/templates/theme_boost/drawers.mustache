@@ -1,0 +1,244 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template theme_boost/drawers (surcharge URDFS)
+
+    Layout principal de Moodle re-coquillé : on injecte la sidebar sur-mesure
+    URDFS a gauche (rendue par output.urdfs_sidebar), et on décale tout le
+    contenu via la classe urdfs-has-sidebar (voir scss/_custom.scss). Les drawers
+    natifs de Boost (index de cours, blocs) restent fonctionnels. Le reste est
+    une copie fidèle du template Boost 4.5.
+}}
+{{> theme_boost/head }}
+
+<body {{{ bodyattributes }}}>
+{{> core/local/toast/wrapper}}
+<div id="page-wrapper" class="d-print-block urdfs-has-sidebar">
+
+    {{{ output.standard_top_of_body_html }}}
+
+    {{{ output.urdfs_sidebar }}}
+
+    {{> theme_boost/navbar }}
+    {{#courseindex}}
+        {{< theme_boost/drawer }}
+            {{$id}}theme_boost-drawers-courseindex{{/id}}
+            {{$drawerheadercontent}}
+                {{> theme_boost/courseindexdrawercontrols}}
+            {{/drawerheadercontent}}
+            {{$drawerclasses}}drawer drawer-left {{#courseindexopen}}show{{/courseindexopen}}{{/drawerclasses}}
+            {{$drawercontent}}
+                {{{courseindex}}}
+            {{/drawercontent}}
+            {{$drawerpreferencename}}drawer-open-index{{/drawerpreferencename}}
+            {{$drawerstate}}show-drawer-left{{/drawerstate}}
+            {{$tooltipplacement}}right{{/tooltipplacement}}
+            {{$closebuttontext}}{{#str}}closecourseindex, core{{/str}}{{/closebuttontext}}
+        {{/ theme_boost/drawer}}
+    {{/courseindex}}
+    {{#hasblocks}}
+        {{< theme_boost/drawer }}
+            {{$id}}theme_boost-drawers-blocks{{/id}}
+            {{$drawerclasses}}drawer drawer-right{{#blockdraweropen}} show{{/blockdraweropen}}{{/drawerclasses}}
+            {{$drawercontent}}
+                <div class="d-print-none">
+                    {{{ addblockbutton }}}
+                    {{{ sidepreblocks }}}
+                </div>
+            {{/drawercontent}}
+            {{$drawerpreferencename}}drawer-open-block{{/drawerpreferencename}}
+            {{$forceopen}}{{#forceblockdraweropen}}1{{/forceblockdraweropen}}{{/forceopen}}
+            {{$drawerstate}}show-drawer-right{{/drawerstate}}
+            {{$tooltipplacement}}left{{/tooltipplacement}}
+            {{$drawercloseonresize}}1{{/drawercloseonresize}}
+            {{$closebuttontext}}{{#str}}closeblockdrawer, core{{/str}}{{/closebuttontext}}
+        {{/ theme_boost/drawer}}
+    {{/hasblocks}}
+    <div id="page" data-region="mainpage" data-usertour="scroller" class="drawers {{#courseindexopen}}show-drawer-left{{/courseindexopen}} {{#blockdraweropen}}show-drawer-right{{/blockdraweropen}} drag-container">
+        <div id="topofscroll" class="main-inner">
+            <div class="drawer-toggles d-flex">
+                {{#courseindex}}
+                    <div class="drawer-toggler drawer-left-toggle open-nav d-print-none">
+                        <button
+                            class="btn icon-no-margin"
+                            data-toggler="drawers"
+                            data-action="toggle"
+                            data-target="theme_boost-drawers-courseindex"
+                            data-toggle="tooltip"
+                            data-placement="right"
+                            title="{{#str}}opendrawerindex, core{{/str}}"
+                        >
+                            <span class="sr-only">{{#str}}opendrawerindex, core{{/str}}</span>
+                            {{#pix}} t/index_drawer, moodle {{/pix}}
+                        </button>
+                    </div>
+                {{/courseindex}}
+                {{#hasblocks}}
+                    <div class="drawer-toggler drawer-right-toggle ms-auto d-print-none">
+                        <button
+                            class="btn icon-no-margin"
+                            data-toggler="drawers"
+                            data-action="toggle"
+                            data-target="theme_boost-drawers-blocks"
+                            data-toggle="tooltip"
+                            data-placement="right"
+                            title="{{#str}}opendrawerblocks, core{{/str}}"
+                        >
+                            <span class="sr-only">{{#str}}opendrawerblocks, core{{/str}}</span>
+                            <span class="dir-rtl-hide">{{#pix}}t/blocks_drawer, core{{/pix}}</span>
+                            <span class="dir-ltr-hide">{{#pix}}t/blocks_drawer_rtl, core{{/pix}}</span>
+                        </button>
+                    </div>
+                {{/hasblocks}}
+            </div>
+            {{{ output.full_header }}}
+            {{#secondarymoremenu}}
+                <div class="secondary-navigation d-print-none">
+                    {{> core/moremenu}}
+                </div>
+            {{/secondarymoremenu}}
+            <div id="page-content" class="pb-3 d-print-block">
+                <div id="region-main-box">
+                    {{#hasregionmainsettingsmenu}}
+                    <div id="region-main-settings-menu" class="d-print-none">
+                        <div> {{{ regionmainsettingsmenu }}} </div>
+                    </div>
+                    {{/hasregionmainsettingsmenu}}
+                    <div id="region-main">
+
+                        {{#hasregionmainsettingsmenu}}
+                            <div class="region_main_settings_menu_proxy"></div>
+                        {{/hasregionmainsettingsmenu}}
+                        {{{ output.course_content_header }}}
+                        {{{ output.urdfs_dashboard_hero }}}
+                        {{{ output.urdfs_techno_hero }}}
+                        {{{ output.urdfs_teacher_hero }}}
+                        {{{ output.urdfs_student_hero }}}
+                        {{#headercontent}}
+                            {{> core/activity_header }}
+                        {{/headercontent}}
+                        {{#overflow}}
+                            <div class="container-fluid tertiary-navigation">
+                                <div class="navitem">
+                                    {{> core/url_select}}
+                                </div>
+                            </div>
+                        {{/overflow}}
+                        {{{ output.main_content }}}
+                        {{{ output.activity_navigation }}}
+                        {{{ output.course_content_footer }}}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{> theme_boost/footer }}
+    </div>
+    {{{ output.standard_after_main_region_html }}}
+</div>
+
+</body>
+</html>
+{{#js}}
+M.util.js_pending('theme_boost/loader');
+require(['theme_boost/loader', 'theme_boost/drawer'], function(Loader, Drawer) {
+    Drawer.init();
+    M.util.js_complete('theme_boost/loader');
+});
+{{/js}}
+{{#js}}
+(function() {
+    var KEY = 'urdfs-sidebar-collapsed';
+    var wrapper = document.getElementById('page-wrapper');
+    var sidebar = document.getElementById('urdfs-sidebar');
+    var scrim = document.getElementById('urdfs-scrim');
+    var burger = document.getElementById('urdfs-burger');
+    var collapseBtn = document.getElementById('urdfs-collapse');
+    if (!wrapper || !sidebar) {
+        return;
+    }
+
+    // État de repli mémorisé.
+    try {
+        if (localStorage.getItem(KEY) === '1') {
+            wrapper.classList.add('urdfs-collapsed');
+        }
+    } catch (e) {}
+
+    if (collapseBtn) {
+        collapseBtn.addEventListener('click', function() {
+            var collapsed = wrapper.classList.toggle('urdfs-collapsed');
+            try { localStorage.setItem(KEY, collapsed ? '1' : '0'); } catch (e) {}
+        });
+    }
+
+    // Dépliage des sous-menus : un clic sur un parent déplie/replie sa section.
+    // Accordéon : ouvrir une section ferme celle qui était ouverte.
+    sidebar.addEventListener('click', function(e) {
+        var toggle = e.target.closest('.urdfs-toggle');
+        if (!toggle) { return; }
+        var item = toggle.closest('.urdfs-item');
+        if (!item) { return; }
+        var willOpen = !item.classList.contains('open');
+        var opened = sidebar.querySelectorAll('.urdfs-item.open');
+        for (var i = 0; i < opened.length; i++) {
+            if (opened[i] !== item) {
+                opened[i].classList.remove('open');
+                var other = opened[i].querySelector('.urdfs-toggle');
+                if (other) { other.setAttribute('aria-expanded', 'false'); }
+            }
+        }
+        item.classList.toggle('open', willOpen);
+        toggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    });
+
+    // Drawer mobile.
+    function openDrawer() { wrapper.classList.add('urdfs-drawer-open'); }
+    function closeDrawer() { wrapper.classList.remove('urdfs-drawer-open'); }
+    if (burger) { burger.addEventListener('click', openDrawer); }
+    if (scrim) { scrim.addEventListener('click', closeDrawer); }
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') { closeDrawer(); }
+    });
+
+    // Recherche dans la sidebar : filtre les entrées (et leurs sous-menus).
+    var navSearch = document.getElementById('urdfs-nav-search');
+    if (navSearch) {
+        navSearch.addEventListener('input', function() {
+            var q = this.value.toLowerCase().trim();
+            sidebar.querySelectorAll('.urdfs-group').forEach(function(group) {
+                var anyVisible = false;
+                group.querySelectorAll('.urdfs-item').forEach(function(item) {
+                    var lbl = item.querySelector('.urdfs-lbl');
+                    var text = lbl ? lbl.textContent.toLowerCase() : '';
+                    var subMatch = false;
+                    item.querySelectorAll('.urdfs-sublink').forEach(function(s) {
+                        if (s.textContent.toLowerCase().indexOf(q) > -1) { subMatch = true; }
+                    });
+                    var match = (q === '') || text.indexOf(q) > -1 || subMatch;
+                    item.style.display = match ? '' : 'none';
+                    if (match) { anyVisible = true; }
+                    if (q !== '' && subMatch) { item.classList.add('open'); }
+                });
+                group.style.display = anyVisible ? '' : 'none';
+            });
+        });
+    }
+
+    // (Recherche live retiree : on utilise le filtre natif de Moodle.)
+})();
+{{/js}}

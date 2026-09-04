@@ -150,3 +150,6 @@ Vérifier que les mots de passe dans `.env` sont identiques entre `POSTGRES_PASS
 
 **Le cron ne tourne pas :**
 Vérifier les logs avec `docker compose logs -f moodle-cron`. Le service attend que `moodle` et `postgres` soient prêts avant de démarrer.
+
+
+## Tocken : 8350a009ca6f596bd131451534d2b7cd

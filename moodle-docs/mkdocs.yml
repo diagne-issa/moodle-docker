@@ -1,0 +1,138 @@
+site_name: Documentation Plateforme LMS URDFS
+site_description: Documentation de la plateforme d'apprentissage Moodle de l'URDFS
+site_author: Équipe URDFS
+docs_dir: docs-moodle
+
+# Thème Material
+theme:
+  name: material
+  language: fr
+  logo: assets/img/logo-urdfs.png
+  favicon: assets/img/icon.png
+
+  palette:
+    # Mode clair
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-7
+        name: Passer en mode sombre
+
+    # Mode sombre
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-4
+        name: Passer en mode clair
+
+  font:
+    text: Plus Jakarta Sans
+    code: JetBrains Mono
+
+  features:
+    # Navigation latérale complète et toujours visible (pas d'onglets :
+    # avec navigation.tabs, la colonne de gauche se vidait sur l'accueil).
+    - navigation.sections
+    - navigation.expand
+    - navigation.tracking
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - toc.follow
+
+# CSS personnalisé
+#   layout.css : ossature (bandeau, colonnes, TOC, pagination, responsive)
+#   custom.css : habillage du contenu (typographie, cartes, tableaux…)
+# L'ordre compte : layout d'abord, contenu ensuite.
+extra_css:
+  - assets/css/layout.css
+  - assets/css/custom.css
+
+# JS personnalisé (repli du menu latéral, infobulles, retour en haut)
+extra_javascript:
+  - assets/js/sidebar.js
+
+# Plugins
+plugins:
+  - search:
+      lang: fr
+
+# Navigation
+nav:
+  - Accueil: index.md
+
+  - Démarrer:
+      - Lancer la plateforme: demarrer/demarrage.md
+
+  - Technique:
+      - Architecture Docker: technique/architecture.md
+      - Le thème theme_urdfs: technique/theme.md
+      - Charte & design system: technique/charte.md
+      - Rôles & permissions: technique/roles.md
+      - Architecture pédagogique: technique/pedagogie.md
+      - Scripts d'automatisation: technique/scripts.md
+
+  - Modes d'emploi:
+      - Technopédagogue: utiliser/technopedagogue.md
+      - Enseignant: utiliser/enseignant.md
+      - Étudiant: utiliser/etudiant.md
+
+  - Référence:
+      - Journal des décisions: reference/decisions.md
+      - Dépannage: reference/depannage.md
+      - Reste à faire: reference/roadmap.md
+
+# Extensions Markdown
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.betterem
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.keys
+  - pymdownx.smartsymbols
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+# Informations
+extra:
+  social:
+    - icon: fontawesome/solid/globe
+      link: https://urdfs.sn
+      name: Site officiel URDFS
+
+# Copyright
+copyright: >-
+  Université Rose Dieng France-Sénégal — Documentation de la plateforme LMS ·
+  Moodle 5.1.6 · theme_urdfs

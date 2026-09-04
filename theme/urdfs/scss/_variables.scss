@@ -1,0 +1,89 @@
+// =============================================================
+// URDFS - Brand variable overrides (pre-SCSS)
+// Tokens alignés sur le design system premium URDFS.
+// Ce fichier est injecté AVANT la compilation Bootstrap/Boost,
+// donc ces valeurs gagnent sur les défauts. 100 % additif : on
+// ne fait que surcharger des variables déjà utilisées ailleurs.
+// =============================================================
+
+// Polices modernes (Plus Jakarta Sans + Inter).
+// NB : on ne charge PAS les polices via @import ici. Le compilateur de Moodle
+// (scssphp) interprète tout `@import url("https://…")` comme un fichier local
+// et fait échouer toute la compilation. Les polices sont donc chargées via des
+// balises <link> dans le <head>, injectées par
+// classes/output/core_renderer.php -> standard_head_html().
+
+// -------------------------------------------------------------
+// Palette de marque
+// -------------------------------------------------------------
+// !default => si l'admin définit une couleur dans les réglages du thème,
+// la valeur injectée en amont par lib.php gagne. Sinon, ces défauts servent.
+// Charte URDFS : bleu marine + vert + doré (accent) + blanc.
+$urdfs-brand:         #143876 !default; // Bleu marine — couleur principale
+$urdfs-brand-600:     #1b4794; // Survol / état actif
+$urdfs-brand-700:     #102c5d; // Pressé / dégradés
+$urdfs-success:       #06843c; // Vert de charte (secondaire) — progression / positif
+$urdfs-ok:            #22c55e; // Vert « succès » sémantique (charte)
+// Accent = vert de charte (#06843C). Charte définitive : marine + vert + blanc,
+// pas de doré. Le nom $urdfs-gold est conservé pour ne rien casser en aval.
+$urdfs-gold:          #06843c !default;
+
+// Surfaces
+$urdfs-page:          #f8fafc; // Fond général de page
+$urdfs-background:    #ffffff; // Cartes, drawer, navbar, carte de login
+$urdfs-secondary:     #f1f5f9; // Surfaces creusées (en-têtes de table, champs)
+$urdfs-muted:         #f1f5f9;
+$urdfs-accent:        #eef3fc; // Bleu très pâle — survols, états actifs légers
+
+// Texte
+$urdfs-foreground:    #0f172a; // Texte principal
+$urdfs-muted-fg:      #64748b; // Texte secondaire
+$urdfs-subtle-fg:     #94a3b8; // Texte tertiaire / placeholders
+
+// Bordures
+$urdfs-border:        #e2e8f0;
+$urdfs-border-strong: #cbd5e1;
+
+// Sémantique
+$urdfs-destructive:   #ef4444; // Erreur
+$urdfs-warning:       #f59e0b; // Avertissement
+$urdfs-info:          #3b82f6; // Information
+
+// Accents par rôle (drawer / dashboard selon l'espace de l'utilisateur).
+$urdfs-admin-accent:   #143876; // Bleu marine
+$urdfs-teacher-accent: #1d6fb8; // Bleu plus clair
+$urdfs-student-accent: #06843c; // Vert de charte
+
+// -------------------------------------------------------------
+// Surcharges Bootstrap / Boost
+// -------------------------------------------------------------
+$primary:    $urdfs-brand;
+$secondary:  $urdfs-secondary;
+$success:    $urdfs-ok;          // Vert « succès » de la charte (#22C55E)
+$danger:     $urdfs-destructive;
+$warning:    $urdfs-warning;
+$info:       $urdfs-info;
+
+$body-bg:    $urdfs-page;        // Fond de page gris très clair, cartes blanches
+$body-color: $urdfs-foreground;
+
+$border-color:      $urdfs-border;
+$border-radius:     1rem;        // 16px — cartes (conforme à la charte)
+$border-radius-sm:  0.625rem;    // 10px — boutons, champs
+$border-radius-lg:  1.25rem;     // 20px — grandes surfaces (carte de login)
+
+// Typographie — Plus Jakarta Sans, repli Inter puis polices système.
+$font-family-sans-serif: "Plus Jakarta Sans", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+$headings-font-weight: 700;
+
+// Drawer / navigation.
+$drawer-bg: $urdfs-background;
+$navbar-bg: $urdfs-background;
+
+// Cartes.
+$card-border-color: $urdfs-border;
+$card-border-radius: $border-radius;
+
+// Liens.
+$link-color: $urdfs-brand;
+$link-hover-color: $urdfs-brand-600;

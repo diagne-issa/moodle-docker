@@ -1,0 +1,813 @@
+/* ============================================================================
+   Documentation Plateforme LMS URDFS — OSSATURE
+   ----------------------------------------------------------------------------
+   Ce fichier ne contient QUE la mise en page : bandeau, colonnes, sommaire,
+   pagination, bouton de retour en haut, responsive. L'habillage du contenu
+   (typographie, cartes, tableaux…) est dans custom.css.
+
+   PRINCIPES
+   1. Une vraie grille à trois colonnes (§4), pas l'empilement flex de Material.
+      C'est la correction de fond : la largeur de lecture est portée par la
+      COLONNE, pas par une max-width posée à l'intérieur du contenu. C'est ce
+      qui creusait le vide à droite.
+   2. Toutes les dimensions viennent de variables (§1), exprimées en pixels :
+      Material applique `font-size: 125%` sur <html>, donc 1rem ≈ 20px et les
+      valeurs en rem sont trompeuses pour du dimensionnement.
+   3. On ne change pas le positionnement natif des colonnes : elles restent en
+      `sticky` dans la grille de contenu, ce qui les empêche de passer devant
+      le pied de page. Les passages en `position: fixed` réveillent le
+      `transform` du tiroir mobile et poussent la colonne hors écran.
+   4. Une seule échelle de z-index (§2). Aucune valeur au-delà de 6.
+   ========================================================================== */
+
+
+/* ============================================================================
+   §1 — VARIABLES DE MISE EN PAGE
+   ========================================================================== */
+
+:root {
+  --urdfs-header-h:        58px;    /* hauteur du bandeau */
+  --urdfs-sidebar-w:      264px;    /* colonne de navigation déployée */
+  --urdfs-sidebar-mini-w:  62px;    /* rail d'icônes */
+  --urdfs-toc-w:          232px;    /* sommaire de droite */
+  --urdfs-content-max:    980px;    /* largeur de lecture maximale */
+  --urdfs-gutter:          40px;    /* espace entre les colonnes */
+  --urdfs-shell-max:     1680px;    /* largeur totale de l'ossature */
+  --urdfs-ease:          cubic-bezier(.16, 1, .3, 1);
+
+  /* §2 — Hiérarchie des plans, unique et lisible. */
+  --urdfs-z-content: 1;
+  --urdfs-z-toc:     2;
+  --urdfs-z-sidebar: 3;
+  --urdfs-z-header:  4;
+  --urdfs-z-float:   5;
+  --urdfs-z-overlay: 6;
+}
+
+html { scroll-padding-top: calc(var(--urdfs-header-h) + 16px); }
+html, body { max-width: 100%; overflow-x: hidden; }
+
+
+/* ============================================================================
+   §3 — BANDEAU
+   ========================================================================== */
+
+.md-header {
+  z-index: var(--urdfs-z-header);
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-700) 100%);
+  color: #fff;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .08), 0 2px 14px rgba(10, 31, 69, .2);
+}
+
+/* Aligné sur la même ossature que le contenu : le logo tombe au-dessus de la
+   colonne de navigation, la recherche au-dessus du sommaire. */
+.md-header__inner {
+  display: flex;
+  align-items: center;
+  max-width: var(--urdfs-shell-max);
+  height: var(--urdfs-header-h);
+  margin: 0 auto;
+  padding: 0 var(--urdfs-gutter);
+}
+
+.md-header__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  color: #fff !important;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.3;
+  letter-spacing: .01em;
+  margin: 0 16px;
+}
+.md-header__topic { font-weight: 700; }
+.md-header__button { color: rgba(255, 255, 255, .88) !important; }
+.md-header__button:hover { color: #8de3ad !important; }
+
+/* --- Logo -------------------------------------------------------------- */
+.md-header__button.md-logo {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+}
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  height: 38px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;              /* jamais de logo déformé */
+  background: #fff;
+  padding: 4px 9px;
+  border-radius: 9px;
+  box-shadow: 0 1px 4px rgba(10, 31, 69, .28);
+}
+
+/* --- Recherche --------------------------------------------------------- */
+.md-search { flex: 0 0 auto; }
+.md-search__form {
+  width: 260px;
+  height: 38px;
+  background-color: rgba(255, 255, 255, .13);
+  border-radius: 10px;
+}
+.md-search__form:hover { background-color: rgba(255, 255, 255, .2); }
+.md-search__input { height: 38px; font-size: 14px; color: #fff; }
+.md-search__input::placeholder { color: rgba(255, 255, 255, .62); }
+.md-search__icon { color: rgba(255, 255, 255, .8) !important; }
+[data-md-toggle="search"]:checked ~ .md-header .md-search__form {
+  background-color: #fff;
+  border-radius: 10px 10px 0 0;
+}
+[data-md-toggle="search"]:checked ~ .md-header .md-search__input { color: var(--fg); }
+
+
+/* ============================================================================
+   §4 — GRILLE : NAVIGATION | CONTENU | SOMMAIRE
+   Le cœur de la correction. Material empile trois éléments en flex et centre
+   le contenu ; on passe à une grille explicite dont la colonne centrale prend
+   tout l'espace restant (minmax(0, 1fr)).
+   ========================================================================== */
+
+.md-main { background-color: var(--page); }
+
+.md-main__inner.md-grid {
+  max-width: var(--urdfs-shell-max);
+  margin: 0 auto;
+  padding: 0 var(--urdfs-gutter);
+}
+
+.md-content { min-width: 0; z-index: var(--urdfs-z-content); }
+.md-content__inner {
+  max-width: var(--urdfs-content-max);
+  /* Calé à GAUCHE : le contenu colle à la colonne de navigation.
+     Centrer (margin auto) creusait une large bande vide entre la
+     sidebar et le texte sur les écrans larges. */
+  margin: 0;
+  padding: 28px 0 8px;
+}
+.md-content__inner > :first-child { margin-top: 0; }
+.md-content__inner::before { display: none; }
+
+@media screen and (min-width: 76.25em) {
+  .md-main__inner.md-grid {
+    display: grid;
+    grid-template-columns:
+      var(--urdfs-sidebar-w)
+      minmax(0, 1fr)
+      var(--urdfs-toc-w);
+    gap: var(--urdfs-gutter);
+    align-items: start;
+  }
+  .md-sidebar--primary   { grid-column: 1; }
+  .md-content            { grid-column: 2; }
+  .md-sidebar--secondary { grid-column: 3; }
+
+  /* Menu replié : la colonne rétrécit, le contenu récupère la place. */
+  body.urdfs-nav-collapsed .md-main__inner.md-grid {
+    grid-template-columns:
+      var(--urdfs-sidebar-mini-w)
+      minmax(0, 1fr)
+      var(--urdfs-toc-w);
+  }
+}
+
+/* Écrans très larges : on élargit la lecture plutôt que le vide latéral. */
+@media screen and (min-width: 100em) {
+  :root { --urdfs-content-max: 1000px; --urdfs-gutter: 48px; }
+}
+
+
+/* ============================================================================
+   §5 — COLONNE DE NAVIGATION (desktop)
+   ========================================================================== */
+
+@media screen and (min-width: 76.25em) {
+
+  .md-sidebar--primary {
+    z-index: var(--urdfs-z-sidebar);
+    width: auto;                     /* c'est la grille qui donne la largeur */
+    padding: 0;
+    top: var(--urdfs-header-h);
+    height: calc(100vh - var(--urdfs-header-h));
+    transition: none;
+  }
+
+  /* Le menu tient dans l'écran ; s'il déborde, LUI SEUL défile. */
+  .md-sidebar--primary .md-sidebar__scrollwrap {
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    overflow: hidden auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, .26) transparent;
+  }
+
+  /* Bandeau marine PLEINE HAUTEUR : il occupe toute la colonne de l'écran,
+     sans coins arrondis ni marge basse — plus d'effet « menu coupé » avec
+     du vide en dessous. */
+  .md-sidebar--primary .md-sidebar__inner {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 100%;
+    padding: 12px 10px 0;
+    border-radius: 0;
+    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-700) 100%);
+    box-shadow: 0 2px 16px rgba(10, 31, 69, .12);
+  }
+  .md-sidebar--primary .md-nav--primary { flex: 1 0 auto; }
+
+  .md-nav--primary > .md-nav__title { display: none; }
+
+  /* --- État réduit : rail d'icônes ------------------------------------ */
+  body.urdfs-nav-collapsed .md-sidebar--primary .md-sidebar__inner { padding: 12px 8px 0; }
+  body.urdfs-nav-collapsed .md-nav--primary .md-nav__item--section > .md-nav__link {
+    height: 1px;
+    margin: 12px 6px;
+    padding: 0;
+    overflow: hidden;
+    background: rgba(255, 255, 255, .16) !important;
+    color: transparent !important;
+  }
+  body.urdfs-nav-collapsed .md-nav--primary .md-nav__link {
+    justify-content: center;
+    padding: 11px 0;
+    gap: 0;
+  }
+  body.urdfs-nav-collapsed .md-nav--primary .md-nav__link .md-ellipsis,
+  body.urdfs-nav-collapsed .md-nav--primary .md-nav__icon { display: none; }
+}
+
+
+/* ============================================================================
+   §6 — ENTRÉES DE NAVIGATION
+   ========================================================================== */
+
+.md-nav--primary .md-nav__list { padding: 0; }
+.md-nav--primary .md-nav__item { padding: 0; border: 0; }
+
+.md-nav--primary .md-nav__link {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  border-radius: 9px;
+  padding: 9px 12px;
+  margin: 0 0 2px;
+  font-size: 14px;
+  line-height: 1.4;
+  font-weight: 500;
+  color: rgba(255, 255, 255, .78);
+  transition: background .14s, color .14s;
+}
+.md-nav--primary .md-nav__link:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; }
+.md-nav--primary .md-nav__link:hover { background: rgba(255, 255, 255, .1); color: #fff; }
+
+/* Icônes : gabarit unique, jamais déformées. */
+.md-nav--primary .md-nav__link svg {
+  flex: 0 0 18px;
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  opacity: .8;
+}
+.md-nav--primary .md-nav__link .md-ellipsis { min-width: 0; }
+
+/* État actif : franc et immédiatement identifiable. */
+.md-nav--primary .md-nav__item:not(.md-nav__item--section) > .md-nav__link--active,
+.md-nav--primary .md-nav__item:not(.md-nav__item--section).md-nav__item--active > .md-nav__link {
+  background: rgba(255, 255, 255, .17);
+  color: #fff !important;
+  font-weight: 700;
+  box-shadow: inset 3px 0 0 var(--green);
+}
+.md-nav--primary .md-nav__item--active > .md-nav__link svg { opacity: 1; }
+
+/* Intertitres de rubrique : un libellé, pas un bouton. */
+.md-nav--primary .md-nav__item--section > .md-nav__link,
+.md-nav--primary .md-nav__item--section > label.md-nav__link,
+.md-nav--primary .md-nav__item--section.md-nav__item--active > .md-nav__link {
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, .42) !important;
+  background: none !important;
+  box-shadow: none !important;
+  border-radius: 0;
+  margin: 20px 0 6px;
+  padding: 0 12px;
+  cursor: default;
+  pointer-events: none;
+}
+.md-nav--primary .md-nav__item--section > .md-nav__link svg { display: none; }
+.md-nav--primary .md-nav__item--section .md-nav { margin: 0; }
+.md-nav--primary .md-nav__icon { color: rgba(255, 255, 255, .5); }
+
+
+/* ============================================================================
+   §7 — BOUTON DE REPLI
+   ========================================================================== */
+
+#urdfs-nav-toggle { display: none; }
+
+@media screen and (min-width: 76.25em) {
+  #urdfs-nav-toggle {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    flex: 0 0 auto;
+    margin: 14px -10px 0;
+    height: 44px;
+    padding: 0 16px;
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, .12);
+    border-radius: 0;
+    background: var(--navy-700);
+    color: rgba(255, 255, 255, .74);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+  }
+  #urdfs-nav-toggle:hover { background: var(--navy-900); color: #fff; }
+  #urdfs-nav-toggle svg {
+    flex: 0 0 17px;
+    width: 17px;
+    height: 17px;
+    fill: currentColor;
+    transition: transform .28s var(--urdfs-ease);
+  }
+  #urdfs-nav-toggle .urdfs-toggle-label { transition: opacity .16s linear; }
+
+  body.urdfs-nav-collapsed #urdfs-nav-toggle {
+    margin: 14px -6px 0;
+    padding: 0;
+    justify-content: center;
+  }
+  body.urdfs-nav-collapsed #urdfs-nav-toggle svg { transform: rotate(180deg); }
+  body.urdfs-nav-collapsed #urdfs-nav-toggle .urdfs-toggle-label { opacity: 0; width: 0; }
+}
+
+
+/* ============================================================================
+   §8 — INFOBULLES DU RAIL RÉDUIT
+   ========================================================================== */
+
+@media screen and (min-width: 76.25em) {
+  body.urdfs-nav-collapsed .md-nav--primary .md-nav__link[data-urdfs-tip] { position: relative; }
+  body.urdfs-nav-collapsed .md-nav--primary .md-nav__link[data-urdfs-tip]::after {
+    content: attr(data-urdfs-tip);
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: var(--urdfs-z-float);
+    padding: 6px 11px;
+    border-radius: 8px;
+    background: var(--navy-900);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 4px 14px rgba(10, 31, 69, .3);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .14s linear;
+  }
+  body.urdfs-nav-collapsed .md-nav--primary .md-nav__link[data-urdfs-tip]:hover::after,
+  body.urdfs-nav-collapsed .md-nav--primary .md-nav__link[data-urdfs-tip]:focus-visible::after { opacity: 1; }
+
+  body.urdfs-nav-collapsed .md-sidebar--primary,
+  body.urdfs-nav-collapsed .md-sidebar--primary .md-sidebar__scrollwrap { overflow: visible; }
+}
+
+
+/* ============================================================================
+   §9 — SOMMAIRE DE DROITE
+   ========================================================================== */
+
+.md-sidebar--secondary { z-index: var(--urdfs-z-toc); }
+
+@media screen and (min-width: 76.25em) {
+  .md-sidebar--secondary {
+    width: auto;                     /* largeur donnée par la grille */
+    top: calc(var(--urdfs-header-h) + 28px);
+    height: auto;
+    padding: 0;
+  }
+  .md-sidebar--secondary .md-sidebar__scrollwrap {
+    max-height: calc(100vh - var(--urdfs-header-h) - 56px);
+    margin: 0;
+    overflow: hidden auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+}
+
+.md-nav--secondary .md-nav__title {
+  font-size: 11px !important;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--subtle) !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding: 0 0 10px 14px;
+}
+.md-nav--secondary .md-nav__list { padding-left: 0; }
+.md-nav--secondary .md-nav__link {
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--muted);
+  padding: 7px 14px;
+  border-left: 2px solid var(--line);
+  transition: color .14s, border-color .14s, background .14s;
+}
+.md-nav--secondary .md-nav__link:hover { color: var(--green); border-color: var(--green); }
+.md-nav--secondary .md-nav__link--active {
+  color: var(--navy) !important;
+  font-weight: 700;
+  border-color: var(--green);
+}
+/* Sous-niveaux : indentation lisible. */
+.md-nav--secondary .md-nav .md-nav .md-nav__link { padding-left: 26px; font-size: 13px; }
+
+
+/* ============================================================================
+   §10 — BOUTON « RETOUR EN HAUT »
+   ========================================================================== */
+
+.md-top {
+  position: fixed;
+  inset: auto 28px 28px auto;
+  z-index: var(--urdfs-z-float);
+  display: grid !important;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #fff;
+  font-size: 0;
+  box-shadow: 0 6px 18px rgba(16, 44, 93, .3);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px) scale(.92);
+  transition: opacity .2s ease, transform .2s var(--urdfs-ease),
+              visibility .2s, background .15s;
+}
+.md-top[hidden] { display: grid !important; }
+body.urdfs-scrolled .md-top { opacity: 1; visibility: visible; transform: none; }
+.md-top:hover { background: var(--green); transform: translateY(-2px); }
+.md-top .md-icon,
+.md-top svg { display: block; width: 20px; height: 20px; margin: 0; fill: currentColor; }
+
+
+/* ============================================================================
+   §11 — NAVIGATION DE BAS DE PAGE
+   ========================================================================== */
+
+.md-footer { background-color: transparent; }
+
+.md-footer__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: var(--urdfs-content-max);
+  margin: 56px 0 48px;
+  padding: 28px 0 0;
+  border-top: 1px solid var(--line);
+}
+.md-footer__inner:not([hidden]) { display: grid; }
+
+.md-footer__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  width: auto;
+  min-width: 0;
+  margin: 0;
+  padding: 14px 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  opacity: 1;
+  transition: border-color .15s, box-shadow .15s;
+}
+.md-footer__link:hover {
+  border-color: var(--green);
+  box-shadow: 0 6px 18px rgba(16, 44, 93, .08);
+  opacity: 1;
+}
+.md-footer__link--prev { grid-column: 1; justify-self: start; }
+.md-footer__link--next { grid-column: 2; justify-self: end; }
+
+.md-footer__title { margin: 0; padding: 0; min-width: 0; }
+.md-footer__title .md-ellipsis { display: none; }
+.md-footer__direction {
+  position: static;
+  display: block;
+  margin: 0;
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  text-transform: none;
+  color: var(--navy);
+  opacity: 1;
+}
+.md-footer__button { flex: 0 0 auto; margin: 0; padding: 0; color: var(--muted); }
+.md-footer__button svg { display: block; width: 18px; height: 18px; }
+.md-footer__link:hover .md-footer__button,
+.md-footer__link:hover .md-footer__direction { color: var(--green); }
+
+
+/* ============================================================================
+   §12 — PIED DE PAGE
+   ========================================================================== */
+
+.md-footer-meta { background: var(--navy-700); }
+.md-footer-meta__inner {
+  max-width: var(--urdfs-shell-max);
+  margin: 0 auto;
+  padding: 26px var(--urdfs-gutter);
+}
+.md-copyright {
+  width: 100%;
+  padding: 0;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, .8);
+}
+.md-copyright__highlight { color: rgba(255, 255, 255, .8); }
+.md-footer-meta a { color: #8de3ad !important; }
+.md-social { padding: 6px 0 0; }
+
+
+/* ============================================================================
+   §13 — RESPONSIVE
+   ========================================================================== */
+
+/* --- Tablette : le sommaire passe sous le contenu ----------------------- */
+@media screen and (min-width: 60em) and (max-width: 76.2375em) {
+  .md-sidebar--secondary {
+    position: static;
+    width: auto;
+    max-height: none;
+    padding: 0;
+  }
+  .md-sidebar--secondary .md-sidebar__scrollwrap { max-height: none; overflow: visible; }
+  .md-nav--secondary {
+    margin: 32px 0 0;
+    max-width: var(--urdfs-content-max);
+    padding: 18px 22px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--card);
+  }
+}
+
+/* --- Sous 1220px : navigation en tiroir -------------------------------- */
+@media screen and (max-width: 76.2375em) {
+  :root { --urdfs-gutter: 24px; }
+
+  #urdfs-nav-toggle { display: none !important; }
+
+  /* Le tiroir reprend le marine : les entrées sont en blanc (§6). */
+  .md-sidebar--primary {
+    z-index: var(--urdfs-z-overlay);
+    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-700) 100%);
+  }
+  .md-sidebar--primary .md-sidebar__inner { padding: 0 10px 12px; }
+  .md-nav--primary .md-nav__title {
+    background: var(--navy);
+    color: #fff;
+    box-shadow: none;
+    font-size: 15px;
+  }
+  .md-nav--primary .md-nav__title .md-nav__icon { color: #fff; }
+
+  .md-content__inner { padding: 22px 0 8px; }
+}
+
+/* --- Mobile ------------------------------------------------------------ */
+@media screen and (max-width: 44.98em) {
+  :root { --urdfs-header-h: 52px; --urdfs-gutter: 16px; }
+
+  .md-header__title { font-size: 13.5px; margin: 0 10px; }
+  .md-header__button.md-logo img { height: 32px; padding: 3px 7px; }
+  .md-search__form { width: auto; }
+
+  .md-footer__inner { grid-template-columns: 1fr; margin: 40px auto 32px; }
+  .md-footer__link--prev,
+  .md-footer__link--next { grid-column: 1; justify-self: stretch; }
+  .md-footer__link--next { justify-content: flex-end; }
+
+  .md-footer-meta__inner { padding: 22px var(--urdfs-gutter); }
+  .md-top { inset: auto 16px 16px auto; width: 40px; height: 40px; }
+}
+
+
+/* ============================================================================
+   §15 — OSSATURE D'APPLICATION (desktop) — LA RÈGLE QUI PRIME
+   ----------------------------------------------------------------------------
+   Objectif : la page ne défile pas. Le bandeau, la colonne de navigation et le
+   sommaire restent FIXES ; seul le contenu défile, dans sa propre colonne.
+
+   Pourquoi !important : Material écrit des styles EN LIGNE via son JavaScript
+   sur .md-sidebar (top) et .md-sidebar__scrollwrap (height: 536px…). Un style
+   en ligne bat une feuille CSS ; sans !important ces règles sont ignorées.
+   C'est ce qui « coupait » la colonne marine et laissait du blanc dessous.
+
+   Le pied de page est déplacé dans la colonne de contenu par sidebar.js : il
+   reste accessible, en bas du contenu, sans jamais chevaucher la navigation.
+   ========================================================================== */
+
+@media screen and (min-width: 76.25em) {
+
+  /* 1. La fenêtre ne défile plus : c'est le contenu qui défilera. */
+  html, body { height: 100%; overflow: hidden; }
+  .md-container { height: 100%; }
+
+  /* 2. La grille occupe exactement la hauteur restante sous le bandeau. */
+  .md-main { height: calc(100vh - var(--urdfs-header-h)); }
+  .md-main__inner.md-grid {
+    height: 100%;
+    max-width: none;             /* plein écran : plus de vide avant la nav */
+    margin: 0;
+    padding: 0;
+    gap: 0;                      /* la nav est collée au contenu, pas d'écart */
+    align-items: stretch;        /* les 3 colonnes font toute la hauteur */
+    grid-template-columns:
+      var(--urdfs-sidebar-w)
+      minmax(0, 1fr)
+      var(--urdfs-toc-w);
+  }
+  body.urdfs-nav-collapsed .md-main__inner.md-grid {
+    grid-template-columns:
+      var(--urdfs-sidebar-mini-w)
+      minmax(0, 1fr)
+      var(--urdfs-toc-w);
+  }
+
+  /* 3. BANDEAU FUSIONNÉ AVEC LA NAVIGATION.
+        Le logo occupe exactement la largeur de la colonne de gauche : le
+        marine du bandeau et celui de la colonne ne font plus qu'un bloc. */
+  .md-header__inner {
+    max-width: none;
+    padding: 0 28px 0 0;
+  }
+  .md-header__button.md-logo {
+    width: var(--urdfs-sidebar-w);
+    justify-content: center;
+    border-right: 1px solid rgba(255, 255, 255, .10);
+    transition: width .2s var(--urdfs-ease);
+  }
+  body.urdfs-nav-collapsed .md-header__button.md-logo { width: var(--urdfs-sidebar-mini-w); }
+  .md-header__button.md-logo img { height: 46px; padding: 5px 12px; border-radius: 11px; }
+  body.urdfs-nav-collapsed .md-header__button.md-logo img { height: 38px; padding: 3px 5px; }
+  .md-header__title { margin-left: 20px; }
+
+  /* 4. Colonne de navigation : pleine hauteur, immobile, soudée au bandeau. */
+  .md-sidebar--primary {
+    position: static !important;  /* plus de sticky : la colonne EST la hauteur */
+    top: auto !important;
+    height: 100% !important;
+    max-height: none !important;
+    overflow: hidden;
+  }
+  .md-sidebar--primary .md-sidebar__scrollwrap {
+    height: 100% !important;      /* écrase le height en ligne de Material */
+    max-height: none !important;
+    margin: 0 !important;
+  }
+  /* Le marine remplit toute la colonne : même teinte que le bandeau en haut,
+     aucun arrondi ni ombre — la jonction est invisible. */
+  .md-sidebar--primary .md-sidebar__inner {
+    min-height: 100% !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    border-right: 1px solid rgba(255, 255, 255, .08);
+    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-700) 100%);
+    padding: 8px 10px 0 !important;   /* les menus commencent tout de suite */
+  }
+  body.urdfs-nav-collapsed .md-sidebar--primary .md-sidebar__inner { padding: 8px 6px 0 !important; }
+
+  /* Rail réduit : icônes parfaitement centrées. */
+  body.urdfs-nav-collapsed .md-nav--primary .md-nav__link {
+    justify-content: center;
+    padding: 12px 0;
+    margin: 0 0 2px;
+    gap: 0;
+  }
+  body.urdfs-nav-collapsed .md-nav--primary .md-nav__link svg { margin: 0; }
+  body.urdfs-nav-collapsed .md-nav--primary .md-nav__list { padding: 0; }
+
+  /* 5. Sommaire de droite : même traitement. */
+  .md-sidebar--secondary {
+    position: static !important;
+    top: auto !important;
+    height: 100% !important;
+    max-height: none !important;
+    padding-right: 28px;
+  }
+  .md-sidebar--secondary .md-sidebar__scrollwrap {
+    height: 100% !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding-top: 30px;
+  }
+
+  /* 6. LE CONTENU : seule zone qui défile, et qui respire. */
+  .md-content {
+    height: 100%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0 40px 0 48px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+  .md-content__inner { max-width: 1080px; margin: 0; padding: 30px 0 8px; }
+  .md-content::-webkit-scrollbar { width: 10px; }
+  .md-content::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+
+  /* 7. Pied de page rapatrié dans la colonne de contenu (voir sidebar.js).
+        Version DISCRÈTE : plus de gros bloc marine, juste un filet et une
+        ligne de mentions grises. */
+  .md-content .md-footer { background: transparent; margin: 0; }
+  .md-content .md-footer__inner {
+    max-width: 1080px;
+    margin: 40px 0 24px;
+    padding-top: 26px;
+  }
+  .md-content .md-footer-meta,
+  .md-content .md-footer-meta__inner { background: transparent !important; }
+  .md-content .md-footer-meta {
+    border-top: 1px solid var(--line);
+    border-radius: 0;
+  }
+  /* Mentions à gauche, icône sociale sur la MÊME ligne, à droite. */
+  .md-content .md-footer-meta__inner {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 18px;
+    max-width: 1080px;
+    margin: 0;
+    padding: 16px 0 28px;
+  }
+  .md-content .md-copyright,
+  .md-content .md-copyright__highlight { color: var(--muted); font-size: 12.5px; line-height: 1.6; }
+  .md-content .md-copyright { width: auto; margin: 0; }
+  .md-content .md-footer-meta a { color: var(--navy) !important; }
+  .md-content .md-social { padding: 0; margin: 0; flex: 0 0 auto; }
+  .md-content .md-social__link { color: var(--muted); width: 22px; height: 22px; }
+
+  /* Lien « Suivant » : de l'air entre le libellé et la flèche. */
+  .md-footer__link { gap: 18px; }
+  .md-footer__link--next .md-footer__button { margin-left: 4px; }
+
+  /* 8. La colonne de contenu doit pouvoir DÉFILER dans la grille.
+        Sans min-height: 0, un élément de grille refuse de rétrécir sous la
+        taille de son contenu : le débordement n'est alors jamais scrollable
+        et la page « s'arrête ». C'est ce qui bloquait le défilement. */
+  .md-main,
+  .md-main__inner.md-grid { min-height: 0; overflow: visible; }
+  .md-main__inner.md-grid > * { min-height: 0; }
+  .md-content { min-height: 0; overflow-y: auto !important; }
+}
+
+/* Bouton « retour en haut » retiré : Material le pilote par des styles en
+   ligne et son propre gestionnaire de clic, ce qui le rend inexploitable
+   dans une ossature à défilement interne. La colonne de contenu se remonte
+   avec la molette, ++home++ ou la barre de défilement. */
+.md-top { display: none !important; }
+
+
+/* ============================================================================
+   §14 — IMPRESSION
+   ========================================================================== */
+
+@media print {
+  .md-sidebar, #urdfs-nav-toggle, .md-top, .md-footer__inner, .md-header { display: none !important; }
+  .md-main__inner.md-grid { display: block; padding: 0; }
+  .md-content__inner { max-width: none; padding: 0; }
+}

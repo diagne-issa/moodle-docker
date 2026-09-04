@@ -19,3 +19,26 @@ postgres_data/
 # Perso
 commit-message.txt
 notes.md
+
+# Documentation MkDocs : environnement Python et site généré
+moodle-docs/.venv/
+moodle-docs/site/
+__pycache__/
+
+# Sauvegardes (elles ne doivent jamais entrer dans le dépôt)
+sauvegardes/
+*.sql.gz
+*.tar.gz
+
+# Artefacts Windows créés par WSL lors des copies depuis l'explorateur
+*:Zone.Identifier
+*.Zone.Identifier
+
+# Thème tiers inutilisé, qui contient son propre dépôt Git.
+# Il reste monté localement le temps du nettoyage prévu dans la feuille de
+# route, mais ne doit pas entrer dans ce dépôt : Git n'en enregistrerait
+# qu'une référence vide.
+theme/moove/
+
+# Artefact de téléchargement accidentel
+/download

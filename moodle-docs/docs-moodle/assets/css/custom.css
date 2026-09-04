@@ -1,0 +1,583 @@
+/* ============================================================================
+   Documentation Plateforme LMS URDFS — HABILLAGE DU CONTENU
+   ----------------------------------------------------------------------------
+   Typographie, en-têtes de page, cartes, encadrés, tableaux, badges, code.
+   L'ossature (bandeau, colonnes, sommaire, pagination, responsive) est dans
+   layout.css, chargé avant celui-ci.
+   Charte URDFS : bleu marine #143876 · vert #06843C · fond clair.
+   ========================================================================== */
+
+:root {
+  --navy:        #143876;
+  --navy-600:    #1b4794;
+  --navy-700:    #102c5d;
+  --navy-900:    #0a1f45;
+  --green:       #06843c;
+  --green-600:   #0aa54c;
+  --green-050:   #eaf6ef;
+  --page:        #f8fafc;
+  --card:        #ffffff;
+  --line:        #e2e8f0;
+  --line-strong: #cbd5e1;
+  --fg:          #0f172a;
+  --muted:       #64748b;
+  --subtle:      #94a3b8;
+  --accent:      #eef3fc;
+  --warn:        #f59e0b;
+  --warn-bg:     #fffbeb;
+  --danger:      #ef4444;
+  --danger-bg:   #fef2f2;
+  --radius:      16px;
+  --radius-sm:   10px;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Palette Material (primary / accent = custom dans mkdocs.yml) */
+:root {
+  --md-primary-fg-color:        #143876;
+  --md-primary-fg-color--light: #1b4794;
+  --md-primary-fg-color--dark:  #102c5d;
+  --md-accent-fg-color:         #06843c;
+  --md-typeset-a-color:         #143876;
+  --md-default-bg-color:        #f8fafc;
+}
+
+.md-container { background-color: var(--page); }
+
+
+/* ============================================================================
+   CORPS DE TEXTE
+   ========================================================================== */
+
+.md-typeset {
+  color: var(--fg);
+  font-size: 16px;
+  line-height: 1.65;
+}
+.md-typeset p, .md-typeset li { font-size: 16px; }
+.md-typeset ul, .md-typeset ol { padding-left: 1.4em; }
+.md-typeset li { margin-bottom: .38em; }
+
+/* Hiérarchie franche : chaque niveau se distingue du précédent. */
+.md-typeset h2 {
+  font-size: clamp(22px, 1.7vw, 27px);
+  font-weight: 800;
+  letter-spacing: -.015em;
+  color: var(--navy);
+  margin: 2.1em 0 .6em;
+  padding-bottom: .35em;
+  border-bottom: 1px solid var(--line);
+}
+.md-typeset h3 { font-size: 18.5px; font-weight: 700; color: var(--fg);   margin: 1.9em 0 .5em; }
+.md-typeset h4 { font-size: 15.5px; font-weight: 700; color: var(--navy); margin: 1.5em 0 .45em; }
+
+.md-typeset a { color: var(--navy); font-weight: 500; border-bottom: 1px solid var(--line-strong); }
+.md-typeset a:hover { color: var(--green); border-color: var(--green); }
+.md-typeset a.headerlink { border-bottom: 0; }
+.md-typeset h1 a.headerlink, .md-typeset h2 a.headerlink,
+.md-typeset h3 a.headerlink, .md-typeset h4 a.headerlink { color: var(--line-strong); }
+
+
+/* ============================================================================
+   EN-TÊTE DE PAGE (.page-head) ET ACCUEIL (.hero)
+   ========================================================================== */
+
+.md-typeset .page-head {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-700) 62%, var(--navy-900) 100%);
+  color: #fff;
+  border-radius: 20px;
+  padding: clamp(30px, 3.4vw, 52px) clamp(24px, 3.4vw, 56px);
+  margin: 0 0 48px;
+}
+.md-typeset .page-head::after {
+  content: "";
+  position: absolute;
+  right: -90px; top: -110px;
+  width: 330px; height: 330px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(6, 132, 60, .40), transparent 68%);
+}
+.md-typeset .page-head > * { position: relative; z-index: 1; }
+.md-typeset .page-head > :first-child { margin-top: 0; }
+.md-typeset .page-head > :last-child  { margin-bottom: 0; }
+.md-typeset .page-head h1 {
+  color: #fff;
+  font-size: clamp(26px, 2.6vw, 40px);
+  line-height: 1.16;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  margin: 0 0 14px;
+  border: 0;
+}
+.md-typeset .page-head p {
+  color: rgba(255, 255, 255, .78);
+  font-size: clamp(15px, 1.1vw, 17.5px);
+  line-height: 1.6;
+  max-width: 62ch;
+  margin: 0;
+}
+.md-typeset .page-head code { background: rgba(255, 255, 255, .14); color: #8de3ad; border: none; }
+.md-typeset .page-head a { color: #8de3ad; border: none; }
+
+.md-typeset .crumb {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #8de3ad !important;
+  margin: 0 0 12px;
+}
+
+.md-typeset .page-head.hero { padding: clamp(34px, 4vw, 60px) clamp(24px, 3.4vw, 56px); }
+.md-typeset .kicker {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #8de3ad;
+  background: rgba(6, 132, 60, .16);
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(6, 132, 60, .4);
+  margin-bottom: 16px;
+}
+
+/* Chiffres clés : rangée régulière séparée par un filet. */
+.md-typeset .herofacts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 26px 32px;
+  margin-top: 34px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(255, 255, 255, .18);
+}
+.md-typeset .herofacts p { margin: 0; }
+.md-typeset .herofacts b, .md-typeset .herofacts strong {
+  display: block;
+  font-size: clamp(24px, 1.9vw, 30px);
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.15;
+  letter-spacing: -.01em;
+  margin-bottom: 4px;
+}
+.md-typeset .herofacts span {
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, .62);
+  font-weight: 500;
+}
+@media (max-width: 760px) {
+  .md-typeset .herofacts { grid-template-columns: 1fr 1fr; gap: 20px; }
+}
+
+
+/* ============================================================================
+   GRILLES · TUILES · CARTES
+   ========================================================================== */
+
+/* minmax(0, 1fr) : les colonnes ne se laissent pas gonfler par un mot long. */
+.md-typeset .grid { display: grid; gap: 22px; margin: 28px 0 24px; }
+.md-typeset .grid.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.md-typeset .grid.g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 1000px) {
+  .md-typeset .grid.g3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .md-typeset .grid.g2, .md-typeset .grid.g3 { grid-template-columns: minmax(0, 1fr); }
+}
+
+.md-typeset .card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 22px 26px;
+  margin: 0 0 18px;
+}
+.md-typeset .card > :first-child { margin-top: 0; }
+.md-typeset .card > :last-child  { margin-bottom: 0; }
+.md-typeset .card h3, .md-typeset .card h4 { margin-top: 0; }
+
+.md-typeset .tile {
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--navy);
+  border-radius: var(--radius);
+  padding: 26px 26px 28px;
+  transition: box-shadow .16s, border-color .16s;
+}
+.md-typeset .tile:hover { box-shadow: 0 6px 20px rgba(16, 44, 93, .08); }
+.md-typeset .tile.green { border-top-color: var(--green); }
+.md-typeset .tile.red   { border-top-color: var(--danger); }
+.md-typeset .tile h4 { margin: 0 0 10px; font-size: 16.5px; color: var(--navy); line-height: 1.3; }
+.md-typeset .tile p  { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--muted); }
+.md-typeset .tile ul { margin: 0; font-size: 14.5px; }
+
+.md-typeset a.tile {
+  display: block;
+  color: inherit;
+  border-bottom: 1px solid var(--line);
+  transition: transform .15s, box-shadow .15s;
+}
+.md-typeset a.tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(16, 44, 93, .10);
+  color: inherit;
+}
+.md-typeset a.tile h4 { color: var(--navy); }
+.md-typeset a.tile .go {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--green);
+}
+
+/* Pas de lien d'ancrage ¶ dans les en-têtes de page et les cartes. */
+.md-typeset .page-head .headerlink,
+.md-typeset .card .headerlink,
+.md-typeset .tile .headerlink { display: none !important; }
+
+
+/* ============================================================================
+   ENCADRÉS : note · tip · warn
+   ========================================================================== */
+
+.md-typeset .note,
+.md-typeset .tip,
+.md-typeset .warn {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin: 0 0 18px;
+  font-size: 14.5px;
+  background: var(--card);
+}
+.md-typeset .note { border-left: 4px solid var(--navy);  background: var(--accent);    border-color: #d6e2f7; }
+.md-typeset .tip  { border-left: 4px solid var(--green); background: var(--green-050); border-color: #c9e8d6; }
+.md-typeset .warn { border-left: 4px solid var(--warn);  background: var(--warn-bg);   border-color: #fde9b8; }
+.md-typeset .note > :last-child,
+.md-typeset .tip  > :last-child,
+.md-typeset .warn > :last-child { margin-bottom: 0; }
+.md-typeset .note b:first-child,
+.md-typeset .tip  b:first-child,
+.md-typeset .warn b:first-child { display: block; margin-bottom: 4px; }
+
+
+/* ============================================================================
+   TABLEAUX
+   ========================================================================== */
+
+/* La table ne porte plus ni cadre ni arrondi ni overflow : c'est le
+   conteneur qui s'en charge (voir plus bas).
+   width: 100% = elle remplit toujours son cadre, donc l'en-tête marine va
+   bien jusqu'au bord. Et comme une table ne peut pas être plus étroite que
+   son contenu minimal, une table trop large déborde d'elle-même du cadre,
+   ce qui déclenche le défilement horizontal de celui-ci. Rien n'est rogné,
+   rien ne laisse de blanc. */
+/* !important assumé : Material applique `display: inline-block` et
+   `overflow: auto` sur `table:not([class])`, avec exactement la même
+   spécificité que notre règle. Une table en inline-block se dimensionne sur
+   son contenu, d'où l'en-tête marine qui s'arrêtait au milieu et le vide
+   blanc à droite. On impose donc le mode tableau et la pleine largeur. */
+.md-typeset__table > table:not([class]),
+.md-typeset table:not([class]) {
+  display: table !important;
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: none !important;
+  /* auto : les colonnes se répartissent selon leur contenu, ce qui évite
+     qu'une colonne étroite coupe « editingteacher » en deux lignes. */
+  table-layout: auto;
+  border: 0;
+  border-radius: 0;
+  overflow: visible !important;
+  font-size: 14.5px;
+  line-height: 1.6;
+  background: transparent;
+  margin: 0 !important;
+}
+.md-typeset table:not([class]) thead th {
+  background: var(--navy);
+  color: #fff !important;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 14px 18px;
+  white-space: nowrap;
+}
+.md-typeset table:not([class]) td { padding: 15px 18px; vertical-align: top; }
+.md-typeset table:not([class]) tbody tr:nth-child(even) { background: #fbfcfe; }
+/* Le code en cellule ne se coupe plus au milieu d'un identifiant. */
+.md-typeset table:not([class]) td code { white-space: nowrap; }
+/* Première colonne : libellé du profil, jamais cassée. */
+.md-typeset table:not([class]) tbody td:first-child { white-space: nowrap; font-weight: 600; }
+
+/* LE CADRE du tableau : c'est lui qui porte la carte (fond, bordure, coins
+   arrondis) et le défilement horizontal. Seul le tableau défile, la page ne
+   bouge pas. */
+.md-typeset__scrollwrap { margin: 26px 0; overflow: visible; }
+.md-typeset__table {
+  display: block !important;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 0 !important;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  padding: 0;
+  margin: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+.md-typeset__table::-webkit-scrollbar { height: 10px; }
+.md-typeset__table::-webkit-scrollbar-track { background: transparent; }
+.md-typeset__table::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+@media (max-width: 700px) {
+  .md-typeset table:not([class]) { font-size: 13.5px; }
+  .md-typeset table:not([class]) th,
+  .md-typeset table:not([class]) td { padding: 11px 13px; }
+}
+
+
+/* ============================================================================
+   BADGES
+   ========================================================================== */
+
+.md-typeset .badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .02em;
+  vertical-align: middle;
+}
+.md-typeset .badge.ok      { background: var(--green-050); color: var(--green);  border: 1px solid #bfe4cd; }
+/* Restriction, pas erreur : ambre sobre plutôt qu'un rouge d'alerte. */
+.md-typeset .badge.no      { background: #fdf6ec; color: #9a5b12; border: 1px solid #f0dcc0; }
+.md-typeset .badge.wip     { background: var(--warn-bg);   color: #b45309;       border: 1px solid #fde9b8; }
+.md-typeset .badge.neutral { background: var(--accent);    color: var(--navy);   border: 1px solid #d6e2f7; }
+
+
+/* ============================================================================
+   ÉTAPES NUMÉROTÉES · LISTES À PUCES CARRÉES
+   ========================================================================== */
+
+.md-typeset ol.steps {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 18px;
+  counter-reset: s;
+}
+.md-typeset ol.steps > li {
+  counter-increment: s;
+  position: relative;
+  padding: 0 0 16px 42px;
+  margin: 0 0 0 13px;
+  border-left: 2px solid var(--line);
+}
+.md-typeset ol.steps > li:last-child { border-left-color: transparent; padding-bottom: 0; }
+.md-typeset ol.steps > li::before {
+  content: counter(s);
+  position: absolute;
+  left: -14px; top: -2px;
+  width: 27px; height: 27px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+.md-typeset ol.steps > li b:first-child { display: block; margin-bottom: 2px; }
+
+.md-typeset ul.check { list-style: none; padding: 0; margin: 1rem 0 18px; }
+.md-typeset ul.check > li { padding-left: 28px; position: relative; margin-bottom: 6px; }
+.md-typeset ul.check > li::before {
+  content: "";
+  position: absolute;
+  left: 6px; top: 12px;
+  width: 8px; height: 8px;
+  border-radius: 2px;
+  background: var(--green);
+}
+.md-typeset ul.check > li.todo::before {
+  background: transparent;
+  border: 2px solid var(--line-strong);
+  width: 10px; height: 10px;
+  top: 11px; left: 5px;
+}
+
+
+/* ============================================================================
+   NUANCIER · ARBRE DE FICHIERS
+   ========================================================================== */
+
+.md-typeset .swatches {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 1rem 0 18px;
+}
+@media (max-width: 760px) { .md-typeset .swatches { grid-template-columns: 1fr 1fr; } }
+.md-typeset .sw {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--card);
+}
+.md-typeset .sw i { display: block; height: 56px; }
+.md-typeset .sw span { display: block; padding: 8px 11px; font-size: 11.5px; font-weight: 600; }
+.md-typeset .sw em {
+  display: block;
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--muted);
+}
+
+.md-typeset .tree {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.85;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin: 1rem 0 18px;
+  overflow-x: auto;
+  color: var(--fg);
+  white-space: pre;
+}
+.md-typeset .tree b { color: var(--navy); font-weight: 700; }
+.md-typeset .tree i { color: var(--muted); font-style: normal; }
+
+
+/* ============================================================================
+   CODE — bloc « terminal » monochrome
+   ========================================================================== */
+
+.md-typeset code {
+  font-family: var(--mono);
+  font-size: .855em;
+  background: var(--accent);
+  color: var(--navy-700);
+  padding: 2px 6px;
+  border-radius: 6px;
+  border: 1px solid #dbe5f7;
+}
+
+.md-typeset pre > code,
+.md-typeset .highlight pre {
+  background: #0e1c33;
+  border: 1px solid #1c3057;
+}
+.md-typeset pre > code {
+  color: #e6edf8;
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  font-size: 13px;
+  line-height: 1.65;
+}
+/* Rendu monochrome : seuls les commentaires ressortent. */
+.md-typeset .highlight span { color: #e6edf8; }
+.md-typeset .highlight .c,
+.md-typeset .highlight .c1,
+.md-typeset .highlight .cm,
+.md-typeset .highlight .cp,
+.md-typeset .highlight .cs { color: #7d93b8 !important; font-style: italic; }
+.md-typeset .highlight .md-clipboard { color: rgba(230, 237, 248, .5); }
+.md-typeset .highlight:hover .md-clipboard { color: rgba(230, 237, 248, .85); }
+
+
+/* ============================================================================
+   IMAGES · VIDÉOS
+   ========================================================================== */
+
+.md-typeset img {
+  border-radius: var(--radius-sm);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
+  max-width: 100%;
+  height: auto;
+}
+.md-content video { border-radius: var(--radius); max-width: 100%; margin: 1.2rem 0; }
+
+
+/* ============================================================================
+   MODE SOMBRE (slate)
+   ========================================================================== */
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #1b4794;
+  --md-accent-fg-color:  #10b981;
+  --md-typeset-a-color:  #8ab4ff;
+  --md-default-bg-color: #0d1524;
+
+  --card:  #172033;
+  --page:  #0d1524;
+  --line:  #2b3a54;
+  --line-strong: #3b4d6b;
+  --fg:    #e2e8f0;
+  --muted: #94a3b8;
+  --accent:#16233d;
+}
+
+[data-md-color-scheme="slate"] .md-header {
+  background: linear-gradient(135deg, #111a2c 0%, #0d1524 100%);
+}
+[data-md-color-scheme="slate"] .md-header__title,
+[data-md-color-scheme="slate"] .md-header__button { color: #e2e8f0 !important; }
+
+@media screen and (min-width: 76.25em) {
+  [data-md-color-scheme="slate"] .md-sidebar--primary .md-sidebar__inner {
+    background: linear-gradient(180deg, #17223a 0%, #101a2c 100%);
+  }
+  [data-md-color-scheme="slate"] #urdfs-nav-toggle { background: #0d1524; }
+  [data-md-color-scheme="slate"] #urdfs-nav-toggle:hover { background: #060c17; }
+}
+[data-md-color-scheme="slate"] .md-nav--primary .md-nav__link:hover { background: #1c2942; color: #cdddff; }
+[data-md-color-scheme="slate"] .md-nav--primary .md-nav__item--active > .md-nav__link {
+  background: #1c2942;
+  color: #cdddff !important;
+}
+
+[data-md-color-scheme="slate"] .md-typeset h2,
+[data-md-color-scheme="slate"] .md-typeset h4,
+[data-md-color-scheme="slate"] .md-typeset .tile h4,
+[data-md-color-scheme="slate"] .md-typeset .card h3,
+[data-md-color-scheme="slate"] .md-typeset .card h4 { color: #cdddff; }
+[data-md-color-scheme="slate"] .md-typeset h3 { color: #e8eefb; }
+
+[data-md-color-scheme="slate"] .md-typeset .tip  { background: #0f2c1c; }
+[data-md-color-scheme="slate"] .md-typeset .warn { background: #2c220c; }
+[data-md-color-scheme="slate"] .md-typeset .note { background: #16233d; }
+[data-md-color-scheme="slate"] .md-typeset .badge.ok  { background: #0f2c1c; }
+[data-md-color-scheme="slate"] .md-typeset .badge.no  { background: #2c1414; }
+[data-md-color-scheme="slate"] .md-typeset .badge.wip { background: #2c220c; }
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) tbody tr:nth-child(even) { background: #131d30; }
+
+[data-md-color-scheme="slate"] .md-typeset code {
+  background: #1e2a40;
+  color: #8ab4ff;
+  border-color: #2b3a54;
+}
+
+[data-md-color-scheme="slate"] .md-footer__link { background: #172033; border-color: #2b3a54; }
+[data-md-color-scheme="slate"] .md-footer__direction { color: #cdddff; }
+[data-md-color-scheme="slate"] .md-footer-meta { background: #0d1524; }

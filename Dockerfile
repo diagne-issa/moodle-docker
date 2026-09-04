@@ -1,6 +1,7 @@
 FROM moodlehq/moodle-php-apache:8.3-bookworm
 
-ARG MOODLE_BRANCH=MOODLE_501_STABLE
+# Version Moodle FIGEE sur un tag git precis (pas une branche mouvante).
+ARG MOODLE_BRANCH=v5.1.6
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 

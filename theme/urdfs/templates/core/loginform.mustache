@@ -1,0 +1,154 @@
+{{!
+    Surcharge URDFS du template core/loginform : carte de connexion propre.
+    On conserve tous les champs, jetons et le bloc javascript requis.
+}}
+<div class="loginform urdfs-login-card">
+    {{! URDFS : logo blanc dédié (lisible sur le fond bleu de la page). }}
+    <div class="urdfs-login-brand" role="img" aria-label="{{sitename}}"></div>
+
+    <h1 class="urdfs-login-title">{{#str}}login{{/str}}</h1>
+    <p class="urdfs-login-subtitle">Bienvenue ! Connectez-vous à votre compte</p>
+
+    {{#maintenance}}
+        <div class="alert alert-danger login-maintenance">{{{maintenance}}}</div>
+    {{/maintenance}}
+    {{#error}}
+        <div class="alert alert-danger" id="loginerrormessage" role="alert">{{error}}</div>
+    {{/error}}
+    {{#info}}
+        <div class="alert alert-info" id="logininfomessage" role="status">{{info}}</div>
+    {{/info}}
+
+    {{#showloginform}}
+        <form class="login-form" action="{{loginurl}}" method="post" id="login">
+            <input id="anchor" type="hidden" name="anchor" value="">
+            <script>document.getElementById('anchor').value = location.hash;</script>
+            <input type="hidden" name="logintoken" value="{{logintoken}}">
+
+            <div class="login-form-username mb-3">
+                <label for="username" class="urdfs-field-label">
+                    {{^canloginbyemail}}{{#str}} username {{/str}}{{/canloginbyemail}}
+                    {{#canloginbyemail}}{{#str}} usernameemail {{/str}}{{/canloginbyemail}}
+                </label>
+                <input type="text" name="username" id="username" {{!
+                    !}}class="form-control form-control-lg" {{!
+                    !}}value="{{username}}" {{!
+                    !}}placeholder="{{^canloginbyemail}}{{#cleanstr}}username{{/cleanstr}}{{/canloginbyemail}}{{!
+                    !}}{{#canloginbyemail}}{{#cleanstr}}usernameemail{{/cleanstr}}{{/canloginbyemail}}" {{!
+                    !}}autocomplete="username">
+            </div>
+
+            <div class="login-form-password mb-3">
+                <label for="password" class="urdfs-field-label">{{#str}} password {{/str}}</label>
+                <input type="password" name="password" id="password" value="" {{!
+                    !}}class="form-control form-control-lg" {{!
+                    !}}placeholder="{{#cleanstr}}password{{/cleanstr}}" {{!
+                    !}}autocomplete="current-password">
+            </div>
+
+            {{#recaptcha}}
+                <div class="login-form-recaptcha mb-3">{{{recaptcha}}}</div>
+            {{/recaptcha}}
+
+            <div class="urdfs-login-options mb-3">
+                <div class="form-check urdfs-remember mb-0">
+                    <input class="form-check-input" type="checkbox" name="rememberusername" id="rememberusername" value="1">
+                    <label class="form-check-label" for="rememberusername">Se souvenir de moi</label>
+                </div>
+                <a class="urdfs-forgot" href="{{forgotpasswordurl}}">{{#str}} forgotaccount {{/str}}</a>
+            </div>
+
+            <div class="login-form-submit mb-3">
+                <button class="btn btn-primary btn-lg w-100" type="submit" id="loginbtn">{{#str}}login{{/str}}</button>
+            </div>
+        </form>
+    {{/showloginform}}
+
+    {{#hasidentityproviders}}
+        <div class="login-divider"></div>
+        <div class="login-identityproviders">
+            <h2 class="login-heading h6 text-center">{{#str}} potentialidps, auth {{/str}}</h2>
+            {{#identityproviders}}
+                <a class="btn login-identityprovider-btn w-100 mt-3" href="{{url}}">
+                    {{#iconurl}}
+                        <img src="{{iconurl}}" alt="" width="24" height="24"/>
+                    {{/iconurl}}
+                    {{name}}
+                </a>
+            {{/identityproviders}}
+        </div>
+    {{/hasidentityproviders}}
+
+    {{#hasinstructions}}
+        <div class="login-divider"></div>
+        <div class="login-instructions {{#cansignup}}mb-3{{/cansignup}}">
+            <h2 class="login-heading h6">{{#str}}firsttime{{/str}}</h2>
+            {{{instructions}}}
+        </div>
+    {{/hasinstructions}}
+
+    {{#cansignup}}
+        <div class="login-signup">
+            <a class="btn btn-secondary w-100" href="{{signupurl}}">{{#str}}startsignup{{/str}}</a>
+        </div>
+    {{/cansignup}}
+
+    {{! URDFS : accès anonyme et avis cookies retirés — connexion épurée. }}
+
+    {{#languagemenu}}
+        <div class="urdfs-login-footer">
+            <div class="login-languagemenu">
+                {{>core/action_menu}}
+            </div>
+        </div>
+    {{/languagemenu}}
+</div>
+{{#js}}
+    {{^error}}
+        {{#autofocusform}}
+            require(['core_form/events'], function(FormEvent) {
+                function autoFocus() {
+                    const userNameField = document.getElementById('username');
+                    const passwordField = document.getElementById('password');
+                    if (userNameField && userNameField.value.length == 0) {
+                        userNameField.focus();
+                    } else if (passwordField) {
+                        passwordField.focus();
+                    }
+                }
+                autoFocus();
+                window.addEventListener(FormEvent.eventTypes.fieldStructureChanged, autoFocus);
+            });
+        {{/autofocusform}}
+    {{/error}}
+    require(['core/pending'], function(Pending) {
+        const errorMessageDiv = document.getElementById('loginerrormessage');
+        const infoMessageDiv = document.getElementById('logininfomessage');
+        const errorMessage = errorMessageDiv?.textContent.trim();
+        const infoMessage = infoMessageDiv?.textContent.trim();
+        if (errorMessage || infoMessage) {
+            const pendingJS = new Pending('login-move-focus');
+            const usernameField = document.getElementById('username');
+            setTimeout(function() {
+                if (errorMessage && usernameField) {
+                    usernameField.focus();
+                }
+                if (errorMessage) {
+                    errorMessageDiv.innerHTML += "&nbsp;";
+                }
+                if (infoMessage) {
+                    infoMessageDiv.innerHTML += "&nbsp;";
+                }
+                pendingJS.resolve();
+            }, 500);
+        }
+    });
+    {{#togglepassword}}
+        require(['core/togglesensitive'], function(ToggleSensitive) {
+            ToggleSensitive.init("password", {{smallscreensonly}});
+        });
+    {{/togglepassword}}
+    require(['core_form/submit'], function(Submit) {
+        Submit.init("loginbtn");
+    });
+{{/js}}

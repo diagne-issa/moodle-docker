@@ -1,0 +1,36 @@
+# Fins de ligne normalisées.
+#
+# Le projet s'exécute dans des conteneurs Linux : un fichier enregistré sous
+# Windows avec des fins de ligne CRLF y casse les scripts shell et fait
+# échouer la lecture de .env, chaque valeur se terminant alors par un
+# retour chariot invisible.
+#
+# Git convertit donc tout en LF dans le dépôt, quelle que soit la machine.
+
+* text=auto eol=lf
+
+# Fichiers qui DOIVENT rester en LF, sans exception.
+*.sh        text eol=lf
+*.php       text eol=lf
+*.scss      text eol=lf
+*.css       text eol=lf
+*.js        text eol=lf
+*.mustache  text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.md        text eol=lf
+.env*       text eol=lf
+Dockerfile  text eol=lf
+
+# Fichiers binaires : Git ne doit rien convertir.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.pdf   binary
+*.gz    binary
+*.zip   binary
