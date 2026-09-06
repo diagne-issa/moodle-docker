@@ -44,6 +44,26 @@ Windows : PowerShell, le Terminal Windows ou WSL. macOS et Linux : le terminal d
 commandes <code>docker compose</code> sont les mêmes partout.
 </div>
 
+## Créer son fichier .env
+
+Étape obligatoire, à faire **une seule fois** après le clone. Les identifiants de la base et du
+compte administrateur ne sont pas versionnés : chacun crée les siens en partant du modèle fourni.
+
+```bash
+cp .env.example .env
+```
+
+Ouvrez ensuite `.env` et remplacez toutes les valeurs `replace_with_...` par vos propres mots de
+passe. Vérifiez surtout que `POSTGRES_PASSWORD` et `MOODLE_DB_PASSWORD` contiennent **la même
+valeur**, sans quoi Moodle ne pourra pas joindre sa base.
+
+<div class="warn" markdown="1">
+<b>Ne jamais versionner son <code>.env</code></b>
+Le fichier est volontairement listé dans <code>.gitignore</code>. Il contient des mots de passe :
+s'il part sur GitHub, ils sont exposés à tous ceux qui ont accès au dépôt. Le fichier
+<code>config.php</code> de Moodle ne contient d'ailleurs aucun secret, il lit ces variables.
+</div>
+
 ## Démarrage
 
 ```bash
