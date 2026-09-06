@@ -69,6 +69,14 @@ public.
 
 <div class="grid g2" markdown="1">
 <div class="card" markdown="1">
+#### Montée vers Moodle 5.3 LTS
+Version cible pour la mise en production, attendue en octobre 2026. Environ deux ans de support, et
+c'est la version que visent les auteurs de plugins. La montée consiste à changer `MOODLE_BRANCH`,
+reconstruire l'image et lancer `upgrade.php`, après un test sur une copie.
+
+<span class="badge no">Avant la mise en production</span>
+</div>
+<div class="card" markdown="1">
 #### Serveur BigBlueButton dédié
 Le serveur public de démonstration ne convient pas à un usage réel : aucune garantie de
 disponibilité, aucune confidentialité, durée de session limitée.

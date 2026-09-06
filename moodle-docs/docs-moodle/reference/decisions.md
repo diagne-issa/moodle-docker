@@ -47,6 +47,44 @@ version. Les montées de version deviennent des décisions explicites, pas des a
 </div>
 
 <div class="card" markdown="1">
+#### Cible de production : Moodle 5.3 LTS, attendue en octobre 2026
+
+**Contexte.** Le développement a démarré sur Moodle 5.1, version courante au moment du lancement du
+projet.
+
+**Problème.** 5.1 est une version de transition. Ses correctifs fonctionnels s'arrêtent le
+5 octobre 2026 et ses correctifs de sécurité en avril 2027. Ce n'est pas une base sur laquelle
+installer une université pour plusieurs années. Redescendre vers l'actuelle LTS 4.5 n'est pas une
+option : Moodle ne migre sa base que vers le haut, et 4.5 ne reçoit déjà plus que des correctifs de
+sécurité.
+
+**Décision.** Poursuivre le développement sur 5.1, puis **mettre en production sur 5.3 LTS** dès sa
+sortie, prévue en octobre 2026. Une LTS offre environ deux ans de support et c'est la version que
+visent les auteurs de plugins tiers.
+
+**Conséquence.** La montée se résume à changer `MOODLE_BRANCH` dans `.env`, reconstruire l'image et
+lancer `upgrade.php`. Le thème, les rôles et les scripts suivent sans réécriture, précisément parce
+que tout vit dans un thème enfant et des scripts idempotents. La montée sera testée sur une copie
+avant toute application en production.
+</div>
+
+<div class="card" markdown="1">
+#### Plugins installés par le `Dockerfile`, pas par l'interface web
+
+**Problème.** Un plugin installé depuis l'interface d'administration vit dans l'image du conteneur.
+Il disparaît à la première reconstruction, et rien n'indique à un collègue quelle version installer.
+
+**Décision.** Chaque plugin est cloné dans le `Dockerfile`, sur une branche figée. L'installation
+devient reproductible à l'identique pour toute l'équipe et survit aux reconstructions. Après ajout,
+`upgrade.php` crée les tables du plugin.
+
+**À savoir.** Le champ `$plugin->requires` d'un plugin déclare une version **minimale** de Moodle.
+Une branche prévue pour 5.0 s'installe donc sans problème sur 5.1, alors qu'une branche 5.2 serait
+refusée. C'est pourquoi Custom certificate est installé depuis `MOODLE_500_STABLE`, faute de branche
+5.1 publiée.
+</div>
+
+<div class="card" markdown="1">
 #### Déléguer aux fonctions SCSS du parent
 
 **Problème.** Le thème appelait `file_get_contents('theme/boost/scss/pre.scss')`. Ce chemin a changé

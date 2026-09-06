@@ -48,6 +48,19 @@ RUN git clone --branch ${ATTENDANCE_BRANCH} --depth 1 \
         /var/www/html/public/mod/attendance \
     && rm -rf /var/www/html/public/mod/attendance/.git
 
+# Custom certificate : attestations de suivi personnalisables.
+#
+# Branche 5.0 volontairement, alors que nous sommes en 5.1 : ce plugin n'a pas
+# publié de branche 5.1. Ce n'est pas gênant, car `$plugin->requires` déclare
+# une version MINIMALE de Moodle. Une branche 5.0 s'installe donc sur 5.1.
+# C'est l'inverse qui échouerait : MOODLE_502_STABLE exigerait Moodle 5.2.
+ARG CUSTOMCERT_BRANCH=MOODLE_500_STABLE
+
+RUN git clone --branch ${CUSTOMCERT_BRANCH} --depth 1 \
+        https://github.com/mdjnelson/moodle-mod_customcert.git \
+        /var/www/html/public/mod/customcert \
+    && rm -rf /var/www/html/public/mod/customcert/.git
+
 RUN composer install --no-dev --classmap-authoritative --no-cache
 
 RUN mkdir -p /var/www/moodledata \
