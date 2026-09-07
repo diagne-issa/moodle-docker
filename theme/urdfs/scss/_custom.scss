@@ -195,6 +195,7 @@ $urdfs-role-accents: (
     "urdfs-role-admin": $urdfs-admin-accent,
     "urdfs-role-teacher": $urdfs-teacher-accent,
     "urdfs-role-student": $urdfs-student-accent,
+    "urdfs-role-responsable": $urdfs-brand,
 );
 
 @each $class, $accent in $urdfs-role-accents {
@@ -1817,18 +1818,23 @@ body[id^="page-course-view"] {
 body[id^="page-mod-attendance"] {
 
     // Barre de filtres et navigation entre périodes.
+    //
+    // PAS de carte ici : cette barre est déjà à l'intérieur d'une boîte
+    // stylée par le palier des pages d'activité. Lui en ajouter une créait
+    // un double cadre, un fond dans un fond. On garde donc le cadre
+    // extérieur et on rend celui-ci transparent.
     .attfiltercontrols,
     .attfiltercontrols > .nav {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 0.5rem;
-        background: #fff;
-        border: 1px solid $urdfs-border;
-        border-radius: $border-radius;
-        box-shadow: $urdfs-sh-sm;
-        padding: 0.75rem 1rem;
-        margin-bottom: 1.25rem;
+        justify-content: space-between;
+        gap: 0.75rem 1.25rem;
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+        padding: 0;
+        margin-bottom: 1rem;
     }
     .attfiltercontrols .btn,
     .attfiltercontrols .nav-link {
@@ -1882,6 +1888,224 @@ body[id^="page-mod-attendance"] {
     // Barres de progression du taux de présence.
     .progress { border-radius: 999px; height: 0.6rem; background: $urdfs-secondary; }
     .progress-bar { background: $urdfs-success; }
+
+    // --- Correctifs d'affichage de la page de saisie ------------
+
+    // Un seul cadre : toute boîte imbriquée dans une autre perd le sien.
+    #region-main .box .box,
+    #region-main .generalbox .generalbox,
+    #region-main .box .attfiltercontrols,
+    #region-main .card .card {
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin-bottom: 0;
+    }
+
+    // En-tête de séance : date et intitulé à gauche, réglages d'affichage
+    // et pagination groupés à droite, au lieu d'un empilement désordonné.
+    .attfiltercontrols .fitem,
+    .attfiltercontrols .singleselect,
+    .attfiltercontrols .urlselect,
+    .attfiltercontrols form {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0;
+    }
+    .attfiltercontrols label,
+    .attfiltercontrols .col-form-label {
+        margin: 0;
+        padding: 0;
+        white-space: nowrap;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: $urdfs-muted-fg;
+    }
+    .attfiltercontrols select,
+    .attfiltercontrols .custom-select {
+        width: auto;
+        min-width: 8rem;
+        border-radius: 0.6rem;
+    }
+
+    // Indicateur « Page 1 sur 1 » : discret, aligné avec le reste,
+    // et non plus flottant dans un coin.
+    .attfiltercontrols .paging,
+    .attfiltercontrols .pagingbar,
+    #region-main .paging {
+        font-size: 0.85rem;
+        color: $urdfs-muted-fg;
+        border: 1px solid $urdfs-border;
+        border-radius: 0.6rem;
+        padding: 0.35rem 0.7rem;
+        margin: 0;
+    }
+
+    // De l'air entre le tableau et le bouton d'enregistrement, qui
+    // sinon se colle au bord de la dernière ligne.
+    #region-main table { margin-bottom: 1.5rem; }
+    #region-main table + .singlebutton,
+    #region-main table ~ .singlebutton,
+    #region-main input[type="submit"],
+    #region-main table ~ .btn-primary { margin-top: 0.5rem; }
+
+    // Récapitulatif des statuts sous le tableau, aujourd'hui en texte nu.
+    #region-main .attendance-statuses,
+    #region-main .statusdesc {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1.25rem;
+        font-size: 0.88rem;
+        color: $urdfs-muted-fg;
+        margin-top: 1rem;
+    }
+
+    // --- En-tête de séance : LES VRAIES CLASSES ------------------
+    // Le plugin n'utilise pas .attfiltercontrols mais un bloc
+    // `.generalbox.takecontrols` contenant un TABLEAU de mise en page.
+    // La carte extérieure vient déjà du palier des pages d'activité :
+    // tout ce qui est à l'intérieur redevient donc transparent, ce qui
+    // supprime le cadre dans le cadre.
+    .takecontrols .table-responsive,
+    .takecontrols table,
+    .takecontrols table tr,
+    .takecontrols table td {
+        background: transparent !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    // Le plugin met en page avec un TABLEAU, dont les cellules sont trop
+    // étroites : les deux listes déroulantes s'empilaient. On sort donc de
+    // la logique tableau pour une disposition souple, ce qui permet de tout
+    // aligner sur une seule ligne.
+    .takecontrols table,
+    .takecontrols tbody { display: block; width: 100%; }
+    .takecontrols tr {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem 1.25rem;
+        width: 100%;
+    }
+    .takecontrols td { display: block; }
+    .takecontrols td.c0 { flex: 1 1 14rem; }
+
+    // Bloc de droite : étiquette de page et listes déroulantes en ligne.
+    .takecontrols td.lastcol {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.6rem 0.85rem;
+    }
+    .takecontrols td.lastcol br { display: none; } // sauts de ligne du plugin
+
+    // « Page 1 sur 1 » en étiquette discrète, placée EN FIN de ligne.
+    // Dans le HTML du plugin elle précède les listes déroulantes ; `order`
+    // la renvoie après elles, là où l'œil l'attend.
+    .takecontrols .attbtn {
+        order: 2;
+        display: inline-block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: $urdfs-muted-fg;
+        border: 1px solid $urdfs-border;
+        border-radius: 0.6rem;
+        padding: 0.3rem 0.7rem;
+        margin: 0;
+    }
+    .takecontrols td.lastcol .singleselect { order: 1; }
+
+    // Les deux listes déroulantes sur une même ligne, à droite.
+    // flex-wrap: nowrap est essentiel : le formulaire du plugin est en
+    // `d-flex flex-wrap`, ce qui renvoyait l'étiquette au-dessus du champ.
+    .takecontrols .singleselect { display: inline-flex; margin: 0; }
+    .takecontrols .singleselect form {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.5rem;
+        margin: 0;
+    }
+    .takecontrols .singleselect label {
+        margin: 0;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: $urdfs-muted-fg;
+        white-space: nowrap;
+    }
+    .takecontrols select,
+    .takecontrols .form-select {
+        width: auto;
+        min-width: 7.5rem;
+        border-radius: 0.6rem;
+    }
+
+    // Le plugin centre son bouton avec une balise <center> : on lui
+    // donne l'air qui lui manque entre le tableau et lui.
+    #region-main center {
+        display: block;
+        margin: 1.75rem 0 1rem;
+    }
+
+    // --- Page de gestion des séances ( manage.php ) ---------------
+    // Sous la liste des séances, le plugin place la barre d'actions
+    // « Choisir… / OK » dans un SECOND tableau. Rendu tel quel, il crée
+    // un grand vide et une ligne fantôme. On le transforme en simple
+    // barre d'outils accolée au tableau.
+    .attsessions_manage_table {
+
+        // Plus d'écart entre la liste et la barre d'actions.
+        table.generaltable.table { margin-bottom: 0 !important; }
+        .table-responsive + .table-responsive { margin-top: 0; }
+
+        table.table-reboot,
+        table.table-reboot tbody { display: block; width: 100%; margin: 0 !important; }
+
+        table.table-reboot tr {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            width: 100%;
+            border-top: 1px solid $urdfs-border;
+            padding: 0.85rem 0.95rem;
+        }
+        table.table-reboot td {
+            display: block;
+            width: auto !important;
+            background: transparent !important;
+            border: 0 !important;
+            padding: 0 !important;
+        }
+        table.table-reboot select,
+        table.table-reboot .form-select {
+            width: auto;
+            min-width: 10rem;
+            border-radius: 0.6rem;
+        }
+    }
+}
+
+// =============================================================
+// PALIER 31 — SUPPRESSION DU FOND CLAIR SOUS LE CONTENU
+// Une surface teintée se superposait à la carte blanche de la page.
+// Elle débordait sur plusieurs écrans et n'apportait rien : deux
+// fonds empilés se lisent comme une erreur, pas comme une intention.
+// On ne garde que la surface blanche.
+// =============================================================
+.urdfs-has-sidebar #region-main,
+.urdfs-has-sidebar #region-main > div[role="main"],
+.urdfs-has-sidebar #region-main-box {
+    background: transparent !important;
 }
 
 // =============================================================
@@ -4959,14 +5183,20 @@ body.urdfs-role-student .urdfs-nav { padding-top: 0.5rem; }
     border-radius: 0.35rem;
 }
 
-// 4 statistiques (au lieu de 3 pour l'etudiant).
+// 4 statistiques (au lieu de 3 pour l'etudiant), alignees sur UNE ligne.
+// Quatre chiffres cles se lisent d'un balayage horizontal ; sur deux
+// lignes, l'oeil doit revenir a la ligne et la comparaison se perd.
 .urdfs-sstats--teacher {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 1rem;
 }
-@media (min-width: 1200px) {
-    .urdfs-sstats--teacher { grid-template-columns: repeat(2, 1fr); }
+// Deux par deux sur tablette, puis empilees sur mobile.
+@media (max-width: 1100px) {
+    .urdfs-sstats--teacher { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+    .urdfs-sstats--teacher { grid-template-columns: minmax(0, 1fr); }
 }
 
 // Panneau « Travaux a corriger ».
@@ -5091,6 +5321,32 @@ body.urdfs-role-student .urdfs-nav { padding-top: 0.5rem; }
     border-left: 5px solid $urdfs-gold;
 }
 
+// Espace RESPONSABLE PEDAGOGIQUE : meme famille visuelle que le
+// pilotage, liseré vert de charte pour marquer le suivi pédagogique.
+.urdfs-welcome--responsable {
+    background: linear-gradient(135deg, #12336b 0%, $urdfs-brand 55%, #10305f 100%);
+    border-left: 5px solid $urdfs-success;
+}
+
+// Il n'a que trois indicateurs : la grille s'ajuste au lieu de
+// laisser une colonne vide.
+body.urdfs-role-responsable .urdfs-kpi-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+@media (max-width: 900px) {
+    body.urdfs-role-responsable .urdfs-kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (max-width: 560px) {
+    body.urdfs-role-responsable .urdfs-kpi-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+// La carte « Mes formations » prend toute la largeur sous les KPI.
+body.urdfs-role-responsable .urdfs-actions { margin-top: 1.25rem; }
+
 // Les 4 indicateurs sur UNE SEULE ligne.
 .urdfs-kpi-grid {
     display: grid;
@@ -5210,6 +5466,240 @@ body.urdfs-role-student .urdfs-nav { padding-top: 0.5rem; }
 #region-main > [role="main"] > :last-child,
 #region-main > :last-child {
     margin-bottom: 0;
+}
+
+// =============================================================
+// PALIER 32 — RÈGLE GÉNÉRALE CONTRE LES TABLEAUX QUI DÉBORDENT
+// Jusqu'ici le problème était traité page par page, ce qui le faisait
+// réapparaître sur chaque écran non encore visité. On pose ici une règle
+// unique : AUCUN tableau ne déborde de la page. S'il est trop large, son
+// cadre défile horizontalement et la page, elle, ne bouge pas.
+// =============================================================
+.urdfs-has-sidebar {
+
+    // Moodle enveloppe ses tableaux dans .no-overflow ou .table-responsive
+    // selon les pages. Les deux deviennent des cadres défilants.
+    #region-main .no-overflow,
+    #region-main .table-responsive,
+    #region-main .flexible-wrap {
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: visible;
+        scrollbar-width: thin;
+        scrollbar-color: $urdfs-border-strong transparent;
+    }
+    #region-main .no-overflow::-webkit-scrollbar,
+    #region-main .table-responsive::-webkit-scrollbar { height: 9px; }
+    #region-main .no-overflow::-webkit-scrollbar-thumb,
+    #region-main .table-responsive::-webkit-scrollbar-thumb {
+        background: $urdfs-border-strong;
+        border-radius: 999px;
+        border: 3px solid transparent;
+        background-clip: content-box;
+    }
+
+    // Filet de sécurité : un tableau sans enveloppe ne dépasse jamais
+    // la largeur de la colonne de contenu.
+    #region-main table { max-width: 100%; }
+
+    // Certaines pages (permissions, rôles, réglages) posent leur tableau
+    // à nu, sans .table-responsive : il n'avait alors aucun cadre pour
+    // défiler et poussait la page. « display: block » fait du tableau
+    // lui-même la boîte défilante, sans toucher au HTML de Moodle.
+    #region-main > div[role="main"] > table,
+    #region-main .generalbox > table,
+    #region-main .generalbox > form > table,
+    #region-main .box > table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: visible;
+        scrollbar-width: thin;
+        scrollbar-color: $urdfs-border-strong transparent;
+    }
+
+    // Les cellules respirent, et leur contenu se replie plutôt que de
+    // pousser le tableau vers la droite.
+    #region-main table td,
+    #region-main table th {
+        vertical-align: top;
+        overflow-wrap: anywhere;
+    }
+}
+
+// =============================================================
+// PALIER 33 — PAGES DE PERMISSIONS ET DE RÔLES
+// Écrans très denses : une capability par ligne, plusieurs rôles par
+// cellule, chacun suivi de son icône de suppression. Sans mise en forme,
+// tout se colle et devient illisible.
+// =============================================================
+body[id^="page-admin-roles"] {
+
+    // --- Barre de dérogation avancée -------------------------------
+    // Le sélecteur de rôle, isolé au-dessus du tableau.
+    #region-main .advancedoverride {
+        margin: 0 0 1.1rem;
+        padding-bottom: 1.1rem;
+        border-bottom: 1px solid $urdfs-border;
+    }
+    #region-main .advancedoverride label { margin: 0 0.15rem 0 0; font-weight: 600; }
+    #region-main .advancedoverride select { min-width: 18rem; }
+
+    // --- Barre de filtre -------------------------------------------
+    // Moodle pose une largeur en pixels DIRECTEMENT dans l'attribut
+    // style (width: 1006px) : le bloc débordait donc de sa carte dès
+    // que la fenêtre était plus étroite. Le !important est ici
+    // indispensable, un style en ligne l'emporte sur toute règle CSS.
+    #region-main .capabilitysearchui {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 0 1.25rem !important;
+        gap: 0.6rem;
+    }
+    #region-main .capabilitysearchui label { margin: 0; font-weight: 600; }
+    #region-main .capabilitysearchui input[type="text"] {
+        flex: 1 1 16rem;
+        min-width: 12rem;
+        margin: 0 !important;
+    }
+
+    // --- Le tableau lui-même ---------------------------------------
+    // Moodle ne l'enveloppe dans aucun conteneur défilant : il sortait
+    // donc de la carte et poussait la page entière vers la droite.
+    // « display: block » transforme le tableau en sa propre boîte
+    // défilante : les colonnes gardent leur largeur, c'est le cadre
+    // qui défile, et la page ne bouge plus.
+    #region-main table#permissions,
+    #region-main table.rolecap {
+        display: block;
+        width: 100% !important;
+        max-width: 100%;
+        overflow-x: auto;
+        overflow-y: visible;
+        margin-bottom: 0;
+        border-radius: $border-radius;
+        scrollbar-width: thin;
+        scrollbar-color: rgba($urdfs-brand, 0.35) transparent;
+        -webkit-overflow-scrolling: touch;
+    }
+    // L'en-tête reste visible pendant le défilement vertical.
+    #region-main table#permissions thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: $urdfs-brand !important;
+        color: #fff !important;
+        border: 0 !important;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+    }
+
+    #region-main table#permissions td,
+    #region-main table#permissions th { padding: 0.8rem 1rem; vertical-align: top; }
+
+    // Colonne « Capacité » : le libellé est dans un <th scope="row">,
+    // pas dans un <td>. Le nom technique passe en dessous, en gris.
+    #region-main table#permissions th.name {
+        width: 34%;
+        min-width: 15rem;
+        line-height: 1.5;
+        font-weight: 600;
+        background: transparent;
+    }
+    #region-main table#permissions .cap-name {
+        display: block;
+        margin-top: 0.2rem;
+        font-size: 0.78rem;
+        font-weight: 400;
+        color: $urdfs-muted-fg;
+        word-break: break-word;
+    }
+
+    // Bandes de section (« Activité : Devoir », « Catégorie »…).
+    #region-main table#permissions tr.rolecapheading td.header {
+        padding: 0.7rem 1rem;
+        background: rgba($urdfs-brand, 0.06);
+        border-top: 2px solid rgba($urdfs-brand, 0.18);
+        color: $urdfs-brand;
+        font-size: 0.85rem;
+        letter-spacing: 0.01em;
+    }
+
+    // Colonne des risques : pictogrammes centrés, jamais coupés.
+    #region-main table#permissions td.risks,
+    #region-main table#permissions th:nth-child(2) {
+        width: 8rem;
+        text-align: center;
+        white-space: nowrap;
+    }
+    #region-main table#permissions td.risks .action-icon { margin: 0 0.1rem !important; }
+
+    // Colonnes des rôles : une pastille par rôle, au lieu d'un pavé
+    // de texte où les noms se touchaient.
+    #region-main table#permissions td.allowedroles { min-width: 16rem; }
+    #region-main table#permissions td.forbiddenroles { width: 6rem; text-align: center; }
+
+    #region-main table#permissions .allowed,
+    #region-main table#permissions .forbidden {
+        margin: 0 0.35rem 0.4rem 0;
+        padding: 0.18rem 0.3rem 0.18rem 0.45rem;
+        border: 1px solid $urdfs-border;
+        border-radius: 999px;
+        background: #fff;
+        font-size: 0.82rem;
+        line-height: 1.6;
+        white-space: nowrap;
+    }
+    #region-main table#permissions .allowed { border-color: rgba($urdfs-success, 0.35); }
+    #region-main table#permissions .forbidden { border-color: rgba($urdfs-destructive, 0.35); }
+
+    // Icône corbeille : discrète, elle ne se colore qu'au survol.
+    #region-main table#permissions .preventlink {
+        padding: 0 !important;
+        margin-left: 0.15rem;
+        color: $urdfs-muted-fg;
+        opacity: 0.55;
+        vertical-align: middle;
+    }
+    #region-main table#permissions .preventlink:hover {
+        opacity: 1;
+        color: $urdfs-destructive;
+    }
+
+    // Boutons « + » d'ajout : petits, alignés, sur leur propre ligne.
+    #region-main table#permissions .allowmore,
+    #region-main table#permissions .prohibitmore { margin-top: 0.2rem; }
+    #region-main table#permissions .allowlink,
+    #region-main table#permissions .prohibitlink {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.7rem;
+        height: 1.7rem;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 1px dashed $urdfs-border;
+        border-radius: 50%;
+        color: $urdfs-muted-fg;
+    }
+    #region-main table#permissions .allowlink:hover {
+        border-color: $urdfs-success;
+        color: $urdfs-success;
+        border-style: solid;
+    }
+    #region-main table#permissions .prohibitlink:hover {
+        border-color: $urdfs-destructive;
+        color: $urdfs-destructive;
+        border-style: solid;
+    }
+
+    // Lien de retour sous le tableau : il était collé au cadre.
+    #region-main .backlink {
+        margin-top: 1.5rem;
+        padding-top: 0.25rem;
+    }
 }
 
 // Conteneurs de listing (categories, cours, listes diverses) : meme
@@ -5885,4 +6375,26 @@ body.urdfs-has-sidebar { overflow-x: hidden; }
         font-size: 0.86rem;
         vertical-align: middle;
     }
+}
+
+// =============================================================
+// PAGE D'ATTRIBUTION D'UN RÔLE ( /admin/roles/assign.php )
+// Écran hérité, construit sur un tableau de mise en page à trois
+// cellules. J'ai essayé de le convertir en grille : le résultat
+// était pire (colonnes rognées, listes tronquées). On garde donc
+// la mise en page native de Moodle, qui fonctionne, et on se
+// limite à de l'espacement. Ne pas y retoucher sans maquette.
+// =============================================================
+#page-admin-roles-assign {
+
+    // Le bouton « Retour » ne colle plus au titre.
+    #region-main .tertiary-navigation { margin-bottom: 1.25rem; }
+
+    #region-main h2 { margin-bottom: 1.5rem; }
+
+    // Un peu d'air entre les trois colonnes du tableau natif.
+    #region-main #assigningrole td { padding: 0.5rem 0.75rem; }
+
+    // Le sélecteur « Attribuer un autre rôle », détaché du tableau.
+    #region-main .backlink { margin-top: 1.75rem; }
 }

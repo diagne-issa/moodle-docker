@@ -9,7 +9,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2026072801;
+$plugin->version   = 2026090701;
 $plugin->requires  = 2024100700; // Moodle 4.5 / 5.0+
 $plugin->component = 'theme_urdfs';
 $plugin->maturity  = MATURITY_ALPHA;

@@ -100,6 +100,93 @@ attribuer, ni à lui-même ni à personne, le rôle Manager ou Administrateur.
 | Technopédagogue | <span class="badge no">Refusé</span> |
 | Administrateur | <span class="badge no">Refusé</span> |
 
+## Le rôle Responsable pédagogique
+
+Il assure le suivi opérationnel **d'une ou plusieurs formations précises**, là où le technopédagogue
+pilote l'ensemble de la plateforme.
+
+```bash
+cat scripts/setup_responsable_pedagogique.php | docker compose exec -T -u www-data moodle php
+```
+
+### La distinction ne tient pas aux droits, mais au contexte
+
+C'est le point à comprendre, et il évite bien des malentendus.
+
+| | Technopédagogue | Responsable pédagogique |
+|---|---|---|
+| Portée | Toute la plateforme | Les formations qui lui sont confiées |
+| Attribué au niveau | Système | Catégorie |
+| Créer et supprimer des cours | <span class="badge ok">Oui</span> | <span class="badge no">Non</span> |
+| Créer des comptes | <span class="badge ok">Oui</span> | <span class="badge no">Non</span> |
+| Consulter les notes | <span class="badge ok">Oui</span> | <span class="badge ok">Oui</span> |
+| **Modifier** les notes | <span class="badge ok">Oui</span> | <span class="badge no">Non</span> |
+| Rapports et exports | <span class="badge ok">Oui</span> | <span class="badge ok">Oui</span> |
+| Contacter enseignants et étudiants | <span class="badge ok">Oui</span> | <span class="badge ok">Oui</span> |
+| Réglages techniques | <span class="badge no">Non</span> | <span class="badge no">Non</span> |
+
+Le cloisonnement est **structurel** : le rôle est déclaré attribuable uniquement sur une catégorie
+ou un cours, jamais au niveau système. Personne ne peut donc lui donner une portée globale, même par
+erreur. Filtrer l'affichage n'aurait rien protégé, puisqu'il aurait suffi de saisir l'URL d'un autre
+cours.
+
+<div class="warn" markdown="1">
+<b>Il ne modifie jamais les notes</b>
+<code>moodle/grade:edit</code>, <code>mod/assign:grade</code> et <code>mod/quiz:grade</code> sont en
+<i>Prevent</i>. Il consulte, exporte et alerte ; la correction reste la responsabilité de
+l'enseignant. C'est une garantie pédagogique autant qu'une règle de sécurité.
+</div>
+
+### Un responsable, plusieurs formations
+
+C'est le cas courant, et Moodle le gère par la **hiérarchie des catégories**. Le périmètre se règle
+en choisissant le niveau où l'on attribue le rôle.
+
+| Besoin | Où attribuer |
+|---|---|
+| Il suit **tout un domaine** | Sur la catégorie du domaine, par exemple *Numérique & IA*. Il hérite de toutes les formations qu'elle contient. |
+| Il suit **deux formations** de domaines différents | Deux attributions, une sur chaque catégorie de formation. |
+| Il suit **une seule promotion** | Sur la catégorie du niveau, par exemple *L1* sous *Licence Data & IA*. |
+
+Les attributions s'additionnent : un même utilisateur peut porter le rôle sur autant de catégories
+que nécessaire, et il verra l'union de ces périmètres.
+
+### Attribuer le rôle
+
+La manipulation diffère de celle du technopédagogue, et c'est volontaire.
+
+<ol class="steps" markdown="1">
+<li markdown="1"><b>Ouvrir la catégorie concernée</b>
+<i>Cours → Catégories</i>, puis cliquer sur la formation ou le domaine.</li>
+<li markdown="1"><b>Aller dans l'attribution des rôles</b>
+Menu de la catégorie, <i>Permissions → Attribuer des rôles</i>.</li>
+<li markdown="1"><b>Choisir Responsable pédagogique</b>
+Sélectionner l'utilisateur dans la colonne de droite, puis <b>Ajouter</b>.</li>
+<li markdown="1"><b>Répéter si nécessaire</b>
+Une attribution par catégorie dont il est responsable.</li>
+<li markdown="1"><b>Faire reconnecter l'utilisateur</b>
+Sans déconnexion puis reconnexion, sa session conserve les anciennes permissions.</li>
+</ol>
+
+<div class="note" markdown="1">
+<b>Jamais depuis les rôles système</b>
+Ne pas passer par <i>Administration du site → Utilisateurs → Permissions → Attribuer des rôles
+système</i> : cette page est réservée au technopédagogue. Le rôle Responsable pédagogique n'y
+apparaît d'ailleurs pas, par construction.
+</div>
+
+Le technopédagogue peut nommer lui-même les responsables, sans solliciter l'administrateur.
+
+### Son espace dans le thème
+
+Le thème choisit l'espace à afficher d'après les **capabilities** de l'utilisateur. Or le responsable
+n'en possède aucune au niveau système, puisque c'est justement ce qui le cloisonne : il tombait donc
+dans l'espace étudiant.
+
+La détection se fait maintenant sur son **attribution de rôle**, dans `theme_urdfs_is_responsable()`,
+quel que soit le contexte. Il obtient sa propre navigation (ses formations, calendrier, messagerie)
+et un tableau de bord qui affiche son périmètre : formations suivies, cours concernés, étudiants.
+
 ## Durcissement du rôle Enseignant
 
 Trois capabilities passées explicitement en *Prevent* sur `editingteacher` :

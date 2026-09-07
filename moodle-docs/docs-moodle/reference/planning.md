@@ -45,13 +45,13 @@ standard, avec un modèle de permissions réel.
 <li markdown="1">Documentation complète et multiplateforme</li>
 <li markdown="1">Scripts de sauvegarde et de restauration, restauration testée avec succès</li>
 <li markdown="1">Code partagé sur dépôt privé, sans aucun secret versionné</li>
+<li markdown="1">Rôles et capabilities appliqués par script</li>
+<li markdown="1">Catalogue complet en place : 5 domaines, 76 catégories, 43 cohortes</li>
 </ul>
 
 ### Reste à faire pour clore la V0
 
 <ul class="check" markdown="1">
-<li class="todo" markdown="1">Exécuter `setup_offre_formation.php` : catalogue complet des 20 formations</li>
-<li class="todo" markdown="1">Relancer `setup_roles.php` pour les dernières capabilities, puis purger</li>
 <li class="todo" markdown="1">Programmer la sauvegarde automatique dans `crontab`</li>
 <li class="todo" markdown="1">Déposer le favicon URDFS dans `theme/urdfs/pix/` et dans la documentation</li>
 <li class="todo" markdown="1">Retirer le thème `moove` : montage dans `docker-compose.yml` puis dossier</li>

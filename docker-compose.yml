@@ -45,7 +45,6 @@ services:
       - moodledata:/var/www/moodledata
       - ./config.php:/var/www/html/config.php
       - ./theme/urdfs:/var/www/html/public/theme/urdfs
-      - ./theme/moove:/var/www/html/public/theme/moove
     depends_on:
       postgres:
         condition: service_healthy
@@ -75,7 +74,6 @@ services:
       - moodledata:/var/www/moodledata
       - ./config.php:/var/www/html/config.php
       - ./theme/urdfs:/var/www/html/public/theme/urdfs
-      - ./theme/moove:/var/www/html/public/theme/moove
     depends_on:
       postgres:
         condition: service_healthy

@@ -102,6 +102,38 @@ Il apparaît sous l'activité quelques minutes après la fin de la séance, une 
 - **Rapports → Achèvement d'activité** : qui a terminé quoi
 - **Rapports → Participation** : qui n'a rien consulté depuis N jours
 
+## Prendre les présences
+
+Le plugin **Présence** s'ajoute comme n'importe quelle activité, par *Ajouter une activité ou
+ressource → Présence*. Une seule activité suffit pour tout le cours.
+
+<ol class="steps" markdown="1">
+<li markdown="1"><b>Créer les séances</b>
+Dans l'activité, onglet <i>Sessions</i>, puis <i>Ajouter une session</i>. Une séance récurrente
+peut être générée pour tout le semestre en une fois.</li>
+<li markdown="1"><b>Saisir les présences</b>
+Cliquer sur la date de la séance. Chaque étudiant se coche en P, R, E ou A, pour présent, retard,
+excusé ou absent, avec une remarque facultative.</li>
+<li markdown="1"><b>Exporter</b>
+Onglet <i>Rapport</i>, puis export en tableur pour la scolarité.</li>
+</ol>
+
+## Délivrer une attestation
+
+L'activité **Certificat personnalisé** génère un PDF nominatif. Elle s'ajoute comme les autres,
+puis se compose par le bouton **Modifier le certificat** : nom de l'étudiant, intitulé du cours,
+date, logo de l'université.
+
+<div class="warn" markdown="1">
+<b>Toujours poser une condition de délivrance</b>
+Par défaut, l'attestation est téléchargeable dès le premier jour, par n'importe quel étudiant
+inscrit, même s'il n'a rien fait. Cela vide le document de sa valeur.
+
+Dans les réglages de l'activité, section <i>Restreindre l'accès</i>, exigez une condition réelle :
+l'<b>achèvement du cours</b>, une <b>note minimale</b>, ou une <b>date</b> de fin de session. Le
+bouton de téléchargement n'apparaîtra alors qu'aux étudiants qui remplissent la condition.
+</div>
+
 ## Les limites du rôle
 
 <div class="note" markdown="1">

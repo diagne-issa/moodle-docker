@@ -138,6 +138,157 @@ function theme_urdfs_is_technopedagogue(): bool {
 }
 
 /**
+ * L'utilisateur courant est-il responsable pédagogique ?
+ *
+ * On ne peut PAS le détecter par une capability : le rôle n'est jamais
+ * attribué au niveau système (c'est précisément ce qui le cloisonne),
+ * donc has_capability() au niveau système répond toujours non. On
+ * interroge donc directement les attributions de rôle, quel que soit
+ * le contexte (catégorie ou cours).
+ *
+ * @return bool
+ */
+function theme_urdfs_is_responsable(): bool {
+    global $DB, $USER;
+    static $cache = null;
+
+    if (!isloggedin() || isguestuser() || is_siteadmin()) {
+        return false;
+    }
+    if ($cache !== null) {
+        return $cache;
+    }
+
+    try {
+        $cache = $DB->record_exists_sql(
+            "SELECT 1
+               FROM {role_assignments} ra
+               JOIN {role} r ON r.id = ra.roleid
+              WHERE ra.userid = ? AND r.shortname = ?",
+            [$USER->id, 'responsablepedagogique']
+        );
+    } catch (Throwable $e) {
+        $cache = false;
+    }
+    return $cache;
+}
+
+/**
+ * Catégories (formations) dont l'utilisateur courant est responsable.
+ *
+ * Un même responsable peut en porter plusieurs : les attributions
+ * s'additionnent.
+ *
+ * @return array liste d'objets {id, name}, indexée numériquement
+ */
+function theme_urdfs_get_responsable_categories(): array {
+    global $DB, $USER;
+    static $cache = null;
+
+    if ($cache !== null) {
+        return $cache;
+    }
+    if (!isloggedin() || isguestuser()) {
+        return $cache = [];
+    }
+
+    try {
+        $rows = $DB->get_records_sql(
+            "SELECT DISTINCT cc.id, cc.name, cc.path
+               FROM {role_assignments} ra
+               JOIN {role} r ON r.id = ra.roleid
+               JOIN {context} ctx ON ctx.id = ra.contextid
+               JOIN {course_categories} cc ON cc.id = ctx.instanceid
+              WHERE ra.userid = ? AND r.shortname = ? AND ctx.contextlevel = ?
+           ORDER BY cc.name ASC",
+            [$USER->id, 'responsablepedagogique', CONTEXT_COURSECAT]
+        );
+        $cache = array_values($rows);
+    } catch (Throwable $e) {
+        $cache = [];
+    }
+    return $cache;
+}
+
+/**
+ * Identifiants de TOUTES les catégories du périmètre : celles confiées
+ * au responsable, plus leurs sous-catégories (un domaine contient des
+ * formations, qui contiennent des niveaux).
+ *
+ * @return array liste d'identifiants
+ */
+function theme_urdfs_get_responsable_category_ids(): array {
+    global $DB;
+
+    $ids = [];
+    foreach (theme_urdfs_get_responsable_categories() as $cat) {
+        $ids[$cat->id] = $cat->id;
+        try {
+            $like = $DB->sql_like('path', ':p');
+            $children = $DB->get_records_select('course_categories', $like,
+                ['p' => '%/' . $cat->id . '/%'], '', 'id');
+            foreach ($children as $child) {
+                $ids[$child->id] = $child->id;
+            }
+        } catch (Throwable $e) {
+            continue;
+        }
+    }
+    return array_values($ids);
+}
+
+/**
+ * Arbre de navigation RESPONSABLE PÉDAGOGIQUE.
+ *
+ * Il suit des formations, il n'administre rien : pas de création de
+ * cours, pas de gestion de comptes. Les rapports globaux sont volontai-
+ * rement absents (il n'a pas la capability au niveau système, le lien
+ * renverrait « Accès refusé ») ; ils restent accessibles cours par cours.
+ *
+ * @return array
+ */
+function theme_urdfs_nav_tree_responsable(): array {
+    $cats = theme_urdfs_get_responsable_categories();
+
+    $children = [];
+    foreach ($cats as $cat) {
+        $children[] = [
+            'label' => format_string($cat->name),
+            'url'   => '/course/index.php?categoryid=' . $cat->id,
+        ];
+    }
+
+    $formations = [
+        'label' => 'Mes formations',
+        'icon'  => 'folder-tree',
+        'url'   => !empty($cats)
+            ? '/course/index.php?categoryid=' . $cats[0]->id
+            : '/course/index.php',
+    ];
+    // On n'ajoute un sous-menu que s'il y a plusieurs formations :
+    // dérouler une liste d'un seul élément n'apporte rien.
+    if (count($children) > 1) {
+        $formations['children'] = $children;
+    }
+
+    return [
+        ['group' => 'Pilotage', 'items' => [
+            ['label' => 'Tableau de bord', 'icon' => 'gauge-high', 'url' => '/my/'],
+        ]],
+
+        ['group' => 'Suivi pédagogique', 'items' => [
+            $formations,
+            ['label' => 'Tous les cours', 'icon' => 'book', 'url' => '/course/index.php'],
+        ]],
+
+        ['group' => 'Organisation', 'items' => [
+            ['label' => 'Calendrier', 'icon' => 'calendar-days', 'url' => '/calendar/view.php?view=month'],
+            ['label' => 'Messages', 'icon' => 'comments', 'url' => '/message/index.php'],
+        ]],
+    ];
+}
+
+/**
  * Arbre de navigation TECHNOPÉDAGOGUE (gestion pédagogique, sans technique).
  *
  * @return array

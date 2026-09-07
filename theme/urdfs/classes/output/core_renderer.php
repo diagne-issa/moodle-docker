@@ -62,10 +62,17 @@ class core_renderer extends \theme_boost\output\core_renderer {
     public function favicon() {
         global $CFG;
 
+        // Le dossier pix/ du thème est sous la racine web : on peut donc
+        // servir le fichier par son URL directe. On ne passe PAS par
+        // image_url(), qui ne sait résoudre que svg, png, jpg et gif : un
+        // favicon .ico, format le plus courant, y serait introuvable.
         $dir = $CFG->dirroot . '/theme/urdfs/pix/';
-        foreach (['favicon.png', 'favicon.ico', 'favicon.svg'] as $file) {
+
+        // urdfs-icon.svg est l'icône déjà fournie avec le thème ; les noms
+        // favicon.* permettent d'en déposer une autre sans toucher au code.
+        foreach (['favicon.ico', 'favicon.png', 'favicon.svg', 'urdfs-icon.svg'] as $file) {
             if (file_exists($dir . $file)) {
-                return $this->image_url('favicon', 'theme');
+                return new \moodle_url('/theme/urdfs/pix/' . $file);
             }
         }
 
@@ -103,6 +110,14 @@ class core_renderer extends \theme_boost\output\core_renderer {
 
         if (is_siteadmin($USER)) {
             return 'urdfs-role-admin';
+        }
+
+        // Le responsable pédagogique n'a AUCUNE capability d'enseignement
+        // (il ne modifie ni les cours ni les notes) : sans ce test il
+        // retombait sur l'espace étudiant. On le teste donc avant, par
+        // son attribution de rôle et non par une capability.
+        if (theme_urdfs_is_responsable()) {
+            return 'urdfs-role-responsable';
         }
 
         // Use the current course context if we are inside a course,
@@ -152,6 +167,8 @@ class core_renderer extends \theme_boost\output\core_renderer {
             $tree = theme_urdfs_nav_tree();
         } else if (theme_urdfs_is_technopedagogue()) {
             $tree = theme_urdfs_nav_tree_technopedagogue();
+        } else if (theme_urdfs_is_responsable()) {
+            $tree = theme_urdfs_nav_tree_responsable();
         } else if (theme_urdfs_is_teacher()) {
             $tree = theme_urdfs_nav_tree_teacher();
         } else {
@@ -399,6 +416,7 @@ class core_renderer extends \theme_boost\output\core_renderer {
         if ($PAGE->pagetype !== 'my-index' || $this->urdfs_is_mycourses_page()
                 || !isloggedin() || isguestuser()
                 || is_siteadmin() || theme_urdfs_is_technopedagogue()
+                || theme_urdfs_is_responsable()
                 || theme_urdfs_is_teacher()) {
             return '';
         }
@@ -820,6 +838,107 @@ class core_renderer extends \theme_boost\output\core_renderer {
         $h .= '</div></div>';
 
         $h .= '</div>';
+
+        return $h;
+    }
+
+    /**
+     * Tableau de bord du RESPONSABLE PEDAGOGIQUE.
+     *
+     * Il suit une ou plusieurs formations : on lui montre son perimetre
+     * (formations, cours, etudiants) et un acces direct a chacune de ses
+     * formations. Aucune action de creation : ce role observe et rapporte.
+     *
+     * @return string HTML
+     */
+    public function urdfs_responsable_hero(): string {
+        global $DB, $USER, $CFG, $PAGE;
+
+        if ($PAGE->pagetype !== 'my-index' || $this->urdfs_is_mycourses_page()
+                || is_siteadmin() || theme_urdfs_is_technopedagogue()
+                || !theme_urdfs_is_responsable()) {
+            return '';
+        }
+
+        $cats = theme_urdfs_get_responsable_categories();
+        $catids = theme_urdfs_get_responsable_category_ids();
+
+        $courses = 0;
+        $students = 0;
+        try {
+            if (!empty($catids)) {
+                list($insql, $params) = $DB->get_in_or_equal($catids, SQL_PARAMS_NAMED, 'cat');
+                $courses = (int) $DB->count_records_select('course', "category $insql", $params);
+                $students = (int) $DB->count_records_sql(
+                    "SELECT COUNT(DISTINCT ue.userid)
+                       FROM {user_enrolments} ue
+                       JOIN {enrol} e ON e.id = ue.enrolid
+                       JOIN {course} c ON c.id = e.courseid
+                      WHERE c.category $insql", $params);
+            }
+        } catch (\Throwable $e) {
+            $courses = 0;
+            $students = 0;
+        }
+
+        $hour = (int) date('G');
+        $greeting = ($hour < 18) ? 'Bonjour' : 'Bonsoir';
+
+        $kpi = function ($value, $label, $icon, $variant) {
+            return '<div class="urdfs-kpi">'
+                . '<div class="urdfs-kpi-icon ' . $variant . '"><i class="fa-solid fa-' . $icon . '"></i></div>'
+                . '<div class="urdfs-kpi-body"><div class="urdfs-kpi-value">' . (int) $value . '</div>'
+                . '<div class="urdfs-kpi-label">' . $label . '</div></div></div>';
+        };
+        $qa = function ($url, $label, $icon, $primary = false) use ($CFG) {
+            $cls = $primary ? 'urdfs-wbtn urdfs-wbtn--solid' : 'urdfs-wbtn';
+            return '<a class="' . $cls . '" href="' . $CFG->wwwroot . $url . '">'
+                . '<i class="fa-solid fa-' . $icon . '"></i><span>' . $label . '</span></a>';
+        };
+
+        $firsturl = !empty($cats)
+            ? '/course/index.php?categoryid=' . $cats[0]->id
+            : '/course/index.php';
+
+        $sub = !empty($cats)
+            ? 'Suivi de ' . count($cats) . ' formation' . (count($cats) > 1 ? 's' : '')
+              . ' : progression, assiduité et résultats.'
+            : 'Aucune formation ne vous est encore attribuée. Contactez le technopédagogue.';
+
+        $h  = '<section class="urdfs-welcome urdfs-welcome--responsable">';
+        $h .= '<div class="urdfs-welcome-inner"><div class="urdfs-welcome-copy">';
+        $h .= '<div class="urdfs-welcome-eyebrow">Responsable pédagogique</div>';
+        $h .= '<h1 class="urdfs-welcome-title">' . $greeting . ', ' . s($USER->firstname) . '</h1>';
+        $h .= '<p class="urdfs-welcome-sub">' . $sub . '</p>';
+        $h .= '<div class="urdfs-welcome-actions">';
+        $h .= $qa($firsturl, 'Mes formations', 'folder-tree', true);
+        $h .= $qa('/calendar/view.php?view=month', 'Calendrier', 'calendar-days');
+        $h .= $qa('/message/index.php', 'Messages', 'comments');
+        $h .= '</div></div>';
+        $h .= '<div class="urdfs-welcome-badge"><i class="fa-solid fa-clipboard-check"></i></div>';
+        $h .= '</div></section>';
+
+        $h .= '<section class="urdfs-kpi-grid">';
+        $h .= $kpi(count($cats), 'Formations suivies', 'folder-tree', 'is-blue');
+        $h .= $kpi($courses, 'Cours du périmètre', 'book', 'is-blue');
+        $h .= $kpi($students, 'Étudiants', 'users', 'is-green');
+        $h .= '</section>';
+
+        // Acces direct a chaque formation confiee.
+        if (!empty($cats)) {
+            $h .= '<div class="card urdfs-actions">'
+                . '<div class="urdfs-card-head"><div class="urdfs-card-title">Mes formations</div>'
+                . '<div class="urdfs-card-sub">Accès direct à chaque périmètre</div></div>'
+                . '<div class="urdfs-actions-list">';
+            foreach ($cats as $cat) {
+                $h .= '<a class="urdfs-qa" href="' . $CFG->wwwroot
+                    . '/course/index.php?categoryid=' . (int) $cat->id . '">'
+                    . '<span class="urdfs-qa-ic"><i class="fa-solid fa-folder-open"></i></span>'
+                    . '<span class="urdfs-qa-lbl">' . format_string($cat->name) . '</span>'
+                    . '<i class="fa-solid fa-arrow-right urdfs-qa-arw"></i></a>';
+            }
+            $h .= '</div></div>';
+        }
 
         return $h;
     }
