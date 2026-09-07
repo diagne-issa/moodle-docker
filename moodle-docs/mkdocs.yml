@@ -87,6 +87,7 @@ nav:
       - Étudiant: utiliser/etudiant.md
 
   - Référence:
+      - Planning du projet: reference/planning.md
       - Journal des décisions: reference/decisions.md
       - Dépannage: reference/depannage.md
       - Reste à faire: reference/roadmap.md

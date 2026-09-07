@@ -1715,6 +1715,221 @@ body.urdfs-role-guest {
     .bs-tooltip-bottom .arrow::before,
     .tooltip.bs-tooltip-bottom .tooltip-arrow::before { border-bottom-color: $urdfs-foreground; }
 }
+
+// =============================================================
+// PALIER 28 — LISIBILITÉ DU FORMAT DE COURS PAR DÉFAUT
+// Alternative volontaire à un format tiers en tuiles, qui aurait
+// apporté sa propre palette et cassé la charte. On renforce ici
+// la hiérarchie visuelle du format natif, sous notre contrôle.
+// =============================================================
+body.format-topics,
+body.format-weeks,
+body[id^="page-course-view"] {
+
+    // Chaque section reçoit un liseré de couleur : on repère
+    // instantanément où commence et finit une séquence.
+    .course-content .course-section,
+    .course-content li.section {
+        border-left: 3px solid $urdfs-brand;
+        padding-left: 1.35rem;
+    }
+
+    // En-tête de section plus affirmé, avec un peu d'air en dessous.
+    .course-section-header,
+    .course-section .sectionname {
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.65rem;
+        border-bottom: 1px solid $urdfs-border;
+    }
+
+    // Icône d'activité dans une pastille teintée : le type d'activité
+    // se lit d'un coup d'œil, sans avoir à déchiffrer le libellé.
+    .activityiconcontainer {
+        width: 42px;
+        height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.7rem;
+        background: $urdfs-accent;
+        flex: 0 0 42px;
+    }
+    .activityiconcontainer img,
+    .activityiconcontainer .activityicon { width: 22px; height: 22px; }
+
+    // Ligne d'activité plus aérée et alignée.
+    .course-section .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        padding: 0.9rem 1.05rem;
+    }
+    .activity-item .activity-basis,
+    .activity-item .activity-info { min-width: 0; }
+
+    // Nom de l'activité plus lisible, description en retrait.
+    .activityname a,
+    .activity-item .instancename { font-size: 0.98rem; }
+    .activity-item .description,
+    .activity-item .activity-altcontent {
+        color: $urdfs-muted-fg;
+        font-size: 0.88rem;
+        margin-top: 0.2rem;
+    }
+
+    // Indicateurs d'achèvement plus visibles.
+    .activity-item .completion-dropdown .btn,
+    .activity-item [data-region="completion-info"] {
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 600;
+    }
+
+    // Résumé de section en encadré discret plutôt qu'en texte nu.
+    .course-section .summarytext {
+        background: $urdfs-page;
+        border-radius: 0.6rem;
+        padding: 0.75rem 0.95rem;
+        margin-bottom: 0.9rem;
+    }
+
+    // Index de cours latéral : entrées plus lisibles.
+    .courseindex .courseindex-item {
+        border-radius: 0.5rem;
+        padding: 0.35rem 0.5rem;
+
+        &:hover { background: $urdfs-secondary; }
+    }
+    .courseindex .courseindex-section .courseindex-item.active,
+    .courseindex .courseindex-item.pageitem {
+        background: $urdfs-accent;
+        color: $urdfs-brand;
+        font-weight: 600;
+    }
+}
+
+// =============================================================
+// PALIER 29 — PLUGIN PRÉSENCE ( mod_attendance )
+// Les règles génériques des pages mod-* s'appliquent déjà (cartes,
+// tables premium). On traite ici ce qui est propre au plugin :
+// barre de filtres, liste des séances, grille de saisie, statuts.
+// =============================================================
+body[id^="page-mod-attendance"] {
+
+    // Barre de filtres et navigation entre périodes.
+    .attfiltercontrols,
+    .attfiltercontrols > .nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        padding: 0.75rem 1rem;
+        margin-bottom: 1.25rem;
+    }
+    .attfiltercontrols .btn,
+    .attfiltercontrols .nav-link {
+        border-radius: 0.6rem;
+        font-weight: 600;
+    }
+
+    // Date de séance mise en avant dans la liste.
+    .sessiondate,
+    td.datecol { font-weight: 600; color: $urdfs-foreground; white-space: nowrap; }
+
+    // Grille de saisie des présences : lignes bien séparées et
+    // survolables, car on y coche des dizaines d'étudiants à la suite.
+    .takelist tbody tr,
+    #attendancetakeform tbody tr { transition: background 0.12s ease; }
+    .takelist tbody tr:hover,
+    #attendancetakeform tbody tr:hover { background: $urdfs-accent; }
+
+    // Boutons de statut en pastilles colorées et lisibles.
+    .attendancestatusset label,
+    .statuscol label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.25rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.82rem;
+        font-weight: 600;
+    }
+
+    // Sémantique des statuts : vert présent, ambre retard,
+    // rouge absent, bleu excusé. La couleur double le libellé,
+    // elle ne le remplace pas.
+    .attendance-present,  .statusdesc-P { color: $urdfs-success; }
+    .attendance-late,     .statusdesc-L { color: #b45309; }
+    .attendance-absent,   .statusdesc-A { color: $urdfs-destructive; }
+    .attendance-excused,  .statusdesc-E { color: $urdfs-brand; }
+
+    // Encadré de résumé (taux de présence de l'étudiant).
+    .attendance-summary,
+    .userinfobox,
+    .attsummary {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        padding: 1.25rem 1.4rem;
+        margin-bottom: 1.25rem;
+    }
+
+    // Barres de progression du taux de présence.
+    .progress { border-radius: 999px; height: 0.6rem; background: $urdfs-secondary; }
+    .progress-bar { background: $urdfs-success; }
+}
+
+// =============================================================
+// PALIER 30 — PLUGIN ATTESTATIONS ( mod_customcert )
+// Page de téléchargement pour l'étudiant, et concepteur de
+// modèle pour l'enseignant.
+// =============================================================
+body[id^="page-mod-customcert"] {
+
+    // Bouton de téléchargement de l'attestation, action principale.
+    #region-main .singlebutton .btn-primary,
+    .customcert-download .btn {
+        font-weight: 700;
+        padding: 0.7rem 1.6rem;
+        border-radius: 0.7rem;
+    }
+
+    // Concepteur de modèle : la liste des éléments devient une carte.
+    #element-list,
+    .customcert-elements,
+    #page-mod-customcert-edit #region-main > form {
+        background: #fff;
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-sm;
+        padding: 1.25rem 1.4rem;
+        margin-bottom: 1.25rem;
+    }
+
+    // Aperçu du certificat détaché du fond.
+    .customcert-preview,
+    #customcert-preview {
+        border: 1px solid $urdfs-border;
+        border-radius: $border-radius;
+        box-shadow: $urdfs-sh-md;
+        overflow: hidden;
+    }
+
+    // Liste des modèles disponibles.
+    .templatelist li,
+    .customcert-templates li {
+        padding: 0.7rem 0.9rem;
+        border-bottom: 1px solid $urdfs-border;
+
+        &:last-child { border-bottom: 0; }
+        &:hover { background: $urdfs-secondary; }
+    }
+}
 .urdfs-chart-wrap { position: relative; height: 260px; }
 
 // Graphique en barres CSS pur (dashboard admin) — sans dépendance externe.
