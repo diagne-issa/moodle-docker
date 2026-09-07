@@ -77,9 +77,58 @@ La plateforme est ensuite accessible sur **http://localhost:8090**.
 
 <div class="note" markdown="1">
 <b>Premier démarrage</b>
-La toute première fois, Docker construit l'image et Moodle installe sa base : comptez plusieurs
-minutes. Les démarrages suivants sont quasi instantanés.
+La toute première fois, Docker construit l'image : comptez plusieurs minutes. Les démarrages
+suivants sont quasi instantanés.
 </div>
+
+## Installer la base la première fois
+
+Sur une machine neuve, la base est vide et Moodle n'a encore aucune table. **Ne passez pas par
+l'assistant web** : il est manuel, non reproductible, et demande de ressaisir des informations que
+`.env` contient déjà. Une seule commande suffit.
+
+```bash
+docker compose exec -u www-data moodle php /var/www/html/admin/cli/install_database.php \
+  --agree-license \
+  --fullname="Université Rose Dieng France-Sénégal" \
+  --shortname="URDFS" \
+  --adminuser=admin \
+  --adminemail=admin@urdfs.sn \
+  --adminpass='VotreMotDePasseSolide'
+```
+
+Moodle crée alors toutes ses tables et le compte administrateur, en lisant la connexion à la base
+dans `config.php`, qui la tient lui-même de `.env`. Rien à saisir, rien à deviner.
+
+<div class="tip" markdown="1">
+<b>Deux causes d'échec fréquentes</b>
+Le mot de passe administrateur doit respecter la politique de Moodle : au moins huit caractères,
+avec une majuscule, un chiffre et un caractère spécial. Sinon la commande s'arrête sans message
+très explicite. Et si la connexion à la base échoue, vérifiez que <code>POSTGRES_PASSWORD</code> et
+<code>MOODLE_DB_PASSWORD</code> portent bien <b>la même valeur</b> dans <code>.env</code>.
+</div>
+
+<div class="warn" markdown="1">
+<b>Si l'assistant web s'affiche malgré tout</b>
+C'est que <code>config.php</code> n'a pas été trouvé. Le serveur de base de données à saisir est
+alors <code>postgres</code>, le nom du service Docker, et <strong>jamais</strong>
+<code>localhost</code> : Moodle tourne dans un conteneur et joint PostgreSQL par le réseau interne.
+Les autres champs reprennent les valeurs de <code>.env</code>, avec <code>mdl_</code> comme préfixe
+de tables.
+</div>
+
+Ensuite, appliquer la configuration du projet, dans cet ordre :
+
+```bash
+# Rôles et permissions
+cat scripts/setup_roles.php | docker compose exec -T -u www-data moodle php
+
+# Catalogue des formations
+cat scripts/setup_offre_formation.php | docker compose exec -T -u www-data moodle php
+
+# Purge finale
+docker compose exec -u www-data moodle php /var/www/html/admin/cli/purge_caches.php
+```
 
 ## Les commandes du quotidien
 
