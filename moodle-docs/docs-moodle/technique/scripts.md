@@ -80,6 +80,95 @@ Définit le mot de passe d'un compte étudiant, pour pouvoir tester l'espace ét
 la procédure de réinitialisation par courriel, impossible ici puisqu'il n'y a pas de serveur SMTP.
 </div>
 
+## Les scripts shell de sauvegarde
+
+Trois fichiers, à lancer depuis le dossier `moodle-docker`.
+
+<div class="card" markdown="1">
+#### `sauvegarde.sh` <span class="badge neutral">essentiel</span>
+
+Exporte la base PostgreSQL et archive le volume `moodledata`. Les deux fichiers portent le **même
+horodatage** : restaurer l'un sans l'autre donnerait une plateforme incohérente, la base
+référençant des fichiers absents.
+
+Destination et rétention se règlent par variables d'environnement : `URDFS_BACKUP_DIR`
+(défaut `~/sauvegardes-urdfs`) et `URDFS_BACKUP_KEEP` (défaut 14 jours).
+</div>
+
+<div class="card" markdown="1">
+#### `restauration.sh`
+
+Sans argument, liste les archives disponibles. Avec un horodatage, restaure la paire correspondante.
+Demande de saisir `RESTAURER` avant d'agir, arrête les services, restaure, puis relance et purge les
+caches.
+</div>
+
+<div class="card" markdown="1">
+#### `cron-sauvegarde.sh`
+
+Enveloppe de `sauvegarde.sh` destinée à la planification automatique. Elle journalise chaque
+exécution et signale les échecs.
+</div>
+
+## Automatiser la sauvegarde
+
+<div class="warn" markdown="1">
+<b>Ne jamais appeler <code>sauvegarde.sh</code> directement depuis cron</b>
+Cron n'ouvre pas un shell de connexion : il ne lit ni <code>.bashrc</code> ni <code>.profile</code>,
+et son <code>PATH</code> se limite à <code>/usr/bin:/bin</code>. La commande <code>docker</code> de
+Docker Desktop n'y figure pas. La tâche échoue alors sur un <code>docker: command not found</code>,
+en silence, et on ne s'en aperçoit que le jour où l'on a besoin d'une sauvegarde.
+
+C'est exactement pour cela que <code>cron-sauvegarde.sh</code> existe : il rétablit un environnement
+complet avant d'appeler le script de sauvegarde.
+</div>
+
+<ol class="steps" markdown="1">
+<li markdown="1"><b>Rendre le script exécutable</b>
+```bash
+chmod +x scripts/cron-sauvegarde.sh
+```
+</li>
+<li markdown="1"><b>Le tester à la main d'abord</b>
+Ne jamais planifier une commande qu'on n'a pas vue réussir.
+```bash
+./scripts/cron-sauvegarde.sh && echo "OK"
+```
+</li>
+<li markdown="1"><b>Vérifier que le service cron tourne</b>
+Sous WSL il est souvent à l'arrêt au démarrage.
+```bash
+sudo service cron status || sudo service cron start
+```
+</li>
+<li markdown="1"><b>Ajouter la tâche</b>
+`crontab -e`, puis une ligne. Chemin **absolu** obligatoire.
+```
+0 2 * * * /home/issa/projets/lms-plateform/moodle-docker/scripts/cron-sauvegarde.sh
+```
+</li>
+<li markdown="1"><b>Contrôler le lendemain</b>
+```bash
+tail -n 40 ~/sauvegardes-urdfs/sauvegarde.log
+ls -lh ~/sauvegardes-urdfs/
+```
+</li>
+</ol>
+
+<div class="note" markdown="1">
+<b>WSL n'est pas un serveur</b>
+Sous WSL, cron ne s'exécute que si la distribution est lancée. Une sauvegarde planifiée à 2 h ne
+partira pas si le poste est éteint. C'est acceptable en développement ; en production, la
+planification devra vivre sur le serveur, qui lui reste allumé.
+</div>
+
+<div class="warn" markdown="1">
+<b>Une copie sur la même machine n'est pas une sauvegarde</b>
+Si le disque tombe, la plateforme et ses sauvegardes disparaissent ensemble. Copier régulièrement le
+dossier <code>~/sauvegardes-urdfs</code> vers un autre support reste indispensable. C'est un point
+identifié comme bloquant pour la V1.
+</div>
+
 ## Écrire un nouveau script
 
 Le squelette commun :
